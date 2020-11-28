@@ -29,8 +29,6 @@ public class Route {
 
         List<LatLng> latLngs = new ArrayList();
         ClassLoader classLoader = getClass().getClassLoader();
-        //classLoader.getResource("393231.gpx").getFile())
-        //"classpath:393231.gpx"
         Namespace ns = Namespace.getNamespace("", "http://www.topografix.com/GPX/1/1");
         try {
 
@@ -42,7 +40,7 @@ public class Route {
             System.out.println("Root element :" + classElement.getName());
 
             for (Element element : classElement.getChildren()) {
-                System.out.println("Level 1 element :" + element.getName());
+                System.out.println("Level 1 elements :" + element.getName());
             }
 
             Element track = classElement.getChild("trk", ns);
@@ -64,15 +62,11 @@ public class Route {
 
             }
 
-        } catch (JDOMException e) {
+        } catch (JDOMException | IOException e) {
             e.printStackTrace();
-        } catch (IOException ioe) {
-            ioe.printStackTrace();
         }
 
         return latLngs;
 
     }
-
-
 }
