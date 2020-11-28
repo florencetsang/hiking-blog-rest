@@ -5,11 +5,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.jdom2.Attribute;
-import org.jdom2.Document;
-import org.jdom2.Element;
-import org.jdom2.JDOMException;
+import org.jdom2.*;
 import org.jdom2.input.SAXBuilder;
+
 
 public class Route {
 
@@ -30,10 +28,13 @@ public class Route {
     private List<LatLng> loadGpxData() {
 
         List<LatLng> latLngs = new ArrayList();
-
+        ClassLoader classLoader = getClass().getClassLoader();
+        //classLoader.getResource("393231.gpx").getFile())
+        //"classpath:393231.gpx"
+        Namespace ns = Namespace.getNamespace("", "http://www.topografix.com/GPX/1/1");
         try {
 
-            File inputFile = new File("/main/resources/393231.gpx");
+            File inputFile = new File(classLoader.getResource("393231.gpx").getFile());
             SAXBuilder saxBuilder = new SAXBuilder();
             Document document = saxBuilder.build(inputFile);
 
@@ -44,16 +45,17 @@ public class Route {
                 System.out.println("Level 1 element :" + element.getName());
             }
 
-            Element track = classElement.getChild("trk");
+            Element track = classElement.getChild("trk", ns);
             System.out.println("Trk:" + track.getName());
-            List<Element> trackSegments = track.getChildren("trkseg");
+            Element trackSegment = track.getChild("trkseg", ns);
+            List<Element> trackPoints = trackSegment.getChildren("trkpt", ns);
 
             System.out.println("----------------------------");
 
-            for (Element trackSegment : trackSegments) {
+            for (Element trackPoint : trackPoints) {
                 System.out.println("\nCurrent Element :" + trackSegment.getName());
-                Attribute lat = trackSegment.getAttribute("lat");
-                Attribute lon = trackSegment.getAttribute("lon");
+                Attribute lat = trackPoint.getAttribute("lat");
+                Attribute lon = trackPoint.getAttribute("lon");
                 System.out.println("lat : " + lat.getValue() + ",  lon: " + lon.getValue());
 
                 latLngs.add(new LatLng(
