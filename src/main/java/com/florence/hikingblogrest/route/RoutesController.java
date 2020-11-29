@@ -7,7 +7,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class RoutesController {
 
-    RoutesService routesService = new RoutesService();
+    RoutesService routesService;
+
+    public RoutesController(RoutesService routesService){
+        this.routesService = routesService;
+    }
 
     @GetMapping("/get-routes")
     @CrossOrigin(origins = "http://localhost:3000")
