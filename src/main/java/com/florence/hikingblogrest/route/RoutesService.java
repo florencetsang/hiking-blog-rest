@@ -5,31 +5,43 @@ import org.jdom2.input.SAXBuilder;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
 public class RoutesService {
 
-    private static Routes routes = new Routes();
+    private static final Routes routes = new Routes();
 
     static {
-        routes.addRoute(new Route(loadGpxData()));
+
+        URL routesFolder = RoutesService.class.getResource("/routes/");
+        if (routesFolder != null) {
+            File folder = new File(routesFolder.getFile());
+            File[] files = folder.listFiles();
+            //TODO: files might be NULL when running from jar
+            for (File file : files) {
+                if (file.isFile()) {
+                    routes.addRoute(new Route(loadGpxData(file)));
+                    System.out.println(file.getName());
+                }
+            }
+        }
     }
 
     public Routes getRoutes() {
         return routes;
     }
 
-    static private List<LatLng> loadGpxData() {
+    static private List<LatLng> loadGpxData(File gpxFile) {
 
         List<LatLng> latLngs = new ArrayList();
-        ClassLoader classLoader = RoutesService.class.getClassLoader();
         Namespace ns = Namespace.getNamespace("", "http://www.topografix.com/GPX/1/1");
+
         try {
 
-            File inputFile = new File(classLoader.getResource("393231.gpx").getFile());
             SAXBuilder saxBuilder = new SAXBuilder();
-            Document document = saxBuilder.build(inputFile);
+            Document document = saxBuilder.build(gpxFile);
 
             Element classElement = document.getRootElement();
             System.out.println("Root element :" + classElement.getName());
@@ -52,9 +64,8 @@ public class RoutesService {
                 System.out.println("lat : " + lat.getValue() + ",  lon: " + lon.getValue());
 
                 latLngs.add(new LatLng(
-                        Double.valueOf(lat.getValue()),
-                        Double.valueOf(lon.getValue())));
-
+                        Double.parseDouble(lat.getValue()),
+                        Double.parseDouble(lon.getValue())));
             }
 
         } catch (JDOMException | IOException e) {
