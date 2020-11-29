@@ -15,7 +15,7 @@ public class Routes {
         this.routes = routes;
     }
 
-    public void addRoute(Route route){
+    public void addRoute(Route route) {
         this.routes.add(route);
     }
 

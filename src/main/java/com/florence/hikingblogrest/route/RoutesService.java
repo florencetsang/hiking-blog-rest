@@ -12,7 +12,7 @@ public class RoutesService {
 
     private static Routes routes = new Routes();
 
-    static{
+    static {
         routes.addRoute(new Route(loadGpxData()));
     }
 

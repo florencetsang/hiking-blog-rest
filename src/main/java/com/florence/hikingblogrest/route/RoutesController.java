@@ -10,7 +10,7 @@ public class RoutesController {
     RoutesService routesService = new RoutesService();
 
     @GetMapping("/get-routes")
-    @CrossOrigin(origins="http://localhost:3000")
+    @CrossOrigin(origins = "http://localhost:3000")
     public Routes getRoutes() {
         return routesService.getRoutes();
     }
