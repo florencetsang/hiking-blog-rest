@@ -7,6 +7,10 @@ public class Routes {
 
     private List<Route> routes;
 
+    public Routes() {
+        this.routes = new ArrayList<Route>();
+    }
+
     public List<Route> getRoutes() {
         return routes;
     }
@@ -19,8 +23,4 @@ public class Routes {
         this.routes.add(route);
     }
 
-
-    public Routes() {
-        this.routes = new ArrayList<Route>();
-    }
 }
