@@ -9,7 +9,7 @@ public class RoutesController {
 
     RoutesService routesService;
 
-    public RoutesController(RoutesService routesService){
+    public RoutesController(RoutesService routesService) {
         this.routesService = routesService;
     }
 
