@@ -22,5 +22,4 @@ public class Routes {
     public void addRoute(Route route) {
         this.routes.add(route);
     }
-
 }
