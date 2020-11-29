@@ -1,34 +1,29 @@
-package com.florence.hikingblogrest;
+package com.florence.hikingblogrest.route;
+
+import org.jdom2.*;
+import org.jdom2.input.SAXBuilder;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.jdom2.*;
-import org.jdom2.input.SAXBuilder;
+public class RoutesService {
 
+    private static Routes routes = new Routes();
 
-public class Route {
-
-    private List<LatLng> pathCoordinates;
-
-    public List<LatLng> getPathCoordinates() {
-        return pathCoordinates;
+    static{
+        routes.addRoute(new Route(loadGpxData()));
     }
 
-    public void setPathCoordinates(List<LatLng> pathCoordinates) {
-        this.pathCoordinates = pathCoordinates;
+    public Routes getRoutes() {
+        return routes;
     }
 
-    public Route() {
-        this.pathCoordinates = loadGpxData();
-    }
-
-    private List<LatLng> loadGpxData() {
+    static private List<LatLng> loadGpxData() {
 
         List<LatLng> latLngs = new ArrayList();
-        ClassLoader classLoader = getClass().getClassLoader();
+        ClassLoader classLoader = RoutesService.class.getClassLoader();
         Namespace ns = Namespace.getNamespace("", "http://www.topografix.com/GPX/1/1");
         try {
 
@@ -67,6 +62,6 @@ public class Route {
         }
 
         return latLngs;
-
     }
+
 }

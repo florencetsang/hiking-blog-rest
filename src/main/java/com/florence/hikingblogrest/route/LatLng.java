@@ -1,4 +1,4 @@
-package com.florence.hikingblogrest;
+package com.florence.hikingblogrest.route;
 
 public class LatLng {
 

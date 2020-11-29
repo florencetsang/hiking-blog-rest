@@ -1,15 +1,17 @@
-package com.florence.hikingblogrest;
+package com.florence.hikingblogrest.route;
 
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-public class RouteController {
+public class RoutesController {
+
+    RoutesService routesService = new RoutesService();
 
     @GetMapping("/get-routes")
     @CrossOrigin(origins="http://localhost:3000")
     public Routes getRoutes() {
-        return new Routes();
+        return routesService.getRoutes();
     }
 }
