@@ -1,0 +1,67 @@
+package com.florence.hikingblogrest.route;
+
+import org.jdom2.*;
+import org.jdom2.input.SAXBuilder;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+public class RoutesService {
+
+    private static Routes routes = new Routes();
+
+    static {
+        routes.addRoute(new Route(loadGpxData()));
+    }
+
+    public Routes getRoutes() {
+        return routes;
+    }
+
+    static private List<LatLng> loadGpxData() {
+
+        List<LatLng> latLngs = new ArrayList();
+        ClassLoader classLoader = RoutesService.class.getClassLoader();
+        Namespace ns = Namespace.getNamespace("", "http://www.topografix.com/GPX/1/1");
+        try {
+
+            File inputFile = new File(classLoader.getResource("393231.gpx").getFile());
+            SAXBuilder saxBuilder = new SAXBuilder();
+            Document document = saxBuilder.build(inputFile);
+
+            Element classElement = document.getRootElement();
+            System.out.println("Root element :" + classElement.getName());
+
+            for (Element element : classElement.getChildren()) {
+                System.out.println("Level 1 elements :" + element.getName());
+            }
+
+            Element track = classElement.getChild("trk", ns);
+            System.out.println("Trk:" + track.getName());
+            Element trackSegment = track.getChild("trkseg", ns);
+            List<Element> trackPoints = trackSegment.getChildren("trkpt", ns);
+
+            System.out.println("----------------------------");
+
+            for (Element trackPoint : trackPoints) {
+                System.out.println("\nCurrent Element :" + trackSegment.getName());
+                Attribute lat = trackPoint.getAttribute("lat");
+                Attribute lon = trackPoint.getAttribute("lon");
+                System.out.println("lat : " + lat.getValue() + ",  lon: " + lon.getValue());
+
+                latLngs.add(new LatLng(
+                        Double.valueOf(lat.getValue()),
+                        Double.valueOf(lon.getValue())));
+
+            }
+
+        } catch (JDOMException | IOException e) {
+            e.printStackTrace();
+        }
+
+        return latLngs;
+    }
+
+}
