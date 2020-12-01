@@ -20,11 +20,11 @@ public class CloudStorageProxy {
 
     private static final String DATABASE_URL = "https://hiking-blog-app.firebaseio.com";
 
-    public CloudStorageProxy(){
+    public CloudStorageProxy() {
         initializeFirebase();
     }
 
-    public void initializeFirebase(){
+    public void initializeFirebase() {
         try {
             FirebaseOptions options = FirebaseOptions.builder()
                     .setCredentials(GoogleCredentials.getApplicationDefault())
