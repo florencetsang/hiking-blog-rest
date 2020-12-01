@@ -1,5 +1,6 @@
 package com.florence.hikingblogrest.route;
 
+import org.apache.commons.io.FilenameUtils;
 import org.jdom2.*;
 import org.jdom2.input.SAXBuilder;
 
@@ -22,7 +23,7 @@ public class RoutesService {
             //TODO: files might be NULL when running from jar
             for (File file : files) {
                 if (file.isFile()) {
-                    routes.addRoute(new Route(loadGpxData(file)));
+                    routes.addRoute(new Route(loadGpxData(file), FilenameUtils.getBaseName(file.getName())));
                     System.out.println(file.getName());
                 }
             }
