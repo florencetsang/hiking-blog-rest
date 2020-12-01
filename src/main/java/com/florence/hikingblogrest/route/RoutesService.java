@@ -1,32 +1,29 @@
 package com.florence.hikingblogrest.route;
 
-import org.apache.commons.io.FilenameUtils;
+import com.florence.hikingblogrest.proxy.CloudStorageProxy;
 import org.jdom2.*;
 import org.jdom2.input.SAXBuilder;
 
-import java.io.File;
 import java.io.IOException;
-import java.net.URL;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class RoutesService {
 
+    CloudStorageProxy cloudStorageProxy;
     private static final Routes routes = new Routes();
 
-    static {
+    public RoutesService(CloudStorageProxy cloudStorageProxy) {
+        this.cloudStorageProxy = cloudStorageProxy;
+    }
 
-        URL routesFolder = RoutesService.class.getResource("/routes/");
-        if (routesFolder != null) {
-            File folder = new File(routesFolder.getFile());
-            File[] files = folder.listFiles();
-            //TODO: files might be NULL when running from jar
-            for (File file : files) {
-                if (file.isFile()) {
-                    routes.addRoute(new Route(loadGpxData(file), FilenameUtils.getBaseName(file.getName())));
-                    System.out.println(file.getName());
-                }
-            }
+    public void fetchRoutes() {
+        Map<String, InputStream> routeFiles = cloudStorageProxy.getAllGpxRoutes();
+        for (Map.Entry<String, InputStream> routeFile : routeFiles.entrySet()) {
+            routes.addRoute(new Route(loadGpxData(routeFile.getValue()), routeFile.getKey()));
+            System.out.println("Loaded " + routeFile.getKey());
         }
     }
 
@@ -34,7 +31,7 @@ public class RoutesService {
         return routes;
     }
 
-    static private List<LatLng> loadGpxData(File gpxFile) {
+    static private List<LatLng> loadGpxData(InputStream gpxFile) {
 
         List<LatLng> latLngs = new ArrayList();
         Namespace ns = Namespace.getNamespace("", "http://www.topografix.com/GPX/1/1");

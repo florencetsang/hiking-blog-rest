@@ -1,5 +1,6 @@
 package com.florence.hikingblogrest.configurations;
 
+import com.florence.hikingblogrest.proxy.CloudStorageProxy;
 import com.florence.hikingblogrest.route.RoutesController;
 import com.florence.hikingblogrest.route.RoutesService;
 import org.springframework.context.annotation.Bean;
@@ -9,12 +10,17 @@ import org.springframework.context.annotation.Configuration;
 public class RoutesConfig {
 
     @Bean
-    public RoutesService routesService(){
-        return new RoutesService();
+    public CloudStorageProxy cloudStorageProxy() {
+        return new CloudStorageProxy();
     }
 
     @Bean
-    public RoutesController routesController(RoutesService routesService){
+    public RoutesService routesService(CloudStorageProxy cloudStorageProxy) {
+        return new RoutesService(cloudStorageProxy);
+    }
+
+    @Bean
+    public RoutesController routesController(RoutesService routesService) {
         return new RoutesController(routesService);
     }
 }
