@@ -22,4 +22,8 @@ public class Routes {
     public void addRoute(Route route) {
         this.routes.add(route);
     }
+
+    public void clearRoutes(){
+        this.routes.clear();
+    }
 }

@@ -1,9 +1,12 @@
 package com.florence.hikingblogrest.route;
 
 import com.florence.hikingblogrest.proxy.CloudStorageProxy;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.jdom2.*;
 import org.jdom2.input.SAXBuilder;
 
+import javax.xml.XMLConstants;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -11,6 +14,8 @@ import java.util.List;
 import java.util.Map;
 
 public class RoutesService {
+
+    private static final Logger LOGGER = LogManager.getLogger(RoutesService.class);
 
     CloudStorageProxy cloudStorageProxy;
     private static final Routes routes = new Routes();
@@ -20,10 +25,11 @@ public class RoutesService {
     }
 
     public void fetchRoutes() {
+        routes.clearRoutes();
         Map<String, InputStream> routeFiles = cloudStorageProxy.getAllGpxRoutes();
         for (Map.Entry<String, InputStream> routeFile : routeFiles.entrySet()) {
-            routes.addRoute(new Route(loadGpxData(routeFile.getValue()), routeFile.getKey()));
-            System.out.println("Loaded " + routeFile.getKey());
+            routes.addRoute(new Route(routeFile.getKey(), loadGpxData(routeFile.getValue())));
+            LOGGER.info("Loaded {}", routeFile.getKey());
         }
     }
 
@@ -31,35 +37,37 @@ public class RoutesService {
         return routes;
     }
 
-    static private List<LatLng> loadGpxData(InputStream gpxFile) {
+    private static List<LatLng> loadGpxData(InputStream gpxFile) {
 
-        List<LatLng> latLngs = new ArrayList();
+        List<LatLng> latLngs = new ArrayList<>();
         Namespace ns = Namespace.getNamespace("", "http://www.topografix.com/GPX/1/1");
 
         try {
 
             SAXBuilder saxBuilder = new SAXBuilder();
+            saxBuilder.setProperty(XMLConstants.ACCESS_EXTERNAL_DTD, "");
+            saxBuilder.setProperty(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "");
             Document document = saxBuilder.build(gpxFile);
 
             Element classElement = document.getRootElement();
-            System.out.println("Root element :" + classElement.getName());
+            LOGGER.debug("Root element :{}", classElement.getName());
 
             for (Element element : classElement.getChildren()) {
-                System.out.println("Level 1 elements :" + element.getName());
+                LOGGER.debug("Level 1 elements :{}", element.getName());
             }
 
             Element track = classElement.getChild("trk", ns);
-            System.out.println("Trk:" + track.getName());
+            LOGGER.debug("Trk: {}", track.getName());
             Element trackSegment = track.getChild("trkseg", ns);
             List<Element> trackPoints = trackSegment.getChildren("trkpt", ns);
 
-            System.out.println("----------------------------");
+            LOGGER.debug("----------------------------");
 
             for (Element trackPoint : trackPoints) {
-                System.out.println("\nCurrent Element :" + trackSegment.getName());
+                LOGGER.debug("\nCurrent Element :{}", trackSegment.getName());
                 Attribute lat = trackPoint.getAttribute("lat");
                 Attribute lon = trackPoint.getAttribute("lon");
-                System.out.println("lat : " + lat.getValue() + ",  lon: " + lon.getValue());
+                LOGGER.debug("lat: {}, lon: {}", lat.getValue(), lon.getValue());
 
                 latLngs.add(new LatLng(
                         Double.parseDouble(lat.getValue()),

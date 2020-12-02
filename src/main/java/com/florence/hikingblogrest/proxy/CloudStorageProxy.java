@@ -9,6 +9,8 @@ import com.google.cloud.storage.StorageOptions;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
 import org.apache.commons.io.FilenameUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -18,6 +20,7 @@ import java.util.Map;
 
 public class CloudStorageProxy {
 
+    private static final Logger LOGGER = LogManager.getLogger(CloudStorageProxy.class);
     private static final String DATABASE_URL = "https://hiking-blog-app.firebaseio.com";
 
     public CloudStorageProxy() {
@@ -33,8 +36,8 @@ public class CloudStorageProxy {
 
             FirebaseApp.initializeApp(options);
         } catch (IOException e) {
-            System.out.println("ERROR: invalid service account credentials.");
-            System.out.println(e.getMessage());
+            LOGGER.error("ERROR: invalid service account credentials.");
+            LOGGER.error(e.getMessage());
         }
     }
 
@@ -51,7 +54,7 @@ public class CloudStorageProxy {
                         Storage.BlobListOption.currentDirectory());
 
         for (Blob blob : blobs.iterateAll()) {
-            System.out.println(blob.getName());
+            LOGGER.debug(blob.getName());
             if (blob.getName().endsWith(".gpx")) {
                 gpxRoutes.put(FilenameUtils.getBaseName(blob.getName()), new ByteArrayInputStream(blob.getContent()));
             }
