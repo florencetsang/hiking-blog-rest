@@ -16,6 +16,7 @@ public class RoutesController {
     @GetMapping("/get-routes")
     @CrossOrigin(origins = "http://localhost:3000")
     public Routes getRoutes() {
+        routesService.fetchRoutes();
         return routesService.getRoutes();
     }
 }
