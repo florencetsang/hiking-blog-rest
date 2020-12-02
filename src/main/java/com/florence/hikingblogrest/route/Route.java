@@ -2,7 +2,6 @@ package com.florence.hikingblogrest.route;
 
 import java.util.List;
 
-
 public class Route {
 
     private String key;
