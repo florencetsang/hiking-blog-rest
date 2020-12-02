@@ -22,12 +22,14 @@ public class CloudStorageProxy {
 
     private static final Logger LOGGER = LogManager.getLogger(CloudStorageProxy.class);
     private static final String DATABASE_URL = "https://hiking-blog-app.firebaseio.com";
+    private static final String PROJECT_ID = "hiking-blog-app";
+    private static final String BUCKET_ID = "hiking-blog-app.appspot.com";
 
     public CloudStorageProxy() {
         initializeFirebase();
     }
 
-    public void initializeFirebase() {
+    private void initializeFirebase() {
         try {
             FirebaseOptions options = FirebaseOptions.builder()
                     .setCredentials(GoogleCredentials.getApplicationDefault())
@@ -45,8 +47,8 @@ public class CloudStorageProxy {
 
         Map<String, InputStream> gpxRoutes = new HashMap<>();
 
-        Storage storage = StorageOptions.newBuilder().setProjectId("hiking-blog-app").build().getService();
-        Bucket bucket = storage.get("hiking-blog-app.appspot.com");
+        Storage storage = StorageOptions.newBuilder().setProjectId(PROJECT_ID).build().getService();
+        Bucket bucket = storage.get(BUCKET_ID);
 
         Page<Blob> blobs =
                 bucket.list(
