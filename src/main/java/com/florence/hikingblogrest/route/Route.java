@@ -5,11 +5,19 @@ import java.util.List;
 
 public class Route {
 
-    private List<LatLng> pathCoordinates;
     private String key;
+    private List<LatLng> pathCoordinates;
 
-    public Route(List<LatLng> pathCoordinates, String key) {
+    public Route(String key, List<LatLng> pathCoordinates) {
+        this.key = key;
         this.pathCoordinates = pathCoordinates;
+    }
+
+    public String getKey() {
+        return key;
+    }
+
+    public void setKey(String key) {
         this.key = key;
     }
 
@@ -21,11 +29,4 @@ public class Route {
         this.pathCoordinates = pathCoordinates;
     }
 
-    public String getKey() {
-        return key;
-    }
-
-    public void setKey(String key) {
-        this.key = key;
-    }
 }
