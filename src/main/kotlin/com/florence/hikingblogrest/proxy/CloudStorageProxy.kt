@@ -35,7 +35,7 @@ class CloudStorageProxy {
                     Storage.BlobListOption.prefix("routes/"),
                     Storage.BlobListOption.currentDirectory())
             for (blob in blobs.iterateAll()) {
-                LOGGER.debug(blob.name)
+                LOGGER.debug("Processing file {}", blob.name)
                 if (blob.name.endsWith(".gpx")) {
                     gpxRoutes[FilenameUtils.getBaseName(blob.name)] = ByteArrayInputStream(blob.getContent())
                 }
