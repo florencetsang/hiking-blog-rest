@@ -1,4 +1,4 @@
-package com.florence.hikingblogrest.route;
+package com.florence.hikingblogrest.dto;
 
 import java.util.ArrayList;
 import java.util.List;

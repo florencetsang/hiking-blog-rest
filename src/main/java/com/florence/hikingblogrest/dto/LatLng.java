@@ -1,11 +1,15 @@
-package com.florence.hikingblogrest.route;
+package com.florence.hikingblogrest.dto;
+
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class LatLng {
 
     private double lat;
     private double lng;
 
-    public LatLng(double lat, double lng) {
+    @JsonCreator
+    public LatLng(@JsonProperty("lat") double lat, @JsonProperty("lng") double lng) {
         this.lat = lat;
         this.lng = lng;
     }
