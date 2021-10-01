@@ -1,15 +1,17 @@
 package com.florence.hikingblogrest.route;
 
 import com.florence.hikingblogrest.proxy.CloudStorageProxy;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jdom2.*;
 import org.jdom2.input.SAXBuilder;
+import org.springframework.lang.Nullable;
 
 import javax.xml.XMLConstants;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -18,23 +20,42 @@ public class RoutesService {
     private static final Logger LOGGER = LogManager.getLogger(RoutesService.class);
 
     CloudStorageProxy cloudStorageProxy;
-    private static final Routes routes = new Routes();
+    String localFolderOverride;
 
-    public RoutesService(CloudStorageProxy cloudStorageProxy) {
+    public RoutesService(CloudStorageProxy cloudStorageProxy, @Nullable String localFolderOverride) {
         this.cloudStorageProxy = cloudStorageProxy;
+        this.localFolderOverride = localFolderOverride;
     }
 
-    public void fetchRoutes() {
-        routes.clearRoutes();
-        Map<String, InputStream> routeFiles = cloudStorageProxy.getAllGpxRoutes();
+    public Routes getRoutes() throws FileNotFoundException {
+        Map<String, InputStream> routeFiles = fetchRoutesFiles(localFolderOverride);
+        Routes routes = new Routes();
         for (Map.Entry<String, InputStream> routeFile : routeFiles.entrySet()) {
             routes.addRoute(new Route(routeFile.getKey(), loadGpxData(routeFile.getValue())));
             LOGGER.info("Loaded {}", routeFile.getKey());
         }
+        return routes;
     }
 
-    public Routes getRoutes() {
-        return routes;
+    private Map<String, InputStream> fetchRoutesFiles(@Nullable String localFolderOverride) throws FileNotFoundException {
+        if (localFolderOverride == null) {
+            LOGGER.info("Local folder override is null. Getting routes from cloud storage.");
+            return cloudStorageProxy.getAllGpxRoutes();
+        } else {
+            LOGGER.info("Local folder override is {}. Fetching route files.", localFolderOverride);
+            Map<String, InputStream> routeFiles = new HashMap<>();
+            File folder = new File(localFolderOverride);
+            File[] files = folder.listFiles();
+            if (files != null) {
+                for (File file : files) {
+                    if (file.isFile()) {
+                        routeFiles.put(FilenameUtils.getBaseName(file.getName()), new FileInputStream(file));
+                        LOGGER.info("Loaded route file {}", file.getName());
+                    }
+                }
+            }
+            return routeFiles;
+        }
     }
 
     private static List<LatLng> loadGpxData(InputStream gpxFile) {

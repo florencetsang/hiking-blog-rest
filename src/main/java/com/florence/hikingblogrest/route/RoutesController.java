@@ -4,6 +4,8 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.FileNotFoundException;
+
 @RestController
 public class RoutesController {
 
@@ -14,9 +16,8 @@ public class RoutesController {
     }
 
     @GetMapping("/get-routes")
-    @CrossOrigin(origins = "http://localhost:3000")
-    public Routes getRoutes() {
-        routesService.fetchRoutes();
+    @CrossOrigin(origins = {"http://localhost:3000", "http://localhost:5000"})
+    public Routes getRoutes() throws FileNotFoundException {
         return routesService.getRoutes();
     }
 }
