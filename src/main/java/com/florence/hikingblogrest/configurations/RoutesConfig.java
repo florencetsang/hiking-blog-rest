@@ -17,12 +17,14 @@ public class RoutesConfig {
     }
 
     @Bean
-    public DatabaseDAO databaseDAO(){
-        return new DatabaseDAO();
+    public DatabaseDAO databaseDAO(@Value("${spring.datasource.url}") String url,
+                                   @Value("${spring.datasource.username}") String username,
+                                   @Value("${spring.datasource.password}") String password) {
+        return new DatabaseDAO(url, username, password);
     }
 
     @Bean
-    public RoutesService routesService(CloudStorageProxy cloudStorageProxy, @Value("${profileLocation}") String localFolderOverride, DatabaseDAO databaseDAO) {
+    public RoutesService routesService(CloudStorageProxy cloudStorageProxy, @Value("${profileLocation:#{null}}") String localFolderOverride, DatabaseDAO databaseDAO) {
         return new RoutesService(cloudStorageProxy, localFolderOverride, databaseDAO);
     }
 

@@ -24,9 +24,9 @@ public class RoutesService {
 
     private static final Logger LOGGER = LogManager.getLogger(RoutesService.class);
 
-    CloudStorageProxy cloudStorageProxy;
-    String localFolderOverride;
-    DatabaseDAO databaseDAO;
+    private final CloudStorageProxy cloudStorageProxy;
+    private final String localFolderOverride;
+    private final DatabaseDAO databaseDAO;
 
     public RoutesService(CloudStorageProxy cloudStorageProxy, @Nullable String localFolderOverride, DatabaseDAO databaseDAO) {
         this.cloudStorageProxy = cloudStorageProxy;
@@ -74,7 +74,7 @@ public class RoutesService {
         String name = request.getParameter("name");
         String description = request.getParameter("description");
         Part filePart = request.getPart("file");
-        String fileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString();
+        final String fileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString();
 
         LOGGER.info("Create post endpoint received {}. Name: {}, File: {}, Description: {}", request, name, fileName, description);
 
