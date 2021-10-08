@@ -17,7 +17,9 @@ public class RoutesConfig {
     }
 
     @Bean
-    public DatabaseDAO databaseDAO(@Value("{spring.datasource.url}") String url, @Value("{spring.datasource.username}") String username, @Value("{spring.datasource.password}") String password) {
+    public DatabaseDAO databaseDAO(@Value("${spring.datasource.url}") String url,
+                                   @Value("${spring.datasource.username}") String username,
+                                   @Value("${spring.datasource.password}") String password) {
         return new DatabaseDAO(url, username, password);
     }
 
