@@ -1,0 +1,38 @@
+{
+  "name": "hiking-map",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@material-ui/core": "^4.11.2",
+    "@material-ui/icons": "^4.11.2",
+    "@react-google-maps/api": "^2.0.2",
+    "axios": "^0.21.0",
+    "bootstrap": "^4.5.3",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
+    "react-konva": "^16.13.0-6",
+    "react-scripts": "^4.0.3",
+    "yarn": "^1.22.10"
+  },
+  "devDependencies": {
+    "uglifyjs-webpack-plugin": "^2.2.0"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}
