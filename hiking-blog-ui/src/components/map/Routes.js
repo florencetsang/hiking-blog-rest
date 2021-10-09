@@ -1,15 +1,15 @@
 import React, { useState } from 'react';
 import Route from './Route';
 import ControlPanel from './ControlPanel';
+import * as mapStyle from './MapStyle';
 
-const SOLID = "solid";
 export default function Routes(props) {
 
     const [activeKey, setActiveKey] = useState(null);
     const [strokeColor, setStrokeColor] = useState('#0000FF');
     const [strokeWeight, setStrokeWeight] = useState(4);
     const [strokeOpacity, setStrokeOpacity] = useState(0.7);
-    const [strokeStyle, setStrokeStyle] = useState(SOLID);
+    const [strokeStyle, setStrokeStyle] = useState(mapStyle.SOLID);
 
     console.log(`Dashed stroke in Routes is ${strokeStyle}`);
     console.log(`Number to routes to render: ${props.routes.length}`);

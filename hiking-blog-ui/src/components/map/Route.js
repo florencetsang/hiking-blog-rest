@@ -1,7 +1,6 @@
 import React, { useState, useCallback } from 'react';
 import { Polyline, InfoWindow } from '@react-google-maps/api';
-
-const DASHED = "dashed";
+import * as mapStyle from './MapStyle';
 
 /**
  * @param {{ setActiveKey: (arg0: any) => void; label: {}; isActive: any; strokeOpacity: any; pathCoordinates: any; strokeColor: any; strokeWeight: any; strokeStyle: any; }} props
@@ -38,7 +37,7 @@ export default function Route(props) {
     };
 
     const icons = [
-        strokeStyle == DASHED ?
+        strokeStyle == mapStyle.DASHED ?
             {
                 icon: lineSymbol,
                 offset: "0",
@@ -54,7 +53,7 @@ export default function Route(props) {
                 options={{
                     strokeColor: strokeColor,
                     strokeWeight: strokeWeight,
-                    strokeOpacity: strokeStyle == DASHED ? 0 : strokeOpacity,
+                    strokeOpacity: strokeStyle == mapStyle.DASHED ? 0 : strokeOpacity,
                     icons: icons
                 }}
                 onClick={handleToogleOpen}

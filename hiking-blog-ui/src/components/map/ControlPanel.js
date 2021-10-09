@@ -12,9 +12,7 @@ import Radio from '@material-ui/core/Radio';
 import IconButton from '@material-ui/core/IconButton';
 import TuneIcon from '@material-ui/icons/Tune';
 import Box from '@material-ui/core/Box';
-
-const DASHED = "dashed";
-const SOLID = "solid";
+import * as mapStyle from './MapStyle';
 
 export default function ControlPanel(props) {
 
@@ -103,8 +101,8 @@ export default function ControlPanel(props) {
                         <br />
                         <FormLabel>Line Style</FormLabel>
                         <RadioGroup aria-label="stroke-style" name="stroke-style" value={strokeStyle} onChange={handleStrokeStyleChange} >
-                            <FormControlLabel value={DASHED} control={<Radio />} label="Dashed Line" />
-                            <FormControlLabel value={SOLID} control={<Radio />} label="Solid Line" />
+                            <FormControlLabel value={mapStyle.DASHED} control={<Radio />} label="Dashed Line" />
+                            <FormControlLabel value={mapStyle.SOLID} control={<Radio />} label="Solid Line" />
                         </RadioGroup>
                     </form>
                 </DialogContent>
