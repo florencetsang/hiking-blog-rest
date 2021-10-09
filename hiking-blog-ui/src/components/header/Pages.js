@@ -6,21 +6,27 @@ import HikingMap from './../map/HikingMap';
 export default class Pages extends Component {
 
     render() {
-        return (
 
+        const {activeTab} = this.props;
+
+        let page;
+        switch (activeTab) {
+            case "map":
+                page = <HikingMap/>;
+                break;
+            case "routes":
+                page = <Posts />;
+                break;
+            case "form-material":
+                page = <NewPost />;
+                break;
+            default:
+                page = <HikingMap/> 
+        }
+
+        return (
             <div>
-                {
-                    this.props.activeTab === "map" &&
-                    <HikingMap/>
-                }
-                {
-                    this.props.activeTab === "routes" &&
-                    <Posts />                
-                }
-                {
-                    this.props.activeTab === "form-material" &&                    
-                    <NewPost />
-                }
+                {page}
             </div>
         )
     }

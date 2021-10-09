@@ -4,17 +4,24 @@ import { GoogleMap, LoadScript } from '@react-google-maps/api'
 import ReactDOM from 'react-dom';
 import ControlPanel from './ControlPanel'
 
-const zoom = 11;
+const ZOOM = 11;
 
-const center = {
+const CENTER = {
     lat: 22.302711,
     lng: 114.177216
 };
 
-const containerStyle = {
+const CONTAINER_STYLE = {
     width: '100%',
     height: 'calc(100vh - 48px)'
 };
+
+const GOOGLE_MAP_OPTIONS = {
+    streetViewControl: false,
+    gestureHandling: "greedy",
+    mapTypeId: "terrain",
+    mapTypeControlOptions: { position: 3 },
+}
 
 export default function HikingMap() {
 
@@ -22,20 +29,17 @@ export default function HikingMap() {
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
-        let isMounted = true;
-        fetch('http://localhost:8080/get-routes')
+        fetch('/get-routes')
             .then(response => response.json())
             .then(data => {
-                if (isMounted) {
-                    setRoutes(data.routes);
-                    setIsLoading(false);
-                    console.log(`Number of routes fetched: ${data.routes.length}`);
-                    data.routes.map(route => console.log(`Fetched ${route.key}`))
-                }
+                setRoutes(data.routes);
+                setIsLoading(false);
+                console.log(`Number of routes fetched: ${data.routes.length}`);
+                data.routes.map(route => console.log(`Fetched ${route.key}`))                
+            })
+            .catch((err) => {
+                consolo.log(err);
             });
-        return () => {
-            isMounted = false;
-        };
     }, []);
 
     // const [strokeColor, setStrokeColor] = useState('#0000FF');
@@ -75,27 +79,17 @@ export default function HikingMap() {
 
     return (
         <LoadScript
-            googleMapsApiKey="AIzaSyDAkQIEvrwQHfvmPLuTjGo9hzO0HDVgAJc"
+            googleMapsApiKey={process.env.REACT_APP_GOOGLE_MAPS_API_KEY}
         >
             <GoogleMap
-                mapContainerStyle={containerStyle}
-                zoom={zoom}
-                center={center}
+                mapContainerStyle={CONTAINER_STYLE}
+                zoom={ZOOM}
+                center={CENTER}
                 clickableIcons={false}
-                options={{
-                    streetViewControl: false,
-                    gestureHandling: "greedy",
-                    mapTypeId: "terrain",
-                    mapTypeControlOptions: { position: 3 },
-                }}
+                options={GOOGLE_MAP_OPTIONS}
             // onLoad={map => handleOnLoad(map)}
             >
-                <Routes routes={routes}
-                // strokeColor={strokeColor}
-                // strokeWeight={strokeWeight}
-                // strokeOpacity={strokeOpacity}
-                // dottedStroke={dottedStroke}
-                ></Routes>
+                <Routes routes={routes} />
                 {/* <ControlPanelElement /> */}
             </GoogleMap>
 

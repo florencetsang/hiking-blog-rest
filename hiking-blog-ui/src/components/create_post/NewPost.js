@@ -42,11 +42,14 @@ export default function NewPost() {
     fd.append("description", description);
 
     axios
-      .post('http://localhost:8080/create-post', fd)
+      .post('/create-post', fd)
       .then((res) => {
         alert("File Upload success");
       })
-      .catch((err) => alert("File Upload Error"));
+      .catch((err) => {
+        alert("File Upload Error");
+        consolo.log(error);
+      });
   }
 
   return (
@@ -56,7 +59,6 @@ export default function NewPost() {
           <h2>New Route</h2>          
           <UploadFile message="Upload gpx file" updateFile={updateFile} currentFile={currentFile} />
           <TextField
-            id="outlined-margin-normal"
             label="Name"
             style={{ margin: 8 }}
             fullWidth
@@ -69,7 +71,6 @@ export default function NewPost() {
             inputProps={{ maxLength: 12 }}
           />
           <TextField
-            id="outlined-margin-normal"
             label="Description"
             style={{ margin: 8 }}
             fullWidth
@@ -82,7 +83,7 @@ export default function NewPost() {
             variant="outlined"
             onChange={updateDescription}
           />
-          <Button variant="contained" color="primary" type="submit" > Post</Button>
+          <Button variant="contained" color="primary" type="submit" >Post</Button>
         </form>
       </Box>
     </Container>

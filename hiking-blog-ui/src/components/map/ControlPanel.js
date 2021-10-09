@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
@@ -11,38 +11,43 @@ import FormLabel from '@material-ui/core/FormLabel';
 import Radio from '@material-ui/core/Radio';
 import IconButton from '@material-ui/core/IconButton';
 import TuneIcon from '@material-ui/icons/Tune';
+import Box from '@material-ui/core/Box';
+
+const DASHED = "dashed";
+const SOLID = "solid";
 
 export default function ControlPanel(props) {
 
     const [open, setOpen] = useState(false);
 
-    const handleStrokeWeightChange = (event) => {
+    const {strokeWeight, setStrokeWeight, strokeColor, setStrokeColor, strokeOpacity, setStrokeOpacity, strokeStyle, setStrokeStyle} = props;
+
+    const handleStrokeWeightChange = useCallback((event) => {
         console.log(`Setting stroke weight to ${event.target.value}`);
-        props.setStrokeWeight(event.target.value);
-    }
+        setStrokeWeight(event.target.value);
+    }, [setStrokeWeight]);
 
-    const handleStrokeColorChange = (event) => {
-        props.setStrokeColor(event.target.value);
-    }
+    const handleStrokeColorChange = useCallback((event) => {
+        setStrokeColor(event.target.value);
+    }, [setStrokeColor]);
 
-    const handleStrokeOpacityChange = (event) => {
-        props.setStrokeOpacity(event.target.value);
-    }
+    const handleStrokeOpacityChange = useCallback((event) => {
+        setStrokeOpacity(event.target.value);
+    }, [setStrokeOpacity]);
 
-    const handleDottedStrokeChange = (event) => {
-        console.log(`Setting dotted stroke value to ${event.target.value}`);
-        props.setDottedStroke(eval(event.target.value));
-    }
+    const handleStrokeStyleChange = useCallback((event) => {
+        setStrokeStyle(event.target.value);
+    }, [setStrokeStyle]);
 
-    const handleClickOpen = () => {
+    const handleClickOpen = useCallback(() => {
         setOpen(true);
-    };
+    }, [setOpen]);
 
-    const handleClose = () => {
+    const handleClose = useCallback(() => {
         setOpen(false);
-    };
+    }, [setOpen]);
 
-    console.log(`Stroke weight is now ${props.strokeWeight}`);
+    console.log(`Stroke weight is now ${strokeWeight}`);
 
     return (
 
@@ -57,42 +62,49 @@ export default function ControlPanel(props) {
                     <form >
                         <FormLabel>Stroke Weight</FormLabel>
                         <br />
-                        <TextField
-                            value={props.strokeWeight}
-                            onChange={handleStrokeWeightChange}
-                            // label="Stroke Weight"
-                            type="number"
-                            InputLabelProps={{
-                                shrink: true,
-                            }}
-                        />
-                        <br /><br />
+                        <Box mb={1}>
+                            <TextField
+                                mb={3}
+                                value={strokeWeight}
+                                onChange={handleStrokeWeightChange}
+                                // label="Stroke Weight"
+                                type="number"
+                                InputLabelProps={{
+                                    shrink: true,
+                                }}
+                            />
+                        </Box>
+                        <br />
                         <FormLabel>Stroke Color</FormLabel>
                         <br />
-                        <TextField
-                            value={props.strokeColor}
-                            onChange={handleStrokeColorChange}
-                            // label="Stroke Color"
-                            InputLabelProps={{
-                                shrink: true,
-                            }}
-                        />
-                        <br /><br />
+                        <Box mb={1}>
+                            <TextField
+                                value={strokeColor}
+                                onChange={handleStrokeColorChange}
+                                // label="Stroke Color"
+                                InputLabelProps={{
+                                    shrink: true,
+                                }}
+                            />
+                        </Box>
+                        <br />
                         <FormLabel>Stroke Opacity</FormLabel>
                         <br />
-                        <TextField
-                            defaultValue={props.strokeOpacity}
-                            onChange={handleStrokeOpacityChange}
-                            // label="Stroke Opacity"
-                            InputLabelProps={{
-                                shrink: true,
-                            }}
-                        />
-                        <br /><br />
+                        <Box mb={1}>
+                            <TextField
+                                defaultValue={strokeOpacity}
+                                onChange={handleStrokeOpacityChange}
+                                // label="Stroke Opacity"
+                                InputLabelProps={{
+                                    shrink: true,
+                                }}
+                            />
+                        </Box>
+                        <br />
                         <FormLabel>Line Style</FormLabel>
-                        <RadioGroup aria-label="stroke-style" name="stroke-style" value={props.dottedStroke.toString()} onChange={handleDottedStrokeChange}>
-                            <FormControlLabel value="true" control={<Radio />} label="Dashed Line" />
-                            <FormControlLabel value="false" control={<Radio />} label="Solid Line" />
+                        <RadioGroup aria-label="stroke-style" name="stroke-style" value={strokeStyle} onChange={handleStrokeStyleChange} >
+                            <FormControlLabel value={DASHED} control={<Radio />} label="Dashed Line" />
+                            <FormControlLabel value={SOLID} control={<Radio />} label="Solid Line" />
                         </RadioGroup>
                     </form>
                 </DialogContent>

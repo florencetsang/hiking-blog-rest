@@ -18,7 +18,7 @@ export default function Posts() {
 
     const loadRoutes = () => {
         setIsLoading(true);
-        fetch('http://localhost:8080/get-activities')
+        fetch('/get-activities')
             .then(response => response.json())
             .then(data => {
                 setActivities(data);

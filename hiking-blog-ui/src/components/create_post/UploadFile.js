@@ -1,31 +1,40 @@
 import React from 'react';
+import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 
-export default function UploadFile(props) {    
+const useStyles = makeStyles((theme) => ({
+    root: {
+      display: 'none',
+    }
+  }));
+
+export default function UploadFile(props) {
+
+    const classes = useStyles();
+
+    const {currentFile = null, updateFile} = props;    
 
     const selectFile = (event) => {
-        console.log(`Selected file ${event.target.files[0].name}`);
-        props.updateFile(event.target.files[0]);
+        if (event.target.files.length) {
+            console.log(`Selected file ${event.target.files[0].name}`);
+            updateFile(event.target.files[0]);
+        } else { 
+            console.log("No file selected!");
+        }
     };
 
     return (
         <div>
-            {/* <p>{props.message}</p> */}
-            <input
-                style={{ display: 'none' }}
-                id="raised-button-file"
-                type="file"
-                onChange={selectFile}
-            />
-            <div>
-                <label htmlFor="raised-button-file">
-                    <Button variant="contained" color="default" component="span" startIcon={<CloudUploadIcon />}>
-                        Upload GPX File
-                    </Button>
-                    <span>  {props.currentFile ? props.currentFile.name : "No file selected."}</span>
-                </label>
-            </div>
+            <Button variant="contained" color="default" component="label" startIcon={<CloudUploadIcon />}>
+                Upload GPX File
+                <input
+                    className={classes.root}
+                    type="file"
+                    onChange={selectFile}
+                />
+            </Button>
+            <span>  {currentFile ? currentFile.name : "No file selected."}</span>
         </div>
     );
 };

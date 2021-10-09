@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useCallback } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
@@ -13,12 +13,12 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Navigation(props) {
     const classes = useStyles();
-    const [value, setValue] = React.useState("map");
+    const [value, setValue] = useState("map");
 
-    const handleChange = (event, newValue) => {
+    const handleChange = useCallback((event, newValue) => {
         setValue(newValue);
         props.setActiveTab(newValue);
-    };
+    }, [setValue, props.setActiveTab]);
 
     return (
         <div className={classes.root}>

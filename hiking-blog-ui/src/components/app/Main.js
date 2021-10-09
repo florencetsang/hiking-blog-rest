@@ -13,7 +13,7 @@ export default class Main extends Component {
         this.setState({
             activeTab: activeTab
         });
-        console.log(`Setting active page to ${this.state.activeTab}`);
+        console.log(`Setting active page to ${activeTab}`);
     };
 
     render() {
