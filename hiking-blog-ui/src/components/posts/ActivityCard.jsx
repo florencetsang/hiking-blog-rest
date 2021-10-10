@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardActionArea from '@material-ui/core/CardActionArea';
@@ -20,31 +20,34 @@ const useStyles = makeStyles({
     },
 });
 
-const axios = require('axios').default;
+const axios = require('axios');
 
 export default function ActivityCard(props) {
     const classes = useStyles();
     const selectedCoordinates = props.pathCoordinates.filter((element, index) => {
         return index % 5 === 0;
     });
-    const pathCoordinatesString = selectedCoordinates.map(coordinate => coordinate.lat + ',' + coordinate.lng).join('|');
-    const maxLat = Math.max.apply(null, selectedCoordinates.map(coordinate => coordinate.lat));
-    const minLat = Math.min.apply(null, selectedCoordinates.map(coordinate => coordinate.lat));
-    const maxLng = Math.max.apply(null, selectedCoordinates.map(coordinate => coordinate.lng));
-    const minLng = Math.min.apply(null, selectedCoordinates.map(coordinate => coordinate.lng));
+    const pathCoordinatesString = selectedCoordinates.map(coordinate => `${coordinate.lat},${coordinate.lng}`).join('|');
+    const maxLat = Math.max(...selectedCoordinates.map(coordinate => coordinate.lat));
+    const minLat = Math.min(...selectedCoordinates.map(coordinate => coordinate.lat));
+    const maxLng = Math.max(...selectedCoordinates.map(coordinate => coordinate.lng));
+    const minLng = Math.min(...selectedCoordinates.map(coordinate => coordinate.lng));
     const centerLat = (maxLat + minLat) / 2;
     const centerLng = (maxLng + minLng) / 2;
-    const staticMapString = `https://maps.googleapis.com/maps/api/staticmap?center=${centerLat},${centerLng}&zoom=11&size=400x400&maptype=terrain&path=color:0x0000ff80|weight:5|${pathCoordinatesString}&key=AIzaSyDAkQIEvrwQHfvmPLuTjGo9hzO0HDVgAJc`
+    const staticMapString = `https://maps.googleapis.com/maps/api/staticmap?center=${centerLat},${centerLng}&zoom=11&size=400x400&maptype=terrain&path=color:0x0000ff80|weight:5|${pathCoordinatesString}&key=${process.env.REACT_APP_GOOGLE_MAPS_API_KEY}`
 
-    const handleDelete = () => {
+    const handleDelete = useCallback(() => {
         console.log(`Deleting ${props.title} with key ${props.id}.`);
         axios
-            .post(`http://localhost:8080/delete-post/?id=${props.id}`)
+            .post(`/delete-post?id=${props.id}`)
             .then((res) => {
                 alert("Delete success");
             })
-            .catch((err) => alert("Delete Error"));
-    }
+            .catch((err) => {
+                alert("Delete Error");
+                console.log(err);
+            });
+    }, []);
 
     return (
         <Card className={classes.root}>

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import Route from './Route';
 import ControlPanel from './ControlPanel';
+import * as mapStyle from './MapStyle';
 
 export default function Routes(props) {
 
@@ -8,9 +9,9 @@ export default function Routes(props) {
     const [strokeColor, setStrokeColor] = useState('#0000FF');
     const [strokeWeight, setStrokeWeight] = useState(4);
     const [strokeOpacity, setStrokeOpacity] = useState(0.7);
-    const [dottedStroke, setDottedStroke] = useState(false);
+    const [strokeStyle, setStrokeStyle] = useState(mapStyle.SOLID);
 
-    console.log(`Dotted stroke in Routes is ${dottedStroke}`);
+    console.log(`Dashed stroke in Routes is ${strokeStyle}`);
     console.log(`Number to routes to render: ${props.routes.length}`);
 
     return (
@@ -19,16 +20,15 @@ export default function Routes(props) {
                 setStrokeColor={setStrokeColor}
                 setStrokeWeight={setStrokeWeight}
                 setStrokeOpacity={setStrokeOpacity}
-                setDottedStroke={setDottedStroke}
+                setStrokeStyle={setStrokeStyle}
                 strokeColor={strokeColor}
                 strokeWeight={strokeWeight}
                 strokeOpacity={strokeOpacity}
-                dottedStroke={dottedStroke}
+                strokeStyle={strokeStyle}
                 position={window.google.maps.ControlPosition.TOP_CENTER}
+            />
 
-            ></ControlPanel>
-
-            {props.routes.map(route => <Route
+            {props.routes && props.routes.map(route => <Route
                 key={route.key}
                 label={route.key}
                 setActiveKey={setActiveKey}
@@ -37,8 +37,7 @@ export default function Routes(props) {
                 strokeColor={strokeColor}
                 strokeWeight={strokeWeight}
                 strokeOpacity={strokeOpacity}
-                dottedStroke={dottedStroke}></Route>)}
+                strokeStyle={strokeStyle} />)}
         </div>
     );
-
 };

@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { Polyline, InfoWindow } from '@react-google-maps/api';
+import * as mapStyle from './MapStyle';
 
 /**
- * @param {{ setActiveKey: (arg0: any) => void; label: {}; isActive: any; strokeOpacity: any; pathCoordinates: any; strokeColor: any; strokeWeight: any; dottedStroke: any; }} props
+ * @param {{ setActiveKey: (arg0: any) => void; label: {}; isActive: any; strokeOpacity: any; pathCoordinates: any; strokeColor: any; strokeWeight: any; strokeStyle: any; }} props
  */
 export default function Route(props) {
 
@@ -11,51 +12,55 @@ export default function Route(props) {
         lng: 114.177216
     });
 
-    const handleToggleOpen = (position) => {
+    const {setActiveKey, isActive, strokeOpacity, pathCoordinates, strokeColor, strokeWeight, strokeStyle} = props;
 
-        props.setActiveKey(props.label);
+    const handleToogleOpen = useCallback((event) => {
+        const position = event.latLng;
+        setActiveKey(props.label);
         console.log("Setting active key to " + props.label);
         setInfoWindowPosition({
             lat: position.lat(),
             lng: position.lng()
         });
-        console.log(`Info box for Route ${props.label} is opened. Lat: ${position.lat()} Lng: ${position.lng()}. Is active: ${props.isActive}`);
-    }
+        console.log(`Info box for Route ${props.label} is opened. Lat: ${position.lat()} Lng: ${position.lng()}. Is active: ${isActive}`);
+    }, [setActiveKey, setInfoWindowPosition]);
 
-    const handleToggleClose = () => {
-        props.setActiveKey(null);
+    const handleToggleClose = useCallback(() => {
+        setActiveKey(null);
         console.log(`Info box for Route ${props.label} is closed.`);
-    }
+    }, [setActiveKey]);
 
     const lineSymbol = {
         path: "M 0,-1 0,1",
-        strokeOpacity: props.strokeOpacity,
+        strokeOpacity: strokeOpacity,
         scale: 4,
     };
+
+    const icons = [
+        strokeStyle == mapStyle.DASHED ?
+            {
+                icon: lineSymbol,
+                offset: "0",
+                repeat: "20px",
+            }
+            : {}
+    ];
 
     return (
         <div>
             <Polyline
-                path={props.pathCoordinates}
+                path={pathCoordinates}
                 options={{
-                    strokeColor: props.strokeColor,
-                    strokeWeight: props.strokeWeight,
-                    strokeOpacity: props.dottedStroke ? 0 : props.strokeOpacity,
-                    icons: [
-                        props.dottedStroke ?
-                            {
-                                icon: lineSymbol,
-                                offset: "0",
-                                repeat: "20px",
-                            }
-                            : {}
-                    ]
+                    strokeColor: strokeColor,
+                    strokeWeight: strokeWeight,
+                    strokeOpacity: strokeStyle == mapStyle.DASHED ? 0 : strokeOpacity,
+                    icons: icons
                 }}
-                onClick={(event) => handleToggleOpen(event.latLng)}
+                onClick={handleToogleOpen}
             >
             </Polyline>
             {
-                props.isActive &&
+                isActive &&
                 <InfoWindow
                     onCloseClick={handleToggleClose}
                     position={infoWindowPosition}
