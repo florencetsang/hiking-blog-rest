@@ -15,7 +15,7 @@ import java.util.List;
 public class DatabaseDAO {
 
     private static final String SQL_SELECT_ALL_POSTS = "SELECT * FROM hiking_routes";
-    private static final String SQL_INSERT_POST = "INSERT INTO HBA.HIKING_ROUTES (NAME, DESCRIPTION, PATH_COORDINATES, UID) VALUES (?,?,?,?)";
+    private static final String SQL_INSERT_POST = "INSERT INTO HBA.HIKING_ROUTES (NAME, DESCRIPTION, PATH_COORDINATES, USER_ID) VALUES (?,?,?,?)";
     private static final String SQL_DELETE_POST = "DELETE FROM HBA.HIKING_ROUTES WHERE ID=?";
     private static final String CONNECTION_CREATION_LOG = "Created connection: {}";
     private static final Logger LOGGER = LogManager.getLogger(DatabaseDAO.class);

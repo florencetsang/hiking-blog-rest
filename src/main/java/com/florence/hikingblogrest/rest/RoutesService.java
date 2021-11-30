@@ -78,11 +78,12 @@ public class RoutesService {
         String description = request.getParameter("description");
         Part filePart = request.getPart("file");
         String idToken = request.getParameter("token");
+        final String fileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString();
+        LOGGER.info("Create post endpoint received {}. Name: {}, File: {}, Token:{}, Description: {}", request, name, fileName, idToken, description);
+
         FirebaseToken decodedToken = FirebaseAuth.getInstance().verifyIdToken(idToken);
         String uid = decodedToken.getUid();
-        final String fileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString();
-
-        LOGGER.info("Create post endpoint received {}. Name: {}, File: {}, Description: {}", request, name, fileName, description);
+        LOGGER.info("Decoded idToken [{}] to uid [{}]", idToken, uid);
 
         InputStream fileContent = filePart.getInputStream();
         List<LatLng> pathCoordinates = RoutesHelper.loadGpxData(fileContent);

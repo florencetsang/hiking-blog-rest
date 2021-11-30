@@ -24,7 +24,6 @@ export default function NewPost() {
   const [name, setName] = useState("New Trail Record");
   const [description, setDescription] = useState("Descrtipion.");
   const auth = getAuth();
-  const [token, setToken] = useState(null);
 
   const updateFile = (file) => {
     setCurrentFile(file);
@@ -38,22 +37,30 @@ export default function NewPost() {
     setDescription(event.target.value);
   }
 
-  const handleSubmit = (e) => {
+  const getAuthToken = async () => {
+    try {
+        return await auth.currentUser?.getIdToken(true);
+    } catch (e) {
+        console.log(e);
+        return null;
+    }
+  }
 
-    auth.currentUser?.getIdToken(false).then(function(idToken){
-      setToken(idToken);
-      console.log(`Token: ${idToken}`);
-    }).catch((err)=>{
-      console.log(error);
-    })
-
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(`NewPost Form is submitted. File: [${currentFile.name}]. Name: [${name}]. Token: [${token}]. Description: [${description}].`);
+
+    const authToken = await getAuthToken();
+    if (!authToken) {
+        console.log('auth token is null');
+        return;
+    }
+
+    console.log(`NewPost Form is submitted. File: [${currentFile.name}]. Name: [${name}]. Token: [${authToken}]. Description: [${description}].`);
     const fd = new FormData();
     fd.append("file", currentFile);
     fd.append("name", name);
     fd.append("description", description);
-    fd.append("token", token)
+    fd.append("token", authToken)
 
     axios
       .post('/create-post', fd)
