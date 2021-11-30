@@ -38,7 +38,7 @@ export default function HikingMap() {
                 data.routes.map(route => console.log(`Fetched ${route.key}`))                
             })
             .catch((err) => {
-                consolo.log(err);
+                console.log(err);
             });
     }, []);
 

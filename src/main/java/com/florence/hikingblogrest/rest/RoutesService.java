@@ -5,6 +5,9 @@ import com.florence.hikingblogrest.dto.*;
 import com.florence.hikingblogrest.helper.RoutesHelper;
 import com.florence.hikingblogrest.proxy.CloudStorageProxy;
 import com.florence.hikingblogrest.proxy.DatabaseDAO;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthException;
+import com.google.firebase.auth.FirebaseToken;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -69,11 +72,14 @@ public class RoutesService {
         }
     }
 
-    public void createPost(HttpServletRequest request) throws IOException, ServletException, SQLException {
+    public void createPost(HttpServletRequest request) throws IOException, ServletException, SQLException, FirebaseAuthException {
 
         String name = request.getParameter("name");
         String description = request.getParameter("description");
         Part filePart = request.getPart("file");
+        String idToken = request.getParameter("token");
+        FirebaseToken decodedToken = FirebaseAuth.getInstance().verifyIdToken(idToken);
+        String uid = decodedToken.getUid();
         final String fileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString();
 
         LOGGER.info("Create post endpoint received {}. Name: {}, File: {}, Description: {}", request, name, fileName, description);
@@ -82,7 +88,7 @@ public class RoutesService {
         List<LatLng> pathCoordinates = RoutesHelper.loadGpxData(fileContent);
 
         ObjectMapper objectMapper = new ObjectMapper();
-        databaseDAO.insertPost(name, description, objectMapper.writeValueAsString(pathCoordinates));
+        databaseDAO.insertPost(name, description, objectMapper.writeValueAsString(pathCoordinates), uid);
     }
 
     public void deletePost (int id) throws SQLException {
