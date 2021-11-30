@@ -26,22 +26,23 @@ public class CloudStorageProxy {
     private static final String BUCKET_ID = "hiking-blog-app.appspot.com";
 
     public CloudStorageProxy() {
-        initializeFirebase();
+//        initializeFirebase();
     }
 
-    private void initializeFirebase() {
-        try {
-            FirebaseOptions options = FirebaseOptions.builder()
-                    .setCredentials(GoogleCredentials.getApplicationDefault())
-                    .setDatabaseUrl(DATABASE_URL)
-                    .build();
-
-            FirebaseApp.initializeApp(options);
-        } catch (IOException e) {
-            LOGGER.error("ERROR: invalid service account credentials.");
-            LOGGER.error(e.getMessage());
-        }
-    }
+//    private void initializeFirebase() {
+//        try {
+//            FirebaseOptions options = FirebaseOptions.builder()
+//                    .setCredentials(GoogleCredentials.getApplicationDefault())
+//                    .setDatabaseUrl(DATABASE_URL)
+//                    .build();
+//
+//            FirebaseApp.initializeApp(options);
+//            LOGGER.info("Initialized Firebase App");
+//        } catch (IOException e) {
+//            LOGGER.error("ERROR: invalid service account credentials.");
+//            LOGGER.error(e.getMessage());
+//        }
+//    }
 
     public Map<String, InputStream> getAllGpxRoutes() {
 
