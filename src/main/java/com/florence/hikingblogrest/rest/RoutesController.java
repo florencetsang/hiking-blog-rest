@@ -2,6 +2,7 @@ package com.florence.hikingblogrest.rest;
 
 import com.florence.hikingblogrest.dto.Activity;
 import com.florence.hikingblogrest.dto.Routes;
+import com.google.firebase.auth.FirebaseAuthException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.http.HttpStatus;
@@ -31,8 +32,8 @@ public class RoutesController {
     }
 
     @GetMapping("/get-activities")
-    public List<Activity> getActivities() {
-        return routesService.getActivities();
+    public List<Activity> getActivities(@RequestParam String authToken) throws FirebaseAuthException {
+        return routesService.getActivities(authToken);
     }
 
     @PostMapping(value = "/create-post", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)

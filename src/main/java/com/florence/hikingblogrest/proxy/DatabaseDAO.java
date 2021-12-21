@@ -14,7 +14,7 @@ import java.util.List;
 
 public class DatabaseDAO {
 
-    private static final String SQL_SELECT_ALL_POSTS = "SELECT * FROM hiking_routes";
+    private static final String SQL_SELECT_ALL_POSTS = "SELECT * FROM hiking_routes WHERE USER_ID=?";
     private static final String SQL_INSERT_POST = "INSERT INTO HBA.HIKING_ROUTES (NAME, DESCRIPTION, PATH_COORDINATES, USER_ID) VALUES (?,?,?,?)";
     private static final String SQL_DELETE_POST = "DELETE FROM HBA.HIKING_ROUTES WHERE ID=?";
     private static final String CONNECTION_CREATION_LOG = "Created connection: {}";
@@ -30,14 +30,14 @@ public class DatabaseDAO {
         this.password = password;
     }
 
-    public List<Activity> getPosts() {
+    public List<Activity> getPosts(String uid) {
 
         ObjectMapper mapper = new ObjectMapper();
         List<Activity> activities = new ArrayList<>();
         try (Connection conn = DriverManager.getConnection(url, username, password);
              PreparedStatement ps = conn.prepareStatement(SQL_SELECT_ALL_POSTS)) {
             LOGGER.info(CONNECTION_CREATION_LOG, conn);
-
+            ps.setString(1, uid);
             ResultSet rs = ps.executeQuery();
 
             while (rs.next()) {
@@ -46,7 +46,7 @@ public class DatabaseDAO {
                 String description = rs.getString("DESCRIPTION");
                 String route = rs.getString("PATH_COORDINATES");
 
-                LOGGER.info("Id: {}, name: {}, description: {}, route: {}", id, name, description, route);
+                LOGGER.info("Fetch post of user id: {}, id: {}, name: {}, description: {}, route: {}", uid, id, name, description, route);
                 List<LatLng> pathCoordinates = Arrays.asList(mapper.readValue(route, LatLng[].class));
                 activities.add(new Activity(id, name, description, pathCoordinates));
             }

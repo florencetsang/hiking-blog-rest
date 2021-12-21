@@ -47,8 +47,9 @@ public class RoutesService {
         return routes;
     }
 
-    public List<Activity> getActivities(){
-        return databaseDAO.getPosts();
+    public List<Activity> getActivities(String authToken) throws FirebaseAuthException {
+        String uid = getUserIdFromAuthToken(authToken);
+        return databaseDAO.getPosts(uid);
     }
 
     private Map<String, InputStream> fetchRoutesFiles(@Nullable String localFolderOverride) throws FileNotFoundException {
@@ -77,13 +78,11 @@ public class RoutesService {
         String name = request.getParameter("name");
         String description = request.getParameter("description");
         Part filePart = request.getPart("file");
-        String idToken = request.getParameter("token");
+        String authToken = request.getParameter("token");
         final String fileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString();
-        LOGGER.info("Create post endpoint received {}. Name: {}, File: {}, Token:{}, Description: {}", request, name, fileName, idToken, description);
+        LOGGER.info("Create post endpoint received {}. Name: {}, File: {}, Token:{}, Description: {}", request, name, fileName, authToken, description);
 
-        FirebaseToken decodedToken = FirebaseAuth.getInstance().verifyIdToken(idToken);
-        String uid = decodedToken.getUid();
-        LOGGER.info("Decoded idToken [{}] to uid [{}]", idToken, uid);
+        String uid = getUserIdFromAuthToken(authToken);
 
         InputStream fileContent = filePart.getInputStream();
         List<LatLng> pathCoordinates = RoutesHelper.loadGpxData(fileContent);
@@ -94,5 +93,12 @@ public class RoutesService {
 
     public void deletePost (int id) throws SQLException {
         databaseDAO.deletePost(id);
+    }
+
+    private String getUserIdFromAuthToken(String authToken) throws FirebaseAuthException {
+        FirebaseToken decodedToken = FirebaseAuth.getInstance().verifyIdToken(authToken);
+        String uid = decodedToken.getUid();
+        LOGGER.info("Decoded idToken [{}] to uid [{}]", authToken, uid);
+        return uid;
     }
 }
