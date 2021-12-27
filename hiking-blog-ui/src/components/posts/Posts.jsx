@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@mui/styles';
+import Grid from '@mui/material/Grid';
 import ActivityCard from './ActivityCard';
-import { Grid } from '@material-ui/core/'
+import { getApi } from '../../services/api';
 
 const useStyles = makeStyles(theme => ({
     root: {
         flexGrow: 1,
-        padding: theme.spacing(2),
+        padding: 2,
+        margin: 20,
         height: '100%'
     }
 }))
@@ -16,20 +18,29 @@ export default function Posts() {
     const [isLoading, setIsLoading] = useState(false);
     const [activities, setActivities] = useState([]);
 
-    const loadRoutes = () => {
+    const loadRoutes = async () => {
+
         setIsLoading(true);
-        fetch('/get-activities')
-            .then(response => response.json())
-            .then(data => {
-                setActivities(data);
-                setIsLoading(false);
-                console.log(`Number of activities fetched: ${data.length}`);
-                console.log(`Activities: ${data}`);
-                data.map(activity => console.log(`Fetched activity with ID: ${activity.key}`))
-            });
+        
+        console.log("Fetching activities.");
+        getApi("/get-activities")
+        .then(response => response.json())
+        .then(data => {
+            setActivities(data);
+            setIsLoading(false);
+            console.log(`Number of activities fetched: ${data.length}`);
+            console.log(`Activities: ${data}`);
+            data.map(activity => console.log(`Fetched activity with ID: ${activity.key}`))
+        });
     }
 
-    useEffect(() => loadRoutes(), []);
+    const deleteActivity = (id) => {
+        setActivities(activities.filter(activity => activity.key !== id));     
+    }
+
+    useEffect(() => {
+        loadRoutes();
+    }, []);
 
     if (isLoading) {
         return <p> Loading... </p>;
@@ -46,7 +57,7 @@ export default function Posts() {
             >
                 {activities.map(activity => (
                     <Grid item xs={12} sm={6} md={3} key={activity.key}>
-                        <ActivityCard key={activity.key} id={activity.key} title={activity.name} description={activity.description} pathCoordinates={activity.pathCoordinates} />
+                        <ActivityCard key={activity.key} id={activity.key} title={activity.name} description={activity.description} pathCoordinates={activity.pathCoordinates} deleteActivity={deleteActivity} />
                     </Grid>
                 ))}
             </Grid>

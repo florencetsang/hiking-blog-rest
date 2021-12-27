@@ -1,7 +1,10 @@
 package com.florence.hikingblogrest.rest;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.florence.hikingblogrest.dto.*;
+import com.florence.hikingblogrest.dto.Activity;
+import com.florence.hikingblogrest.dto.LatLng;
+import com.florence.hikingblogrest.dto.Route;
+import com.florence.hikingblogrest.dto.Routes;
 import com.florence.hikingblogrest.helper.RoutesHelper;
 import com.florence.hikingblogrest.proxy.CloudStorageProxy;
 import com.florence.hikingblogrest.proxy.DatabaseDAO;
@@ -10,11 +13,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.lang.Nullable;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.Part;
 import java.io.*;
-import java.nio.file.Paths;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
@@ -44,8 +44,8 @@ public class RoutesService {
         return routes;
     }
 
-    public List<Activity> getActivities(){
-        return databaseDAO.getPosts();
+    public List<Activity> getActivities(String uid) {
+        return databaseDAO.getPosts(uid);
     }
 
     private Map<String, InputStream> fetchRoutesFiles(@Nullable String localFolderOverride) throws FileNotFoundException {
@@ -69,23 +69,16 @@ public class RoutesService {
         }
     }
 
-    public void createPost(HttpServletRequest request) throws IOException, ServletException, SQLException {
-
-        String name = request.getParameter("name");
-        String description = request.getParameter("description");
-        Part filePart = request.getPart("file");
-        final String fileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString();
-
-        LOGGER.info("Create post endpoint received {}. Name: {}, File: {}, Description: {}", request, name, fileName, description);
+    public void createPost(String name, String description, Part filePart, String uid) throws IOException, SQLException {
 
         InputStream fileContent = filePart.getInputStream();
         List<LatLng> pathCoordinates = RoutesHelper.loadGpxData(fileContent);
-
         ObjectMapper objectMapper = new ObjectMapper();
-        databaseDAO.insertPost(name, description, objectMapper.writeValueAsString(pathCoordinates));
+        databaseDAO.insertPost(name, description, objectMapper.writeValueAsString(pathCoordinates), uid);
     }
 
-    public void deletePost (int id) throws SQLException {
-        databaseDAO.deletePost(id);
+    public void deletePost(String uid, int id) throws SQLException {
+        databaseDAO.deletePost(uid, id);
     }
+
 }

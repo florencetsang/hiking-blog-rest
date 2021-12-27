@@ -1,15 +1,16 @@
 import React, { useCallback } from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import Card from '@material-ui/core/Card';
-import CardActionArea from '@material-ui/core/CardActionArea';
-import CardActions from '@material-ui/core/CardActions';
-import CardContent from '@material-ui/core/CardContent';
-import CardMedia from '@material-ui/core/CardMedia';
-import IconButton from '@material-ui/core/IconButton';
-import Typography from '@material-ui/core/Typography';
-import FavoriteIcon from '@material-ui/icons/Favorite';
-import ShareIcon from '@material-ui/icons/Share';
-import DeleteIcon from '@material-ui/icons/Delete';
+import { makeStyles } from '@mui/styles';
+import Card from '@mui/material/Card';
+import CardActionArea from '@mui/material/CardActionArea';
+import CardActions from '@mui/material/CardActions';
+import CardContent from '@mui/material/CardContent';
+import CardMedia from '@mui/material/CardMedia';
+import IconButton from '@mui/material/IconButton';
+import Typography from '@mui/material/Typography';
+import FavoriteIcon from '@mui/icons-material/Favorite';
+import ShareIcon from '@mui/icons-material/Share';
+import DeleteIcon from '@mui/icons-material/Delete';
+import { postApi } from '../../services/api';
 
 const useStyles = makeStyles({
     root: {
@@ -20,11 +21,11 @@ const useStyles = makeStyles({
     },
 });
 
-const axios = require('axios');
-
 export default function ActivityCard(props) {
+
+    const {id, title, description, pathCoordinates, deleteActivity} = props;
     const classes = useStyles();
-    const selectedCoordinates = props.pathCoordinates.filter((element, index) => {
+    const selectedCoordinates = pathCoordinates.filter((element, index) => {
         return index % 5 === 0;
     });
     const pathCoordinatesString = selectedCoordinates.map(coordinate => `${coordinate.lat},${coordinate.lng}`).join('|');
@@ -37,16 +38,26 @@ export default function ActivityCard(props) {
     const staticMapString = `https://maps.googleapis.com/maps/api/staticmap?center=${centerLat},${centerLng}&zoom=11&size=400x400&maptype=terrain&path=color:0x0000ff80|weight:5|${pathCoordinatesString}&key=${process.env.REACT_APP_GOOGLE_MAPS_API_KEY}`
 
     const handleDelete = useCallback(() => {
-        console.log(`Deleting ${props.title} with key ${props.id}.`);
-        axios
-            .post(`/delete-post?id=${props.id}`)
-            .then((res) => {
-                alert("Delete success");
-            })
-            .catch((err) => {
-                alert("Delete Error");
-                console.log(err);
-            });
+        console.log(`Deleting ${title} with key ${id}.`);
+        const postData = {
+            id: id
+        };
+        postApi('/delete-post', JSON.stringify(postData))
+        .then(res => {
+            if (res.ok) {
+                return res;
+            } else {
+                throw new Error(`Delete failed with status ${res.status}.`);
+            }
+        })
+        .then(res => {  
+            deleteActivity(id);
+            alert("Delete success");
+        })
+        .catch((err) => {
+            alert("Delete Error");
+            console.log(err);
+        });
     }, []);
 
     return (
@@ -59,10 +70,10 @@ export default function ActivityCard(props) {
                 />
                 <CardContent>
                     <Typography gutterBottom variant="h5" component="h2">
-                        {props.title}
+                        {title}
                     </Typography>
                     <Typography variant="body2" color="textSecondary" component="p">
-                        {props.description}
+                        {description}
                     </Typography>
                 </CardContent>
             </CardActionArea>

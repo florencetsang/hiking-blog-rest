@@ -14,9 +14,9 @@ import java.util.List;
 
 public class DatabaseDAO {
 
-    private static final String SQL_SELECT_ALL_POSTS = "SELECT * FROM hiking_routes";
-    private static final String SQL_INSERT_POST = "INSERT INTO HBA.HIKING_ROUTES (NAME, DESCRIPTION, PATH_COORDINATES) VALUES (?,?,?)";
-    private static final String SQL_DELETE_POST = "DELETE FROM HBA.HIKING_ROUTES WHERE ID=?";
+    private static final String SQL_SELECT_ALL_POSTS = "SELECT * FROM hiking_routes WHERE USER_ID=?";
+    private static final String SQL_INSERT_POST = "INSERT INTO HBA.HIKING_ROUTES (NAME, DESCRIPTION, PATH_COORDINATES, USER_ID) VALUES (?,?,?,?)";
+    private static final String SQL_DELETE_POST = "DELETE FROM HBA.HIKING_ROUTES WHERE USER_ID=? AND ID=?";
     private static final String CONNECTION_CREATION_LOG = "Created connection: {}";
     private static final Logger LOGGER = LogManager.getLogger(DatabaseDAO.class);
 
@@ -30,14 +30,14 @@ public class DatabaseDAO {
         this.password = password;
     }
 
-    public List<Activity> getPosts() {
+    public List<Activity> getPosts(String uid) {
 
         ObjectMapper mapper = new ObjectMapper();
         List<Activity> activities = new ArrayList<>();
         try (Connection conn = DriverManager.getConnection(url, username, password);
              PreparedStatement ps = conn.prepareStatement(SQL_SELECT_ALL_POSTS)) {
             LOGGER.info(CONNECTION_CREATION_LOG, conn);
-
+            ps.setString(1, uid);
             ResultSet rs = ps.executeQuery();
 
             while (rs.next()) {
@@ -46,7 +46,7 @@ public class DatabaseDAO {
                 String description = rs.getString("DESCRIPTION");
                 String route = rs.getString("PATH_COORDINATES");
 
-                LOGGER.info("Id: {}, name: {}, description: {}, route: {}", id, name, description, route);
+                LOGGER.info("Fetch post of user id: {}, id: {}, name: {}, description: {}, route: {}", uid, id, name, description, route);
                 List<LatLng> pathCoordinates = Arrays.asList(mapper.readValue(route, LatLng[].class));
                 activities.add(new Activity(id, name, description, pathCoordinates));
             }
@@ -58,7 +58,7 @@ public class DatabaseDAO {
         return activities;
     }
 
-    public void insertPost(String name, String description, String route) throws SQLException {
+    public void insertPost(String name, String description, String route, String uid) throws SQLException {
 
         try (Connection conn = DriverManager.getConnection(url, username, password);
              PreparedStatement ps = conn.prepareStatement(SQL_INSERT_POST)) {
@@ -66,19 +66,21 @@ public class DatabaseDAO {
             ps.setString(1, name);
             ps.setString(2, description);
             ps.setString(3, route);
+            ps.setString(4, uid);
             ps.execute();
-            LOGGER.info("Inserted data to database:: Name: {}. Description: {}. Route: {}", name, description, route);
+            LOGGER.info("Inserted data to database:: Name: {}. Description: {}. Route: {}. UID: {}", name, description, route, uid);
         }
     }
 
-    public void deletePost(int id) throws SQLException {
+    public void deletePost(String uid, int id) throws SQLException {
 
         try (Connection conn = DriverManager.getConnection(url, username, password);
              PreparedStatement ps = conn.prepareStatement(SQL_DELETE_POST)) {
             LOGGER.info(CONNECTION_CREATION_LOG, conn);
-            ps.setInt(1, id);
+            ps.setString(1, uid);
+            ps.setInt(2, id);
             ps.execute();
-            LOGGER.info("Deleted post with id {}.", id);
+            LOGGER.info("Deleted post with uid: [{}], id [{}].", uid, id);
         }
     }
 

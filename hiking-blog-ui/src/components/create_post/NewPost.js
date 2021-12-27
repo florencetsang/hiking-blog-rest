@@ -5,7 +5,7 @@ import Container from '@material-ui/core/Container';
 import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
 import UploadFile from './UploadFile';
-const axios = require('axios').default;
+import { postFormData } from '../../services/api';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -16,7 +16,6 @@ const useStyles = makeStyles((theme) => ({
 export default function NewPost() {
 
   const classes = useStyles();
-
   const [currentFile, setCurrentFile] = useState(null);
   const [name, setName] = useState("New Trail Record");
   const [description, setDescription] = useState("Descrtipion.");
@@ -33,27 +32,28 @@ export default function NewPost() {
     setDescription(event.target.value);
   }
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     console.log(`NewPost Form is submitted. File: [${currentFile.name}]. Name: [${name}]. Description: [${description}].`);
+
     const fd = new FormData();
     fd.append("file", currentFile);
     fd.append("name", name);
     fd.append("description", description);
 
-    axios
-      .post('/create-post', fd)
-      .then((res) => {
-        alert("File Upload success");
-      })
-      .catch((err) => {
-        alert("File Upload Error");
-        consolo.log(error);
-      });
+    postFormData('/create-post', fd)
+    .then((res) => {
+      alert("File Upload success");
+    })
+    .catch((err) => {
+      alert("File Upload Error");
+      console.log(err);
+    });
   }
 
   return (
     <Container fixed>
+      
       <Box marginTop={10} marginBottom={30}>
         <form onSubmit={handleSubmit} className={classes.root}>
           <h2>New Route</h2>          
