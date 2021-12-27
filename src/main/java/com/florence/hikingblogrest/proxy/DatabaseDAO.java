@@ -16,7 +16,7 @@ public class DatabaseDAO {
 
     private static final String SQL_SELECT_ALL_POSTS = "SELECT * FROM hiking_routes WHERE USER_ID=?";
     private static final String SQL_INSERT_POST = "INSERT INTO HBA.HIKING_ROUTES (NAME, DESCRIPTION, PATH_COORDINATES, USER_ID) VALUES (?,?,?,?)";
-    private static final String SQL_DELETE_POST = "DELETE FROM HBA.HIKING_ROUTES WHERE ID=?";
+    private static final String SQL_DELETE_POST = "DELETE FROM HBA.HIKING_ROUTES WHERE USER_ID=? AND ID=?";
     private static final String CONNECTION_CREATION_LOG = "Created connection: {}";
     private static final Logger LOGGER = LogManager.getLogger(DatabaseDAO.class);
 
@@ -72,14 +72,15 @@ public class DatabaseDAO {
         }
     }
 
-    public void deletePost(int id) throws SQLException {
+    public void deletePost(String uid, int id) throws SQLException {
 
         try (Connection conn = DriverManager.getConnection(url, username, password);
              PreparedStatement ps = conn.prepareStatement(SQL_DELETE_POST)) {
             LOGGER.info(CONNECTION_CREATION_LOG, conn);
-            ps.setInt(1, id);
+            ps.setString(1, uid);
+            ps.setInt(2, id);
             ps.execute();
-            LOGGER.info("Deleted post with id {}.", id);
+            LOGGER.info("Deleted post with uid: [{}], id [{}].", uid, id);
         }
     }
 

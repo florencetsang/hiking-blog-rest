@@ -5,8 +5,7 @@ import Container from '@material-ui/core/Container';
 import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
 import UploadFile from './UploadFile';
-import { getAuth } from "firebase/auth";
-import { postApi } from '../../services/api';
+import { postFormData } from '../../services/api';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -42,7 +41,7 @@ export default function NewPost() {
     fd.append("name", name);
     fd.append("description", description);
 
-    postApi('/create-post', fd)
+    postFormData('/create-post', fd)
     .then((res) => {
       alert("File Upload success");
     })

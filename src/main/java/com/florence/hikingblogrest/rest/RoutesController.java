@@ -43,13 +43,13 @@ public class RoutesController {
     public ResponseEntity<String> createPost(HttpServletRequest request, @AuthenticationPrincipal UserPrincipal userPrincipal) {
         LOGGER.info("Create post endpoint hit");
         try {
-            String name = request.getParameter("name");
-            String description = request.getParameter("description");
-            Part filePart = request.getPart("file");
+            final String name = request.getParameter("name");
+            final String description = request.getParameter("description");
+            final Part filePart = request.getPart("file");
             final String fileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString();
-            String uid = userPrincipal.getUid();
+            final String uid = userPrincipal.getUid();
             LOGGER.info("Create post endpoint received {}. Uid:{}, Name: {}, File: {}, Description: {}", request, uid, name, fileName, description);
-            routesService.createPost(name, description, filePart, userPrincipal.getUid());
+            routesService.createPost(name, description, filePart, uid);
             return ResponseEntity.ok("Received form data");
         } catch (Exception e) {
             LOGGER.error("Exception thrown when processing request {}", request, e);
@@ -58,9 +58,12 @@ public class RoutesController {
     }
 
     @PostMapping(value = "/delete-post")
-    public ResponseEntity<String> deletePost(@RequestParam("id") int id) {
+    public ResponseEntity<String> deletePost(@RequestBody DeletePostRequest request, @AuthenticationPrincipal UserPrincipal userPrincipal) {
+        final int id = request.getId();
+        final String uid = userPrincipal.getUid();
+        LOGGER.info("Received delete post request. User: [{}], Id: [{}]", uid, id);
         try {
-            routesService.deletePost(id);
+            routesService.deletePost(uid, id);
             return ResponseEntity.ok("Deleted post with id " + id);
         } catch (Exception e) {
             LOGGER.error("Exception thrown when processing delete post request for id {}.", id, e);

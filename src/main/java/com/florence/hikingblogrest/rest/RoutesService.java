@@ -77,8 +77,8 @@ public class RoutesService {
         databaseDAO.insertPost(name, description, objectMapper.writeValueAsString(pathCoordinates), uid);
     }
 
-    public void deletePost(int id) throws SQLException {
-        databaseDAO.deletePost(id);
+    public void deletePost(String uid, int id) throws SQLException {
+        databaseDAO.deletePost(uid, id);
     }
 
 }

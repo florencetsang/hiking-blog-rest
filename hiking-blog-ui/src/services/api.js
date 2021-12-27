@@ -28,8 +28,16 @@ const getApi = async (apiPath, urlParams=new URLSearchParams(), options={}) => {
       }
     })
 };
+
+const getApiHeaders = (contentType) => {
+  const headers = {};
+  if (contentType) {
+    headers['Content-Type'] = contentType;
+  }
+  return headers;
+};
   
-const postApi = async (apiPath, data, options={}) => {
+const _postApi = async (apiPath, data, options, contentType) => {
     const authToken = await getAuthToken();
     if (!authToken) {
       throw new Error('Unauthrorized');
@@ -43,12 +51,20 @@ const postApi = async (apiPath, data, options={}) => {
       credentials: 'same-origin',
       headers: {
         'Authorization': `Bearer ${authToken}`,
-        // 'Content-Type': 'multipart/form-data; boundary=something'
+        ...getApiHeaders(contentType)
       },
       redirect: 'follow',
       referrerPolicy: 'no-referrer',
       body: data
     });
 };
+
+const postApi = async (apiPath, data, options={}) => {
+  return _postApi(apiPath, data, options, 'application/json');
+};
+
+const postFormData = async (apiPath, data, options={}) => {
+  return _postApi(apiPath, data, options, null);
+};
   
-export {getApi, postApi};
+export {getApi, postApi, postFormData};

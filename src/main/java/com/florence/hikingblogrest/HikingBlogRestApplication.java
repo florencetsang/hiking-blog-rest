@@ -1,6 +1,5 @@
 package com.florence.hikingblogrest;
 
-import com.florence.hikingblogrest.proxy.CloudStorageProxy;
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
@@ -25,17 +24,19 @@ public class HikingBlogRestApplication implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments args) {
-        try {
-            FirebaseOptions options = FirebaseOptions.builder()
-                    .setCredentials(GoogleCredentials.getApplicationDefault())
-                    .setDatabaseUrl(DATABASE_URL)
-                    .build();
+        if (FirebaseApp.getApps().isEmpty()) {
+            try {
+                FirebaseOptions options = FirebaseOptions.builder()
+                        .setCredentials(GoogleCredentials.getApplicationDefault())
+                        .setDatabaseUrl(DATABASE_URL)
+                        .build();
 
-            FirebaseApp.initializeApp(options);
-            LOGGER.info("Initialized Firebase App");
-        } catch (IOException e) {
-            LOGGER.error("ERROR: invalid service account credentials.");
-            LOGGER.error(e.getMessage());
+                FirebaseApp.initializeApp(options);
+                LOGGER.info("Initialized Firebase App");
+            } catch (IOException e) {
+                LOGGER.error("ERROR: invalid service account credentials.");
+                LOGGER.error(e.getMessage());
+            }
         }
     }
 }

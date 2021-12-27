@@ -34,6 +34,10 @@ export default function Posts() {
         });
     }
 
+    const deleteActivity = (id) => {
+        setActivities(activities.filter(activity => activity.key !== id));     
+    }
+
     useEffect(() => {
         loadRoutes();
     }, []);
@@ -53,7 +57,7 @@ export default function Posts() {
             >
                 {activities.map(activity => (
                     <Grid item xs={12} sm={6} md={3} key={activity.key}>
-                        <ActivityCard key={activity.key} id={activity.key} title={activity.name} description={activity.description} pathCoordinates={activity.pathCoordinates} />
+                        <ActivityCard key={activity.key} id={activity.key} title={activity.name} description={activity.description} pathCoordinates={activity.pathCoordinates} deleteActivity={deleteActivity} />
                     </Grid>
                 ))}
             </Grid>
