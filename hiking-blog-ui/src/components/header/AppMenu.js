@@ -10,38 +10,26 @@ import { getAuth, signInWithPopup, signInWithRedirect, GoogleAuthProvider, signO
 
 export default function AppMenu(props) {
 
-  const provider = new GoogleAuthProvider();
-  const auth = getAuth();
-  const [token, setToken] = useState(null);
-  const {loggedInUser, setLoggedInUser} = props;
+  const {loggedInUser} = props;
 
   const handleLogin = useCallback((event) => {
+    const provider = new GoogleAuthProvider();
+    const auth = getAuth();
     console.log("Login is clicked");
     signInWithPopup(auth, provider)
     .then((result) => {
-      // This gives you a Google Access Token. You can use it to access the Google API.
-      const credential = GoogleAuthProvider.credentialFromResult(result);
-      // const token = credential.accessToken;
-      setToken(credential.accessToken);
       console.log("Logged in");
     }).catch((error) => {
-      // Handle Errors here.
-      const errorCode = error.code;
-      const errorMessage = error.message;
-      // The email of the user's account used.
-      const email = error.email;
-      // The AuthCredential type that was used.
-      const credential = GoogleAuthProvider.credentialFromError(error);
-      console.log(`Error occured during sign in ${error}`);
-
+      console.log(`Error occurred during sign in ${error}`);
     });
   }, []);
 
   const handleLogout = useCallback((event) => {
+    const auth = getAuth();
     signOut(auth).then(() => {
       console.log("Sign out success.");
     }).catch((error) => {
-      console.log(`Error occured during logout: ${error}`);
+      console.log(`Error occurred during logout: ${error}`);
     });
   }, [])
 

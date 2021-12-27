@@ -2,16 +2,19 @@ package com.florence.hikingblogrest.rest;
 
 import com.florence.hikingblogrest.dto.Activity;
 import com.florence.hikingblogrest.dto.Routes;
-import com.google.firebase.auth.FirebaseAuthException;
+import com.florence.hikingblogrest.security.UserPrincipal;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.Part;
 import java.io.FileNotFoundException;
+import java.nio.file.Paths;
 import java.util.List;
 
 @RestController
@@ -27,19 +30,26 @@ public class RoutesController {
     }
 
     @GetMapping("/get-routes")
-    public Routes getRoutes() throws FileNotFoundException {
+    public Routes getRoutes(@AuthenticationPrincipal UserPrincipal userPrincipal) throws FileNotFoundException {
         return routesService.getRoutes();
     }
 
     @GetMapping("/get-activities")
-    public List<Activity> getActivities(@RequestParam String authToken) throws FirebaseAuthException {
-        return routesService.getActivities(authToken);
+    public List<Activity> getActivities(@AuthenticationPrincipal UserPrincipal userPrincipal) {
+        return routesService.getActivities(userPrincipal.getUid());
     }
 
     @PostMapping(value = "/create-post", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<String> createPost(HttpServletRequest request) {
+    public ResponseEntity<String> createPost(HttpServletRequest request, @AuthenticationPrincipal UserPrincipal userPrincipal) {
+        LOGGER.info("Create post endpoint hit");
         try {
-            routesService.createPost(request);
+            String name = request.getParameter("name");
+            String description = request.getParameter("description");
+            Part filePart = request.getPart("file");
+            final String fileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString();
+            String uid = userPrincipal.getUid();
+            LOGGER.info("Create post endpoint received {}. Uid:{}, Name: {}, File: {}, Description: {}", request, uid, name, fileName, description);
+            routesService.createPost(name, description, filePart, userPrincipal.getUid());
             return ResponseEntity.ok("Received form data");
         } catch (Exception e) {
             LOGGER.error("Exception thrown when processing request {}", request, e);

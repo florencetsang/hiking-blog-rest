@@ -1,23 +1,20 @@
 package com.florence.hikingblogrest.rest;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.florence.hikingblogrest.dto.*;
+import com.florence.hikingblogrest.dto.Activity;
+import com.florence.hikingblogrest.dto.LatLng;
+import com.florence.hikingblogrest.dto.Route;
+import com.florence.hikingblogrest.dto.Routes;
 import com.florence.hikingblogrest.helper.RoutesHelper;
 import com.florence.hikingblogrest.proxy.CloudStorageProxy;
 import com.florence.hikingblogrest.proxy.DatabaseDAO;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseAuthException;
-import com.google.firebase.auth.FirebaseToken;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.lang.Nullable;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.Part;
 import java.io.*;
-import java.nio.file.Paths;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
@@ -47,8 +44,7 @@ public class RoutesService {
         return routes;
     }
 
-    public List<Activity> getActivities(String authToken) throws FirebaseAuthException {
-        String uid = getUserIdFromAuthToken(authToken);
+    public List<Activity> getActivities(String uid) {
         return databaseDAO.getPosts(uid);
     }
 
@@ -73,32 +69,16 @@ public class RoutesService {
         }
     }
 
-    public void createPost(HttpServletRequest request) throws IOException, ServletException, SQLException, FirebaseAuthException {
-
-        String name = request.getParameter("name");
-        String description = request.getParameter("description");
-        Part filePart = request.getPart("file");
-        String authToken = request.getParameter("token");
-        final String fileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString();
-        LOGGER.info("Create post endpoint received {}. Name: {}, File: {}, Token:{}, Description: {}", request, name, fileName, authToken, description);
-
-        String uid = getUserIdFromAuthToken(authToken);
+    public void createPost(String name, String description, Part filePart, String uid) throws IOException, SQLException {
 
         InputStream fileContent = filePart.getInputStream();
         List<LatLng> pathCoordinates = RoutesHelper.loadGpxData(fileContent);
-
         ObjectMapper objectMapper = new ObjectMapper();
         databaseDAO.insertPost(name, description, objectMapper.writeValueAsString(pathCoordinates), uid);
     }
 
-    public void deletePost (int id) throws SQLException {
+    public void deletePost(int id) throws SQLException {
         databaseDAO.deletePost(id);
     }
 
-    private String getUserIdFromAuthToken(String authToken) throws FirebaseAuthException {
-        FirebaseToken decodedToken = FirebaseAuth.getInstance().verifyIdToken(authToken);
-        String uid = decodedToken.getUid();
-        LOGGER.info("Decoded idToken [{}] to uid [{}]", authToken, uid);
-        return uid;
-    }
 }

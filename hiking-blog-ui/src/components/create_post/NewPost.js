@@ -6,9 +6,7 @@ import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
 import UploadFile from './UploadFile';
 import { getAuth } from "firebase/auth";
-
-
-const axios = require('axios').default;
+import { postApi } from '../../services/api';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -19,11 +17,9 @@ const useStyles = makeStyles((theme) => ({
 export default function NewPost() {
 
   const classes = useStyles();
-
   const [currentFile, setCurrentFile] = useState(null);
   const [name, setName] = useState("New Trail Record");
   const [description, setDescription] = useState("Descrtipion.");
-  const auth = getAuth();
 
   const updateFile = (file) => {
     setCurrentFile(file);
@@ -37,45 +33,24 @@ export default function NewPost() {
     setDescription(event.target.value);
   }
 
-  const getAuthToken = async () => {
-    try {
-        return await auth.currentUser?.getIdToken(true);
-    } catch (e) {
-        console.log(e);
-        return null;
-    }
-  }
-
   const handleSubmit = async (e) => {
     e.preventDefault();
+    console.log(`NewPost Form is submitted. File: [${currentFile.name}]. Name: [${name}]. Description: [${description}].`);
 
-    const authToken = await getAuthToken();
-    if (!authToken) {
-        console.log('auth token is null');
-        return;
-    }
-
-    console.log(`NewPost Form is submitted. File: [${currentFile.name}]. Name: [${name}]. Token: [${authToken}]. Description: [${description}].`);
     const fd = new FormData();
     fd.append("file", currentFile);
     fd.append("name", name);
     fd.append("description", description);
-    fd.append("token", authToken)
 
-    axios
-      .post('/create-post', fd)
-      .then((res) => {
-        alert("File Upload success");
-      })
-      .catch((err) => {
-        alert("File Upload Error");
-        console.log(error);
-      });
+    postApi('/create-post', fd)
+    .then((res) => {
+      alert("File Upload success");
+    })
+    .catch((err) => {
+      alert("File Upload Error");
+      console.log(err);
+    });
   }
-
-  // console.log(`Auth is ${auth}`);
-  // console.log(`Auth currentUser is ${auth.currentUser}`);
-  // console.log(`Auth token is ${auth.currentUser?.getIdToken(false)}`);
 
   return (
     <Container fixed>

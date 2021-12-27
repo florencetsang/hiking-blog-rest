@@ -36,11 +36,15 @@ export default function Main() {
 
     return (
         <div>
-            <AppMenu loggedInUser={loggedInUser} setLoggedInUser={setLoggedInUser}/>
-            <Navigation setActiveTab={setActiveTab}/>             
-            <Pages activeTab={activeTab} loggedInUser={loggedInUser}/>
-            {/* <Footer /> */}
-        </div >
+            <AppMenu loggedInUser={loggedInUser}/>
+            {loggedInUser &&         
+                <div>
+                    <Navigation setActiveTab={setActiveTab}/>             
+                    <Pages activeTab={activeTab} loggedInUser={loggedInUser}/>
+                    {/* <Footer /> */}
+                </div >    
+            }
+        </div>
     );
     
 }
