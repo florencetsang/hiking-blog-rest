@@ -41,7 +41,7 @@ export default function NewPost() {
     fd.append("name", name);
     fd.append("description", description);
 
-    postFormData('/create-post', fd)
+    postFormData('/api/create-post', fd)
     .then((res) => {
       alert("File Upload success");
     })

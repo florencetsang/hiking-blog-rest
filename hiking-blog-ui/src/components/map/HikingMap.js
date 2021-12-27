@@ -28,7 +28,7 @@ export default function HikingMap() {
     const [isLoading, setIsLoading] = useState(true);
 
     const loadRoutes = async () => {
-        getApi('/get-routes')
+        getApi('/api/get-routes')
         .then(response => response.json())
         .then(data => {
             setRoutes(data.routes);

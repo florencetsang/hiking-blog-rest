@@ -21,17 +21,15 @@ public class CustomWebSecurityConfigurerAdapter extends WebSecurityConfigurerAda
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
-//                .cors()
-//                .and()
                 .csrf().disable()
                 .httpBasic().disable()
                 .formLogin().disable()
                 .authorizeRequests()
-                .antMatchers("/api").authenticated()
+                .antMatchers("/", "/static/**", "/favicon.ico").permitAll()
+                .anyRequest().authenticated()
                 .and()
                 .addFilterBefore(firebaseAuthFilter, BasicAuthenticationFilter.class)
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-
         logger.info("configured security");
 //        http.addFilterAfter(new FirebaseAuthFilter(), BasicAuthenticationFilter.class);
     }

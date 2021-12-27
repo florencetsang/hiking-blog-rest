@@ -23,7 +23,7 @@ export default function Posts() {
         setIsLoading(true);
         
         console.log("Fetching activities.");
-        getApi("/get-activities")
+        getApi("/api/get-activities")
         .then(response => response.json())
         .then(data => {
             setActivities(data);

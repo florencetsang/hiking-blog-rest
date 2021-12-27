@@ -40,17 +40,17 @@ public class FirebaseAuthFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, FilterChain filterChain) throws ServletException, IOException {
 
+        final String uri = httpServletRequest.getRequestURI();
         final String firebaseToken = bearerTokenResolver.resolve(httpServletRequest);
 
         if (StringUtils.isEmpty(firebaseToken)) {
             LOGGER.warn("Failed request - Firebase token is invalid or not found. Please make sure it is passed in the HEADER");
-            httpServletResponse.sendError(HttpServletResponse.SC_FORBIDDEN, "Access Denied: Please contact tech support to verify your entitlements");
         } else {
-            LOGGER.info("Firebase token [{}] attempting to access [{}]", firebaseToken, httpServletRequest.getRequestURI());
+            LOGGER.info("Firebase token [{}] attempting to access [{}]", firebaseToken, uri);
             try {
                 final String uid = getUserIdFromAuthToken(firebaseToken);
                 if (!StringUtils.isEmpty(uid)) {
-                    LOGGER.info("User [{}] has been granted access to resource [{}]", uid, httpServletRequest.getRequestURI());
+                    LOGGER.info("User [{}] has been granted access to resource [{}]", uid, uri);
 
                     final UserPrincipal userPrincipal = new UserPrincipal(uid);
                     final UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userPrincipal, null, emptyList());
@@ -58,16 +58,14 @@ public class FirebaseAuthFilter extends OncePerRequestFilter {
                     // authenticate user
                     authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(httpServletRequest));
                     SecurityContextHolder.getContext().setAuthentication(authentication);
-
-                    filterChain.doFilter(httpServletRequest, httpServletResponse);
                 } else {
                     LOGGER.warn("Failed to verify entitlements for firebase token [{}]", firebaseToken);
-                    httpServletResponse.sendError(HttpServletResponse.SC_FORBIDDEN, "Access Denied: Please contact tech support to verify your entitlements");
                 }
             } catch (FirebaseAuthException e) {
                 LOGGER.warn("Failed to verify entitlements for firebase token [{}]", firebaseToken, e);
                 throw new WebServiceException(String.valueOf(HttpStatus.INTERNAL_SERVER_ERROR));
             }
         }
+        filterChain.doFilter(httpServletRequest, httpServletResponse);
     }
 }

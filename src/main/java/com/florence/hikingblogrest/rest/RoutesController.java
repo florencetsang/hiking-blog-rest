@@ -18,6 +18,7 @@ import java.nio.file.Paths;
 import java.util.List;
 
 @RestController
+@RequestMapping("/api")
 @CrossOrigin(origins = {"http://localhost:3000", "http://localhost:5000"})
 public class RoutesController {
 
