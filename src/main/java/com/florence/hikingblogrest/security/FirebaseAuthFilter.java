@@ -21,6 +21,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.xml.ws.WebServiceException;
 import java.io.IOException;
+import java.util.stream.Stream;
 
 import static java.util.Collections.emptyList;
 
@@ -68,4 +69,10 @@ public class FirebaseAuthFilter extends OncePerRequestFilter {
         }
         filterChain.doFilter(httpServletRequest, httpServletResponse);
     }
+
+//    @Override
+//    protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
+//        final String uri = request.getRequestURI();
+//        return Stream.of("/", "/static/**", "/favicon.ico").anyMatch(uri::startsWith);
+//    }
 }

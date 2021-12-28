@@ -25,7 +25,7 @@ public class CustomWebSecurityConfigurerAdapter extends WebSecurityConfigurerAda
                 .httpBasic().disable()
                 .formLogin().disable()
                 .authorizeRequests()
-                .antMatchers("/", "/static/**", "/favicon.ico").permitAll()
+                .antMatchers("/", "/static/**", "/favicon.ico", "/FT_Grey_NoSlogan_Small_Circle.PNG").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .addFilterBefore(firebaseAuthFilter, BasicAuthenticationFilter.class)
@@ -33,4 +33,12 @@ public class CustomWebSecurityConfigurerAdapter extends WebSecurityConfigurerAda
         logger.info("configured security");
 //        http.addFilterAfter(new FirebaseAuthFilter(), BasicAuthenticationFilter.class);
     }
+
+//    @Bean
+//    public FilterRegistrationBean<FirebaseAuthFilter> firebaseAuthFilter(){
+//        final FilterRegistrationBean<FirebaseAuthFilter> registrationBean = new FilterRegistrationBean<>();
+//        registrationBean.setFilter(new FirebaseAuthFilter());
+//        registrationBean.addUrlPatterns("/api/*");
+//        return registrationBean;
+//    }
 }

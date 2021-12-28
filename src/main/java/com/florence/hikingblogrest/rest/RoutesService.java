@@ -34,7 +34,11 @@ public class RoutesService {
         this.databaseDAO = databaseDAO;
     }
 
-    public Routes getRoutes() throws FileNotFoundException {
+    public Routes getRoutes(String uid) {
+       return databaseDAO.getRoutes(uid);
+    }
+
+    private Routes getRoutesFromFiles() throws FileNotFoundException {
         Map<String, InputStream> routeFiles = fetchRoutesFiles(localFolderOverride);
         Routes routes = new Routes();
         for (Map.Entry<String, InputStream> routeFile : routeFiles.entrySet()) {

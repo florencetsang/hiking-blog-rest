@@ -4,6 +4,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.florence.hikingblogrest.dto.Activity;
 import com.florence.hikingblogrest.dto.LatLng;
+import com.florence.hikingblogrest.dto.Route;
+import com.florence.hikingblogrest.dto.Routes;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -28,6 +30,29 @@ public class DatabaseDAO {
         this.url = url;
         this.username = username;
         this.password = password;
+    }
+
+    public Routes getRoutes(String uid) {
+
+        ObjectMapper mapper = new ObjectMapper();
+        Routes routes = new Routes();
+        try (Connection conn = DriverManager.getConnection(url, username, password);
+             PreparedStatement ps = conn.prepareStatement(SQL_SELECT_ALL_POSTS)) {
+            LOGGER.info(CONNECTION_CREATION_LOG, conn);
+            ps.setString(1, uid);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                int id = rs.getInt("ID");
+                String pathCoordinatesString = rs.getString("PATH_COORDINATES");
+                List<LatLng> pathCoordinates = Arrays.asList(mapper.readValue(pathCoordinatesString, LatLng[].class));
+                LOGGER.info("Fetch post of user id: {}, id: {}, path coordinates: {}", uid, id, pathCoordinates);
+                routes.addRoute(new Route(Integer.toString(id), pathCoordinates));
+            }
+        } catch (SQLException | JsonProcessingException e) {
+            LOGGER.error(e);
+        }
+
+        return routes;
     }
 
     public List<Activity> getPosts(String uid) {

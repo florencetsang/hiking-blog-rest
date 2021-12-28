@@ -134,7 +134,7 @@
 						<goals>
 							<goal>install-node-and-npm</goal>
 						</goals>
-<!--						<phase>generate-resources</phase>-->
+						<phase>generate-resources</phase>
 						<configuration>
 							<nodeVersion>v12.19.0</nodeVersion>
 							<npmVersion>6.13.6</npmVersion>
@@ -145,7 +145,7 @@
 						<goals>
 							<goal>npm</goal>
 						</goals>
-<!--						<phase>generate-resources</phase>-->
+						<phase>generate-resources</phase>
 						<configuration>
 							<arguments>install</arguments>
 						</configuration>
@@ -155,7 +155,7 @@
 						<goals>
 							<goal>npm</goal>
 						</goals>
-<!--						<phase>generate-resources</phase>-->
+						<phase>generate-resources</phase>
 						<configuration>
 							<arguments>run build</arguments>
 						</configuration>

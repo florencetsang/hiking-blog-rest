@@ -31,8 +31,9 @@ public class RoutesController {
     }
 
     @GetMapping("/get-routes")
-    public Routes getRoutes(@AuthenticationPrincipal UserPrincipal userPrincipal) throws FileNotFoundException {
-        return routesService.getRoutes();
+    public Routes getRoutes(@AuthenticationPrincipal UserPrincipal userPrincipal) {
+        final String uid = userPrincipal.getUid();
+        return routesService.getRoutes(uid);
     }
 
     @GetMapping("/get-activities")
