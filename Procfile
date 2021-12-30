@@ -1,0 +1,1 @@
+web: java -jar target/hiking-blog-rest-0.0.3-SNAPSHOT.jar

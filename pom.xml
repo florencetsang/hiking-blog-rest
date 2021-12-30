@@ -134,10 +134,10 @@
 						<goals>
 							<goal>install-node-and-npm</goal>
 						</goals>
-						<phase>generate-resources</phase>
+<!--						<phase>generate-resources</phase>-->
 						<configuration>
-							<nodeVersion>v12.19.0</nodeVersion>
-							<npmVersion>6.13.6</npmVersion>
+							<nodeVersion>v16.13.1</nodeVersion>
+							<npmVersion>8.1.2</npmVersion>
 						</configuration>
 					</execution>
 					<execution>
@@ -145,7 +145,7 @@
 						<goals>
 							<goal>npm</goal>
 						</goals>
-						<phase>generate-resources</phase>
+<!--						<phase>generate-resources</phase>-->
 						<configuration>
 							<arguments>install</arguments>
 						</configuration>
@@ -170,7 +170,7 @@
 						<configuration>
 							<target>
 								<copy todir="${project.build.directory}/classes/public">
-									<fileset dir="${project.basedir}/hiking-blog-ui/build"/>
+									<fileset dir="${project.basedir}bearer/hiking-blog-ui/build"/>
 								</copy>
 							</target>
 						</configuration>
@@ -180,6 +180,17 @@
 					</execution>
 				</executions>
 			</plugin>
+<!--			<plugin>-->
+<!--				<groupId>com.heroku.sdk</groupId>-->
+<!--				<artifactId>heroku-maven-plugin</artifactId>-->
+<!--				<version>3.0.3</version>-->
+<!--				<configuration>-->
+<!--					<appName>Hiking Blog</appName>-->
+<!--					<processTypes>-->
+<!--						<web>java -jar target/hiking-blog-rest-${version}.jar</web>-->
+<!--					</processTypes>-->
+<!--				</configuration>-->
+<!--			</plugin>-->
 		</plugins>
 	</build>
 

@@ -45,7 +45,7 @@ public class FirebaseAuthFilter extends OncePerRequestFilter {
         final String firebaseToken = bearerTokenResolver.resolve(httpServletRequest);
 
         if (StringUtils.isEmpty(firebaseToken)) {
-            LOGGER.warn("Failed request - Firebase token is invalid or not found. Please make sure it is passed in the HEADER");
+            LOGGER.warn("Failed request - Firebase token is invalid or not found. Please make sure it is passed in the HEADER. Uri: [{}]", uri);
         } else {
             LOGGER.info("Firebase token [{}] attempting to access [{}]", firebaseToken, uri);
             try {

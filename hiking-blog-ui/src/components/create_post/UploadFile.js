@@ -1,7 +1,7 @@
 import React from 'react';
 import { makeStyles } from '@mui/styles';
 import Button from '@mui/material/Button';
-import CloudUploadIcon from '@material-ui/icons/CloudUpload';
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -26,7 +26,7 @@ export default function UploadFile(props) {
 
     return (
         <div>
-            <Button variant="contained" color="default" component="label" startIcon={<CloudUploadIcon />}>
+            <Button variant="contained" component="label" startIcon={<CloudUploadIcon />}>
                 Upload GPX File
                 <input
                     className={classes.root}

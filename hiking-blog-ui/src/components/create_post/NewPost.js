@@ -83,7 +83,7 @@ export default function NewPost() {
             variant="outlined"
             onChange={updateDescription}
           />
-          <Button variant="contained" color="primary" type="submit" >Post</Button>
+          <Button variant="contained" type="submit" >Post</Button>
         </form>
       </Box>
     </Container>
