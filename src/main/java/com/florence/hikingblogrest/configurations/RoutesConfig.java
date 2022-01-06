@@ -2,6 +2,7 @@ package com.florence.hikingblogrest.configurations;
 
 import com.florence.hikingblogrest.proxy.CloudStorageProxy;
 import com.florence.hikingblogrest.proxy.DatabaseDAO;
+import com.florence.hikingblogrest.proxy.PostgresDatabaseDAO;
 import com.florence.hikingblogrest.rest.RoutesController;
 import com.florence.hikingblogrest.rest.RoutesService;
 import org.springframework.beans.factory.annotation.Value;
@@ -24,7 +25,12 @@ public class RoutesConfig {
     }
 
     @Bean
-    public RoutesService routesService(CloudStorageProxy cloudStorageProxy, @Value("${profileLocation:#{null}}") String localFolderOverride, DatabaseDAO databaseDAO) {
+    public PostgresDatabaseDAO postgresDatabaseDAO() {
+        return new PostgresDatabaseDAO();
+    }
+
+    @Bean
+    public RoutesService routesService(CloudStorageProxy cloudStorageProxy, @Value("${profileLocation:#{null}}") String localFolderOverride, PostgresDatabaseDAO databaseDAO) {
         return new RoutesService(cloudStorageProxy, localFolderOverride, databaseDAO);
     }
 

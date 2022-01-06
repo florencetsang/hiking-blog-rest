@@ -8,6 +8,7 @@ import com.florence.hikingblogrest.dto.Routes;
 import com.florence.hikingblogrest.helper.RoutesHelper;
 import com.florence.hikingblogrest.proxy.CloudStorageProxy;
 import com.florence.hikingblogrest.proxy.DatabaseDAO;
+import com.florence.hikingblogrest.proxy.PostgresDatabaseDAO;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -26,16 +27,16 @@ public class RoutesService {
 
     private final CloudStorageProxy cloudStorageProxy;
     private final String localFolderOverride;
-    private final DatabaseDAO databaseDAO;
+    private final PostgresDatabaseDAO databaseDAO;
 
-    public RoutesService(CloudStorageProxy cloudStorageProxy, @Nullable String localFolderOverride, DatabaseDAO databaseDAO) {
+    public RoutesService(CloudStorageProxy cloudStorageProxy, @Nullable String localFolderOverride, PostgresDatabaseDAO databaseDAO) {
         this.cloudStorageProxy = cloudStorageProxy;
         this.localFolderOverride = localFolderOverride;
         this.databaseDAO = databaseDAO;
     }
 
     public Routes getRoutes(String uid) {
-       return databaseDAO.getRoutes(uid);
+        return databaseDAO.getRoutes(uid);
     }
 
     private Routes getRoutesFromFiles() throws FileNotFoundException {

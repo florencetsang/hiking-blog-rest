@@ -14,29 +14,23 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class DatabaseDAO {
+public class PostgresDatabaseDAO {
 
-    private static final String SQL_SELECT_ALL_POSTS = "SELECT * FROM HBA.HIKING_ROUTES WHERE USER_ID=?";
-    private static final String SQL_INSERT_POST = "INSERT INTO HBA.HIKING_ROUTES (NAME, DESCRIPTION, PATH_COORDINATES, USER_ID) VALUES (?,?,?,?)";
-    private static final String SQL_DELETE_POST = "DELETE FROM HBA.HIKING_ROUTES WHERE USER_ID=? AND ID=?";
+    private static final String SQL_SELECT_ALL_POSTS = "SELECT * FROM HBA_HIKING_ROUTES WHERE USER_ID=?";
+    private static final String SQL_INSERT_POST = "INSERT INTO HBA_HIKING_ROUTES (NAME, DESCRIPTION, PATH_COORDINATES, USER_ID) VALUES (?,?,?,?)";
+    private static final String SQL_DELETE_POST = "DELETE FROM HBA_HIKING_ROUTES WHERE USER_ID=? AND ID=?";
     private static final String CONNECTION_CREATION_LOG = "Created connection: {}";
-    private static final Logger LOGGER = LogManager.getLogger(DatabaseDAO.class);
+    private static final String JDBC_DATABASE_URL_ENV_VARIABLE = "JDBC_DATABASE_URL";
+    private static final Logger LOGGER = LogManager.getLogger(PostgresDatabaseDAO.class);
 
-    private final String url;
-    private final String username;
-    private final String password;
-
-    public DatabaseDAO(String url, String username, String password) {
-        this.url = url;
-        this.username = username;
-        this.password = password;
+    public PostgresDatabaseDAO() {
     }
 
     public Routes getRoutes(String uid) {
 
         ObjectMapper mapper = new ObjectMapper();
         Routes routes = new Routes();
-        try (Connection conn = DriverManager.getConnection(url, username, password);
+        try (Connection conn = DriverManager.getConnection(System.getenv(JDBC_DATABASE_URL_ENV_VARIABLE));
              PreparedStatement ps = conn.prepareStatement(SQL_SELECT_ALL_POSTS)) {
             LOGGER.info(CONNECTION_CREATION_LOG, conn);
             ps.setString(1, uid);
@@ -59,7 +53,7 @@ public class DatabaseDAO {
 
         ObjectMapper mapper = new ObjectMapper();
         List<Activity> activities = new ArrayList<>();
-        try (Connection conn = DriverManager.getConnection(url, username, password);
+        try (Connection conn = DriverManager.getConnection(System.getenv(JDBC_DATABASE_URL_ENV_VARIABLE));
              PreparedStatement ps = conn.prepareStatement(SQL_SELECT_ALL_POSTS)) {
             LOGGER.info(CONNECTION_CREATION_LOG, conn);
             ps.setString(1, uid);
@@ -85,7 +79,7 @@ public class DatabaseDAO {
 
     public void insertPost(String name, String description, String route, String uid) throws SQLException {
 
-        try (Connection conn = DriverManager.getConnection(url, username, password);
+        try (Connection conn = DriverManager.getConnection(System.getenv(JDBC_DATABASE_URL_ENV_VARIABLE));
              PreparedStatement ps = conn.prepareStatement(SQL_INSERT_POST)) {
             LOGGER.info(CONNECTION_CREATION_LOG, conn);
             ps.setString(1, name);
@@ -99,7 +93,7 @@ public class DatabaseDAO {
 
     public void deletePost(String uid, int id) throws SQLException {
 
-        try (Connection conn = DriverManager.getConnection(url, username, password);
+        try (Connection conn = DriverManager.getConnection(System.getenv(JDBC_DATABASE_URL_ENV_VARIABLE));
              PreparedStatement ps = conn.prepareStatement(SQL_DELETE_POST)) {
             LOGGER.info(CONNECTION_CREATION_LOG, conn);
             ps.setString(1, uid);
