@@ -9,8 +9,6 @@ import java.util.List;
 
 public interface BaseDatabaseDAO {
 
-    Connection getConnection() throws SQLException;
-
     Routes getRoutes(String uid);
 
     List<Activity> getPosts(String uid);
