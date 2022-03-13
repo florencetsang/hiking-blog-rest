@@ -8,7 +8,7 @@ const useStyles = makeStyles(theme => ({
     root: {
         flexGrow: 1,
         padding: 2,
-        margin: 20,
+        margin: '2em',
         height: '100%'
     }
 }))
@@ -23,7 +23,7 @@ export default function Posts() {
         setIsLoading(true);
         
         console.log("Fetching activities.");
-        getApi("/get-activities")
+        getApi("/api/get-activities")
         .then(response => response.json())
         .then(data => {
             setActivities(data);

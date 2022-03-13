@@ -47,7 +47,7 @@ export default function AppMenu(props) {
             <MenuIcon />
           </IconButton>
           {loggedInUser? 
-          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>Welcome, {loggedInUser.displayName} .</Typography>: 
+          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>Welcome, {loggedInUser.displayName}.</Typography>:
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>Pls sign in.</Typography>}
           {loggedInUser ?  <Button onClick={handleLogout} color="inherit">Logout</Button>: <Button onClick={handleLogin} color="inherit">Login</Button>}          
         </Toolbar>

@@ -6,8 +6,8 @@ import com.florence.hikingblogrest.dto.LatLng;
 import com.florence.hikingblogrest.dto.Route;
 import com.florence.hikingblogrest.dto.Routes;
 import com.florence.hikingblogrest.helper.RoutesHelper;
+import com.florence.hikingblogrest.proxy.BaseDatabaseDAO;
 import com.florence.hikingblogrest.proxy.CloudStorageProxy;
-import com.florence.hikingblogrest.proxy.DatabaseDAO;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -26,15 +26,19 @@ public class RoutesService {
 
     private final CloudStorageProxy cloudStorageProxy;
     private final String localFolderOverride;
-    private final DatabaseDAO databaseDAO;
+    private final BaseDatabaseDAO databaseDAO;
 
-    public RoutesService(CloudStorageProxy cloudStorageProxy, @Nullable String localFolderOverride, DatabaseDAO databaseDAO) {
+    public RoutesService(CloudStorageProxy cloudStorageProxy, @Nullable String localFolderOverride, BaseDatabaseDAO databaseDAO) {
         this.cloudStorageProxy = cloudStorageProxy;
         this.localFolderOverride = localFolderOverride;
         this.databaseDAO = databaseDAO;
     }
 
-    public Routes getRoutes() throws FileNotFoundException {
+    public Routes getRoutes(String uid) {
+        return databaseDAO.getRoutes(uid);
+    }
+
+    private Routes getRoutesFromFiles() throws FileNotFoundException {
         Map<String, InputStream> routeFiles = fetchRoutesFiles(localFolderOverride);
         Routes routes = new Routes();
         for (Map.Entry<String, InputStream> routeFile : routeFiles.entrySet()) {

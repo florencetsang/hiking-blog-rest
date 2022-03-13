@@ -13,11 +13,11 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.Part;
-import java.io.FileNotFoundException;
 import java.nio.file.Paths;
 import java.util.List;
 
 @RestController
+@RequestMapping("/api")
 @CrossOrigin(origins = {"http://localhost:3000", "http://localhost:5000"})
 public class RoutesController {
 
@@ -30,8 +30,9 @@ public class RoutesController {
     }
 
     @GetMapping("/get-routes")
-    public Routes getRoutes(@AuthenticationPrincipal UserPrincipal userPrincipal) throws FileNotFoundException {
-        return routesService.getRoutes();
+    public Routes getRoutes(@AuthenticationPrincipal UserPrincipal userPrincipal) {
+        final String uid = userPrincipal.getUid();
+        return routesService.getRoutes(uid);
     }
 
     @GetMapping("/get-activities")

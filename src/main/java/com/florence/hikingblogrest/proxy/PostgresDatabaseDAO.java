@@ -14,22 +14,19 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class DatabaseDAO implements BaseDatabaseDAO {
+public class PostgresDatabaseDAO implements BaseDatabaseDAO {
 
-    private static final String SQL_SELECT_ALL_POSTS = "SELECT * FROM HBA.HIKING_ROUTES WHERE USER_ID=?";
-    private static final String SQL_INSERT_POST = "INSERT INTO HBA.HIKING_ROUTES (NAME, DESCRIPTION, PATH_COORDINATES, USER_ID) VALUES (?,?,?,?)";
-    private static final String SQL_DELETE_POST = "DELETE FROM HBA.HIKING_ROUTES WHERE USER_ID=? AND ID=?";
+    private static final String SQL_SELECT_ALL_POSTS = "SELECT * FROM HIKING_ROUTES WHERE USER_ID=?";
+    private static final String SQL_INSERT_POST = "INSERT INTO HIKING_ROUTES (NAME, DESCRIPTION, PATH_COORDINATES, USER_ID) VALUES (?,?,?,?)";
+    private static final String SQL_DELETE_POST = "DELETE FROM HIKING_ROUTES WHERE USER_ID=? AND ID=?";
     private static final String CONNECTION_CREATION_LOG = "Created connection: {}";
-    private static final Logger LOGGER = LogManager.getLogger(DatabaseDAO.class);
+    private static final Logger LOGGER = LogManager.getLogger(PostgresDatabaseDAO.class);
 
     private final String url;
     private final String username;
     private final String password;
 
-//    public DatabaseDAO() {
-//    }
-
-    public DatabaseDAO(String url, String username, String password) {
+    public PostgresDatabaseDAO(String url, String username, String password) {
         this.url = url;
         this.username = username;
         this.password = password;

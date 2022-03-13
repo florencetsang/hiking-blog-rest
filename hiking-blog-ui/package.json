@@ -2,12 +2,10 @@
   "name": "hiking-map",
   "version": "0.1.0",
   "private": true,
-  "proxy": "http://localhost:8080",
+  "proxy": "http://localhost:8081",
   "dependencies": {
     "@emotion/react": "^11.4.1",
     "@emotion/styled": "^11.3.0",
-    "@material-ui/core": "^4.11.2",
-    "@material-ui/icons": "^4.11.2",
     "@mui/icons-material": "^5.0.3",
     "@mui/material": "^5.0.3",
     "@mui/styles": "^5.2.3",

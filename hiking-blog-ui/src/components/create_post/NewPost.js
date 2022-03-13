@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import TextField from '@material-ui/core/TextField';
-import Container from '@material-ui/core/Container';
-import Box from '@material-ui/core/Box';
-import Button from '@material-ui/core/Button';
+import { makeStyles } from '@mui/styles';
+import TextField from '@mui/material/TextField';
+import Container from '@mui/material/Container';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
 import UploadFile from './UploadFile';
 import { postFormData } from '../../services/api';
 
@@ -41,7 +41,7 @@ export default function NewPost() {
     fd.append("name", name);
     fd.append("description", description);
 
-    postFormData('/create-post', fd)
+    postFormData('/api/create-post', fd)
     .then((res) => {
       alert("File Upload success");
     })
@@ -83,7 +83,7 @@ export default function NewPost() {
             variant="outlined"
             onChange={updateDescription}
           />
-          <Button variant="contained" color="primary" type="submit" >Post</Button>
+          <Button variant="contained" type="submit" >Post</Button>
         </form>
       </Box>
     </Container>

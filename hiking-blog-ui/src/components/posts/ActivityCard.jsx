@@ -42,7 +42,7 @@ export default function ActivityCard(props) {
         const postData = {
             id: id
         };
-        postApi('/delete-post', JSON.stringify(postData))
+        postApi('/api/delete-post', JSON.stringify(postData))
         .then(res => {
             if (res.ok) {
                 return res;
