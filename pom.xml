@@ -191,7 +191,7 @@
 <!--				<artifactId>heroku-maven-plugin</artifactId>-->
 <!--				<version>3.0.3</version>-->
 <!--				<configuration>-->
-<!--					<appName>Hiking Blog</appName>-->
+<!--					<appName>TripHub</appName>-->
 <!--					<processTypes>-->
 <!--						<web>java -jar target/hiking-blog-rest-${version}.jar</web>-->
 <!--					</processTypes>-->
