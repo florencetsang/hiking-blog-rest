@@ -27,22 +27,25 @@ export default function HikingMap() {
     const [routes, setRoutes] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
 
-    const loadRoutes = async () => {
-        getApi('/api/get-routes')
-        .then(response => response.json())
-        .then(data => {
-            setRoutes(data.routes);
-            setIsLoading(false);
-            console.log(`Number of routes fetched: ${data.routes.length}`);
-            data.routes.map(route => console.log(`Fetched ${route.key}`))                
-        })
-        .catch((err) => {
-            console.log(err);
-        });
-    }
-
     useEffect(() => {
-        loadRoutes();        
+        let didCancel = false;
+        const _loadRoutes = async () => {
+            getApi('/api/get-routes')
+            .then(response => response.json())
+            .then(data => {
+                if (!didCancel) {
+                    setRoutes(data.routes);
+                    setIsLoading(false);
+                    console.log(`Number of routes fetched: ${data.routes.length}`);
+                    data.routes.map(route => console.log(`Fetched ${route.key}`))   
+                }             
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+        };
+        _loadRoutes();
+        return () => {didCancel = true;};
     }, []);
 
     // const [strokeColor, setStrokeColor] = useState('#0000FF');

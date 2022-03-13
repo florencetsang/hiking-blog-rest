@@ -18,28 +18,30 @@ export default function Posts() {
     const [isLoading, setIsLoading] = useState(false);
     const [activities, setActivities] = useState([]);
 
-    const loadRoutes = async () => {
-
-        setIsLoading(true);
-        
-        console.log("Fetching activities.");
-        getApi("/api/get-activities")
-        .then(response => response.json())
-        .then(data => {
-            setActivities(data);
-            setIsLoading(false);
-            console.log(`Number of activities fetched: ${data.length}`);
-            console.log(`Activities: ${data}`);
-            data.map(activity => console.log(`Fetched activity with ID: ${activity.key}`))
-        });
-    }
-
     const deleteActivity = (id) => {
         setActivities(activities.filter(activity => activity.key !== id));     
     }
 
     useEffect(() => {
-        loadRoutes();
+        let didCancel = false;
+        const _loadRoutes = async () => {
+            setIsLoading(true);
+        
+            console.log("Fetching activities.");
+            getApi("/api/get-activities")
+            .then(response => response.json())
+            .then(data => {
+                if (!didCancel) {
+                    setActivities(data);
+                    setIsLoading(false);
+                    console.log(`Number of activities fetched: ${data.length}`);
+                    console.log(`Activities: ${data}`);
+                    data.map(activity => console.log(`Fetched activity with ID: ${activity.key}`))
+                }
+            });
+        };
+        _loadRoutes();
+        return () => {didCancel = true;};
     }, []);
 
     if (isLoading) {

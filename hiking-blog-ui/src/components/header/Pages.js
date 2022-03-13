@@ -6,6 +6,7 @@ import {
   BrowserRouter,
   Routes,
   Route,
+  Navigate
 } from "react-router-dom";
 import Navigation from '../header/Navigation';
 
@@ -18,10 +19,10 @@ export default class Pages extends Component {
         <BrowserRouter>
           <Navigation/>   
           <Routes>
-            <Route path="/" element={<HikingMap/>} />
             <Route path="/map" element={<HikingMap/>} />
             <Route path="/routes" element={<Posts />} />
             <Route path="/new-post" element={<NewPost />} />
+            <Route path="*" element={<Navigate replace to="/map" />} />
           </Routes>
         </BrowserRouter>
       )
