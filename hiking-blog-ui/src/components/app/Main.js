@@ -1,7 +1,6 @@
 import React, {  useState } from 'react';
 import Pages from '../header/Pages';
 import Footer from '../header/Footer';
-import Navigation from '../header/Navigation';
 import AppMenu from '../header/AppMenu';
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { initializeApp } from "firebase/app";
@@ -37,13 +36,7 @@ export default function Main() {
     return (
         <div>
             <AppMenu loggedInUser={loggedInUser}/>
-            {loggedInUser &&         
-                <div>
-                    <Navigation setActiveTab={setActiveTab}/>             
-                    <Pages activeTab={activeTab} loggedInUser={loggedInUser}/>
-                    {/* <Footer /> */}
-                </div >    
-            }
+            {loggedInUser && <Pages loggedInUser={loggedInUser}/> }
         </div>
     );
     
