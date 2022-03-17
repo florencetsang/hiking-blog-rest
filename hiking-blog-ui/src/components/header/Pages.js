@@ -21,7 +21,7 @@ export default class Pages extends Component {
           <Routes>
             <Route path="/map" element={<HikingMap/>} />
             <Route path="/routes" element={<Posts />} />
-            <Route path="/new-post" element={<NewPost />} />
+            <Route path="/newPost" element={<NewPost />} />
             <Route path="*" element={<Navigate replace to="/map" />} />
           </Routes>
         </BrowserRouter>

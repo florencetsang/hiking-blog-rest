@@ -31,7 +31,7 @@ export default function Navigation(props) {
         return null;
       }
 
-    const routeMatch = useRouteMatch(['/map', '/routes', '/new-post']);
+    const routeMatch = useRouteMatch(['/map', '/routes', '/newPost']);
     const currentTab = routeMatch?.pattern?.path;
 
     return (
@@ -45,7 +45,7 @@ export default function Navigation(props) {
                 >
                     <Tab label="Map" value="/map" to="/map" component={Link}  />
                     <Tab label="Routes" value="/routes" to="/routes" component={Link} />
-                    <Tab label="New Route" value="/new-post" to="/new-post" component={Link} />
+                    <Tab label="New Route" value="/newPost" to="/newPost" component={Link} />
                 </Tabs>
             </Paper>
         </div>

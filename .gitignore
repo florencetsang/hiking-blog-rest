@@ -1,3 +1,5 @@
+src/main/resources/public
+
 HELP.md
 target/
 !.mvn/wrapper/maven-wrapper.jar
