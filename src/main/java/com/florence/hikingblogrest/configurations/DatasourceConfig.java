@@ -18,8 +18,10 @@ public class DatasourceConfig {
     @Bean
     public ConnectionResolver connectionResolver(@Value("${spring.datasource.url}") String url,
                                                  @Value("${spring.datasource.username}") String username,
-                                                 @Value("${spring.datasource.password}") String password) {
-        return new DBCPConnectionResolver(url, username, password);
+                                                 @Value("${spring.datasource.password}") String password,
+                                                 @Value("${dbcp.min.idle}") int minIdle,
+                                                 @Value("${dbcp.max.idle}") int maxIdle) {
+        return new DBCPConnectionResolver(url, username, password, minIdle, maxIdle);
     }
 
     @Bean

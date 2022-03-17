@@ -1,21 +1,27 @@
 package com.florence.hikingblogrest.proxy.connectionresolver;
 
 import org.apache.commons.dbcp2.BasicDataSource;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.sql.Connection;
 import java.sql.SQLException;
 
 public class DBCPConnectionResolver implements ConnectionResolver {
 
-    private static final BasicDataSource ds = new BasicDataSource();
+    private static final Logger LOGGER = LogManager.getLogger(DBCPConnectionResolver.class);
 
-    public DBCPConnectionResolver(String url, String username, String password) {
+    private final BasicDataSource ds = new BasicDataSource();
+
+    public DBCPConnectionResolver(String url, String username, String password, int minIdle, int maxIdle) {
         ds.setUrl(url);
         ds.setUsername(username);
         ds.setPassword(password);
-        ds.setMinIdle(5);
-        ds.setMaxIdle(10);
-        ds.setMaxOpenPreparedStatements(100);
+        ds.setMinIdle(minIdle);
+        ds.setMaxIdle(maxIdle);
+//        ds.setMaxOpenPreparedStatements(100);
+
+        LOGGER.info("Created DBCPConnectionResolver. Url: [{}] MinIdle: [{}] MaxIdle: [{}] ", url, minIdle, maxIdle);
     }
 
     @Override
