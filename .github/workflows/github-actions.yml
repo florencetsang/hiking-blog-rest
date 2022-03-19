@@ -17,7 +17,4 @@ jobs:
           cache: maven
       - name: Build with Maven
         env:
-          JDBC_DATABASE_URL: ${{ secrets.JDBC_DATABASE_URL }}
-          JDBC_DATABASE_USERNAME: ${{ secrets.JDBC_DATABASE_USERNAME }}
-          JDBC_DATABASE_PASSWORD: ${{ secrets.JDBC_DATABASE_PASSWORD }}
-        run: mvn -B -Dspring.profiles.active=prod package --file pom.xml
+        run: mvn -B package
