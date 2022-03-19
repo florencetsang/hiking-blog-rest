@@ -17,10 +17,6 @@ jobs:
           cache: maven
       - name: Build with Maven
         run: mvn -B package
-
-  heroku-deploy:
-    runs-on: ubuntu-latest
-    steps:
       - name: Deploy to Heroku
         uses: akhileshns/heroku-deploy@v3.12.12
         with:
