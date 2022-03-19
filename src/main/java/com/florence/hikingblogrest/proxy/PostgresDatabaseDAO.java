@@ -6,6 +6,7 @@ import com.florence.hikingblogrest.dto.Activity;
 import com.florence.hikingblogrest.dto.LatLng;
 import com.florence.hikingblogrest.dto.Route;
 import com.florence.hikingblogrest.dto.Routes;
+import com.florence.hikingblogrest.proxy.connectionresolver.ConnectionResolver;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -22,26 +23,17 @@ public class PostgresDatabaseDAO implements BaseDatabaseDAO {
     private static final String CONNECTION_CREATION_LOG = "Created connection: {}";
     private static final Logger LOGGER = LogManager.getLogger(PostgresDatabaseDAO.class);
 
-    private final String url;
-    private final String username;
-    private final String password;
+    private final ConnectionResolver connectionResolver;
 
-    public PostgresDatabaseDAO(String url, String username, String password) {
-        this.url = url;
-        this.username = username;
-        this.password = password;
-    }
-
-    @Override
-    public Connection getConnection() throws SQLException {
-        return DriverManager.getConnection(url, username, password);
+    public PostgresDatabaseDAO(ConnectionResolver connectionResolver) {
+        this.connectionResolver = connectionResolver;
     }
 
     public Routes getRoutes(String uid) {
 
         ObjectMapper mapper = new ObjectMapper();
         Routes routes = new Routes();
-        try (Connection conn = getConnection();
+        try (Connection conn = connectionResolver.getConnection();
              PreparedStatement ps = conn.prepareStatement(SQL_SELECT_ALL_POSTS)) {
             LOGGER.info(CONNECTION_CREATION_LOG, conn);
             ps.setString(1, uid);
@@ -64,7 +56,7 @@ public class PostgresDatabaseDAO implements BaseDatabaseDAO {
 
         ObjectMapper mapper = new ObjectMapper();
         List<Activity> activities = new ArrayList<>();
-        try (Connection conn = getConnection();
+        try (Connection conn = connectionResolver.getConnection();
              PreparedStatement ps = conn.prepareStatement(SQL_SELECT_ALL_POSTS)) {
             LOGGER.info(CONNECTION_CREATION_LOG, conn);
             ps.setString(1, uid);
@@ -90,7 +82,7 @@ public class PostgresDatabaseDAO implements BaseDatabaseDAO {
 
     public void insertPost(String name, String description, String route, String uid) throws SQLException {
 
-        try (Connection conn = getConnection();
+        try (Connection conn = connectionResolver.getConnection();
              PreparedStatement ps = conn.prepareStatement(SQL_INSERT_POST)) {
             LOGGER.info(CONNECTION_CREATION_LOG, conn);
             ps.setString(1, name);
@@ -104,7 +96,7 @@ public class PostgresDatabaseDAO implements BaseDatabaseDAO {
 
     public void deletePost(String uid, int id) throws SQLException {
 
-        try (Connection conn = getConnection();
+        try (Connection conn = connectionResolver.getConnection();
              PreparedStatement ps = conn.prepareStatement(SQL_DELETE_POST)) {
             LOGGER.info(CONNECTION_CREATION_LOG, conn);
             ps.setString(1, uid);

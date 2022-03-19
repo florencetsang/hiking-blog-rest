@@ -1,8 +1,8 @@
 package com.florence.hikingblogrest.configurations;
 
-import com.florence.hikingblogrest.proxy.BaseDatabaseDAO;
-import com.florence.hikingblogrest.proxy.CloudStorageProxy;
-import com.florence.hikingblogrest.proxy.PostgresDatabaseDAO;
+import com.florence.hikingblogrest.proxy.*;
+import com.florence.hikingblogrest.proxy.connectionresolver.ConnectionResolver;
+import com.florence.hikingblogrest.proxy.connectionresolver.DBCPConnectionResolver;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,9 +16,16 @@ public class DatasourceConfig {
     }
 
     @Bean
-    public BaseDatabaseDAO databaseDAO(@Value("${spring.datasource.url}") String url,
-                                   @Value("${spring.datasource.username}") String username,
-                                   @Value("${spring.datasource.password}") String password) {
-        return new PostgresDatabaseDAO(url, username, password);
+    public ConnectionResolver connectionResolver(@Value("${spring.datasource.url}") String url,
+                                                 @Value("${spring.datasource.username}") String username,
+                                                 @Value("${spring.datasource.password}") String password,
+                                                 @Value("${dbcp.min.idle}") int minIdle,
+                                                 @Value("${dbcp.max.idle}") int maxIdle) {
+        return new DBCPConnectionResolver(url, username, password, minIdle, maxIdle);
+    }
+
+    @Bean
+    public BaseDatabaseDAO databaseDAO(ConnectionResolver connectionResolver) {
+        return new PostgresDatabaseDAO(connectionResolver);
     }
 }
