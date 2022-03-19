@@ -1,4 +1,4 @@
-CREATE USER hbaadmin WITH PASSWORD 'hbaAdmin' CREATEDB;
+CREATE USER hbaadmin WITH PASSWORD 'hbaAdmin' CREATEDB; --for dev only
 
 CREATE DATABASE TH;
 
