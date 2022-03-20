@@ -12,6 +12,8 @@ import Typography from '@mui/material/Typography';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import ShareIcon from '@mui/icons-material/Share';
 import DeleteIcon from '@mui/icons-material/Delete';
+import Chip from '@mui/material/Chip';
+import Stack from '@mui/material/Stack';
 
 import { Link } from 'react-router-dom';
 
@@ -66,7 +68,11 @@ export default function TripCard(props: TripCardProps) {
                     <Typography variant="body2" color="textSecondary" component="p">
                         {trip.description}
                     </Typography>
-                    <Typography>{JSON.stringify(trip.tags)}</Typography>
+                    <Stack direction="row" spacing={1}>
+                        {trip.tags.map(tag => (
+                            <Chip key={tag.tagId} label={tag.name}/>
+                        ))}
+                    </Stack>
                 </CardContent>
             </CardActionArea>
             <CardActions>
