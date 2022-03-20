@@ -22,12 +22,7 @@ public class SimpleConnectionResolver implements ConnectionResolver {
     }
 
     @Override
-    public Connection getConnection() {
-        try {
-            return DriverManager.getConnection(url, username, password);
-        } catch (SQLException e) {
-            LOGGER.error("Cannot get connection", e);
-            return null;
-        }
+    public Connection getConnection() throws SQLException {
+        return DriverManager.getConnection(url, username, password);
     }
 }

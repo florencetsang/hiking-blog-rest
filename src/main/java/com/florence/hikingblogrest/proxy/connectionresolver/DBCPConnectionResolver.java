@@ -26,12 +26,7 @@ public class DBCPConnectionResolver implements ConnectionResolver {
     }
 
     @Override
-    public Connection getConnection() {
-        try {
-            return ds.getConnection();
-        } catch (SQLException e) {
-            LOGGER.error("Cannot get connection", e);
-            return null;
-        }
+    public Connection getConnection() throws SQLException {
+        return ds.getConnection();
     }
 }
