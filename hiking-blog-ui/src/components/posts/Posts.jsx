@@ -1,8 +1,18 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
+
 import { makeStyles } from '@mui/styles';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
-import ActivityCard from './ActivityCard';
-import { getApi } from '../../services/api';
+import Modal from '@mui/material/Modal';
+
+import { Link } from 'react-router-dom';
+
+import TripCard from './TripCard';
+import TagDetails from '../tag/TagDetails';
+
+import { getTrips } from '../../services/tripApi';
+import { getTags, addTag } from '../../services/tagApi';
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -11,38 +21,68 @@ const useStyles = makeStyles(theme => ({
         margin: '2em',
         height: '100%'
     }
-}))
+}));
+
+const tagModalStyle = {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: 400,
+    bgcolor: 'background.paper',
+    border: '2px solid #000',
+    boxShadow: 24,
+    p: 4,
+};
 
 export default function Posts() {
     const classes = useStyles();
-    const [isLoading, setIsLoading] = useState(false);
-    const [activities, setActivities] = useState([]);
 
-    const deleteActivity = (id) => {
-        setActivities(activities.filter(activity => activity.key !== id));     
-    }
+    const [isLoading, setIsLoading] = useState(false);
+    const [trips, setTrips] = useState([]);
+    const [tags, setTags] = useState([]);
+    const [tagModalOpen, setTagModalOpen] = useState(false);
+
+    const deleteTrip = useCallback((tripId) => {
+        setTrips(trips => trips.filter(trip => trip.key !== tripId));
+    }, [setTrips]);
 
     useEffect(() => {
         let didCancel = false;
-        const _loadRoutes = async () => {
+        const _loadTrips = async () => {
             setIsLoading(true);
-        
-            console.log("Fetching activities.");
-            getApi("/api/get-activities")
-            .then(response => response.json())
-            .then(data => {
-                if (!didCancel) {
-                    setActivities(data);
-                    setIsLoading(false);
-                    console.log(`Number of activities fetched: ${data.length}`);
-                    console.log(`Activities: ${data}`);
-                    data.map(activity => console.log(`Fetched activity with ID: ${activity.key}`))
-                }
-            });
+            console.log("Fetching trips.");
+            const trips = await getTrips();
+            if (!didCancel) {
+                setTrips(trips);
+                setIsLoading(false);
+                console.log(`Number of trips fetched: ${trips.length}`);
+                console.log(`trips: ${trips}`);
+                trips.map(trip => console.log(`Fetched trip with ID: ${trip.key}`))
+            }
         };
-        _loadRoutes();
+        _loadTrips();
         return () => {didCancel = true;};
     }, []);
+
+    useEffect(() => {
+        let didCancel = false;
+        const _loadTags = async () => {
+            const tags = await getTags();
+            if (!didCancel) {
+                setTags(tags);
+            }
+        };
+        _loadTags();
+        return () => {didCancel = true;};
+    }, []);
+
+    const openTagModal = useCallback(() => setTagModalOpen(true), [setTagModalOpen]);
+    const closeTagModal = useCallback(() => setTagModalOpen(false), [setTagModalOpen]);
+
+    const postSaveTag = useCallback(() => {
+        closeTagModal();
+    }, [closeTagModal]);
 
     if (isLoading) {
         return <p> Loading... </p>;
@@ -57,12 +97,27 @@ export default function Posts() {
                 justify="flex-start"
                 alignItems="flex-start"
             >
-                {activities.map(activity => (
-                    <Grid item xs={12} sm={6} md={3} key={activity.key}>
-                        <ActivityCard key={activity.key} id={activity.key} title={activity.name} description={activity.description} pathCoordinates={activity.pathCoordinates} deleteActivity={deleteActivity} />
+                {trips.map(trip => (
+                    <Grid item xs={12} sm={6} md={3} key={trip.key}>
+                        <TripCard key={trip.key} trip={trip} postDeleteTrip={deleteTrip} />
                     </Grid>
                 ))}
             </Grid>
+
+            <Button><Link to="/tripDetails/_new">New Trip</Link></Button>
+
+            <div>{JSON.stringify(tags)}</div>
+            <Button onClick={openTagModal}>New tag</Button>
+            <Modal
+                open={tagModalOpen}
+                onClose={closeTagModal}
+                aria-labelledby="Tag modal"
+                aria-describedby="Tag modal"
+            >
+                <Box sx={tagModalStyle}>
+                    <TagDetails tagId={-1} editType={0} postSaveTag={postSaveTag}/>
+                </Box>
+            </Modal>
         </div>
     );
 };

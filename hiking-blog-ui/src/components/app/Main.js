@@ -11,16 +11,16 @@ export default function Main() {
     const [activeTab, setActiveTab] = useState("map");
 
     const firebaseConfig = {
-        apiKey: "AIzaSyB5LsZWY3JuZsns2ERAfhXosYu10E7EGeA",
+        apiKey: "AIzaSyAh-FvVa0j-71iD4Dy-NRmymdUo4euLIWU",
         authDomain: "hiking-blog-app.firebaseapp.com",
         databaseURL: "https://hiking-blog-app.firebaseio.com",
         projectId: "hiking-blog-app",
         storageBucket: "hiking-blog-app.appspot.com",
         messagingSenderId: "584040487221",
-        appId: "1:584040487221:web:b1157b79a7647e8253147c",
-        measurementId: "G-ZBVGB3E77L"
+        appId: "1:584040487221:web:f56f336fc90e366553147c",
+        measurementId: "G-0JEMS8DE6Z"
       };
-    
+
     // Initialize Firebase
     const app = initializeApp(firebaseConfig);
 
@@ -39,5 +39,5 @@ export default function Main() {
             {loggedInUser && <Pages loggedInUser={loggedInUser}/> }
         </div>
     );
-    
+
 }

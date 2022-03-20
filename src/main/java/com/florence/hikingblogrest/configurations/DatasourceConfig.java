@@ -20,12 +20,8 @@ public class DatasourceConfig {
                                                  @Value("${spring.datasource.username}") String username,
                                                  @Value("${spring.datasource.password}") String password,
                                                  @Value("${dbcp.min.idle}") int minIdle,
-                                                 @Value("${dbcp.max.idle}") int maxIdle) {
-        return new DBCPConnectionResolver(url, username, password, minIdle, maxIdle);
-    }
-
-    @Bean
-    public BaseDatabaseDAO databaseDAO(ConnectionResolver connectionResolver) {
-        return new PostgresDatabaseDAO(connectionResolver);
+                                                 @Value("${dbcp.max.idle}") int maxIdle,
+                                                 @Value("${dbcp.maxWaitMillis}") int maxWaitMillis) {
+        return new DBCPConnectionResolver(url, username, password, minIdle, maxIdle, maxWaitMillis);
     }
 }
