@@ -1,1 +1,1 @@
-web: java -jar -Dserver.port=$PORT -Dspring.profiles.active=prod "target/hiking-blog-rest-0.0.6-SNAPSHOT.jar"
+web: java -jar -Dserver.port=$PORT -Dspring.profiles.active=prod "/home/runner/work/hiking-blog-rest/hiking-blog-rest/target/hiking-blog-rest-0.0.6-SNAPSHOT.jar"
