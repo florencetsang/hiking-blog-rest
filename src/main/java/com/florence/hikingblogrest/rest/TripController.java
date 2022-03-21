@@ -101,7 +101,7 @@ public class TripController {
         return new SuccessApiRes<>(deletedId);
     }
 
-    public abstract static class ActivityReqBody {
+    public abstract static class TripReqBody {
         private String name;
         private String description;
         private List<Integer> tagIds = new ArrayList<>();
@@ -129,7 +129,7 @@ public class TripController {
         }
     }
 
-    public static class CreateTripReqBody extends ActivityReqBody {
+    public static class CreateTripReqBody extends TripReqBody {
 
     }
 

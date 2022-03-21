@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import Posts from '../posts/Posts';
+import Trips from '../posts/Trips';
 import TripDetails from '../trip/TripDetails';
 import HikingMap from './../map/HikingMap';
 import {
@@ -20,7 +20,7 @@ export default class Pages extends Component {
           <Navigation/>
           <Routes>
             <Route path="/map" element={<HikingMap/>} />
-            <Route path="/trips" element={<Posts />} />
+            <Route path="/trips" element={<Trips />} />
             <Route path="/tripDetails/:tripId" element={<TripDetails />} />
             <Route path="*" element={<Navigate replace to="/map" />} />
           </Routes>

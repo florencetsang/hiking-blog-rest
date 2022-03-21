@@ -35,7 +35,7 @@ const tagModalStyle = {
     p: 4,
 };
 
-export default function Posts() {
+export default function Trips() {
     const classes = useStyles();
 
     const [isLoading, setIsLoading] = useState(false);
