@@ -1,6 +1,9 @@
 package com.florence.hikingblogrest.configurations;
 
-import com.florence.hikingblogrest.proxy.*;
+import com.florence.hikingblogrest.proxy.BaseDatabaseDAO;
+import com.florence.hikingblogrest.proxy.CloudStorageProxy;
+import com.florence.hikingblogrest.proxy.PostgresDatabaseDAO;
+import com.florence.hikingblogrest.proxy.TagDAO;
 import com.florence.hikingblogrest.proxy.connectionresolver.ConnectionResolver;
 import com.florence.hikingblogrest.service.TripService;
 import org.springframework.context.annotation.Bean;

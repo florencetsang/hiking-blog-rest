@@ -1,9 +1,10 @@
 package com.florence.hikingblogrest.rest
 
-import org.junit.jupiter.api.Test
 import com.florence.hikingblogrest.rest.TripController.CreateTripReqBody
 import org.codehaus.jackson.map.ObjectMapper
-import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.Test
 
 internal class TripControllerTest {
     @Test

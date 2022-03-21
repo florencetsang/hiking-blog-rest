@@ -1,6 +1,6 @@
 package com.florence.hikingblogrest.service;
 
-import com.florence.hikingblogrest.dto.*;
+import com.florence.hikingblogrest.dto.Trip;
 import com.florence.hikingblogrest.helper.RoutesHelper;
 import com.florence.hikingblogrest.proxy.BaseDatabaseDAO;
 import com.florence.hikingblogrest.proxy.CloudStorageProxy;
@@ -9,7 +9,10 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.lang.Nullable;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

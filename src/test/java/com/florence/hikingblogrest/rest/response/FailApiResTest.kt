@@ -1,7 +1,7 @@
 package com.florence.hikingblogrest.rest.response
 
 import org.codehaus.jackson.map.ObjectMapper
-import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 
 internal class FailApiResTest {

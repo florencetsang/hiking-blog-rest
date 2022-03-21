@@ -1,6 +1,6 @@
 package com.florence.hikingblogrest.configurations;
 
-import com.florence.hikingblogrest.proxy.*;
+import com.florence.hikingblogrest.proxy.CloudStorageProxy;
 import com.florence.hikingblogrest.proxy.connectionresolver.ConnectionResolver;
 import com.florence.hikingblogrest.proxy.connectionresolver.DBCPConnectionResolver;
 import org.springframework.beans.factory.annotation.Value;

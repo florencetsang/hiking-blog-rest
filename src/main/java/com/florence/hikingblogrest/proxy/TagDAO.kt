@@ -4,7 +4,8 @@ import com.florence.hikingblogrest.dto.Tag
 import com.florence.hikingblogrest.dto.Tag.TagBuilder
 import com.florence.hikingblogrest.proxy.connectionresolver.ConnectionResolver
 import mu.KotlinLogging
-import java.sql.*
+import java.sql.ResultSet
+import java.sql.Statement
 import java.util.*
 
 class TagDAO(

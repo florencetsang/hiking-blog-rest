@@ -2,9 +2,9 @@ package com.florence.hikingblogrest.proxy;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.florence.hikingblogrest.dto.Trip;
 import com.florence.hikingblogrest.dto.LatLng;
 import com.florence.hikingblogrest.dto.Tag;
+import com.florence.hikingblogrest.dto.Trip;
 import com.florence.hikingblogrest.proxy.connectionresolver.ConnectionResolver;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

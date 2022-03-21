@@ -22,7 +22,8 @@ class TagController(private val tagService: TagService) {
 
     @GetMapping(value = ["/getTags"], produces = [MediaType.APPLICATION_JSON_VALUE])
     fun getTags(
-            @AuthenticationPrincipal userPrincipal: UserPrincipal): ApiRes {
+        @AuthenticationPrincipal userPrincipal: UserPrincipal
+    ): ApiRes {
         val uid = userPrincipal.uid
         logger.info("Get tags. UID: {}", uid)
         val tags = tagService.getTags(uid)
@@ -31,8 +32,9 @@ class TagController(private val tagService: TagService) {
 
     @GetMapping(value = ["/getTag"], produces = [MediaType.APPLICATION_JSON_VALUE])
     fun getTag(
-            @RequestParam tagId: Int,
-            @AuthenticationPrincipal userPrincipal: UserPrincipal): ApiRes {
+        @RequestParam tagId: Int,
+        @AuthenticationPrincipal userPrincipal: UserPrincipal
+    ): ApiRes {
         val uid = userPrincipal.uid
         logger.info("Get tag. UID: {}, tagId: {}", uid, tagId)
         val tag = tagService.getTag(uid, tagId)
@@ -47,7 +49,8 @@ class TagController(private val tagService: TagService) {
     @GetMapping(value = ["/getTagByName"], produces = [MediaType.APPLICATION_JSON_VALUE])
     fun getTag(
         @RequestParam tagName: String,
-        @AuthenticationPrincipal userPrincipal: UserPrincipal): ApiRes {
+        @AuthenticationPrincipal userPrincipal: UserPrincipal
+    ): ApiRes {
         val uid = userPrincipal.uid
         logger.info("Get tag by name. UID: {}, tagName: {}", uid, tagName)
         val tag = tagService.getTagByName(uid, tagName)
@@ -59,10 +62,15 @@ class TagController(private val tagService: TagService) {
         return SuccessApiRes(tag)
     }
 
-    @PostMapping(value = ["/addTag"], consumes = [MediaType.APPLICATION_JSON_VALUE], produces = [MediaType.APPLICATION_JSON_VALUE])
+    @PostMapping(
+        value = ["/addTag"],
+        consumes = [MediaType.APPLICATION_JSON_VALUE],
+        produces = [MediaType.APPLICATION_JSON_VALUE]
+    )
     fun addTag(
-            @RequestBody createTagReqBody: CreateTagReqBody,
-            @AuthenticationPrincipal userPrincipal: UserPrincipal): ApiRes {
+        @RequestBody createTagReqBody: CreateTagReqBody,
+        @AuthenticationPrincipal userPrincipal: UserPrincipal
+    ): ApiRes {
         val uid = userPrincipal.uid
         logger.info("Add tag. UID: {}, tagReqBody: {}", uid, createTagReqBody)
         val addedTagId = tagService.addTag(uid, createTagReqBody.name, createTagReqBody.description)
@@ -74,10 +82,15 @@ class TagController(private val tagService: TagService) {
         return SuccessApiRes(addedTagId)
     }
 
-    @PostMapping(value = ["/deleteTag"], consumes = [MediaType.APPLICATION_JSON_VALUE], produces = [MediaType.APPLICATION_JSON_VALUE])
+    @PostMapping(
+        value = ["/deleteTag"],
+        consumes = [MediaType.APPLICATION_JSON_VALUE],
+        produces = [MediaType.APPLICATION_JSON_VALUE]
+    )
     fun deleteTag(
-            @RequestBody reqBody: DeleteTagReqBody,
-            @AuthenticationPrincipal userPrincipal: UserPrincipal): ApiRes {
+        @RequestBody reqBody: DeleteTagReqBody,
+        @AuthenticationPrincipal userPrincipal: UserPrincipal
+    ): ApiRes {
         val tagId = reqBody.tagId
         val uid = userPrincipal.uid
         val deletedTagId = tagService.deleteTag(uid, tagId)
