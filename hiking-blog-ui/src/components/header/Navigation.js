@@ -9,6 +9,8 @@ import {
     useLocation,
   } from 'react-router-dom';
 
+import { MAP_URL, TRIPS_URL } from './navUtil';
+
 const useStyles = makeStyles((theme) => ({
     root: {
         flexGrow: 1,
@@ -31,7 +33,7 @@ export default function Navigation(props) {
         return null;
       }
 
-    const routeMatch = useRouteMatch(['/map', '/trips']);
+    const routeMatch = useRouteMatch([MAP_URL, TRIPS_URL]);
     const currentTab = routeMatch?.pattern?.path;
 
     return (
@@ -43,8 +45,8 @@ export default function Navigation(props) {
                     textColor="primary"
                     centered
                 >
-                    <Tab label="Map" value="/map" to="/map" component={Link}  />
-                    <Tab label="Trips" value="/trips" to="/trips" component={Link} />
+                    <Tab label="Map" value={MAP_URL} to={MAP_URL} component={Link}  />
+                    <Tab label="Trips" value={TRIPS_URL} to={TRIPS_URL} component={Link} />
                 </Tabs>
             </Paper>
         </div>
