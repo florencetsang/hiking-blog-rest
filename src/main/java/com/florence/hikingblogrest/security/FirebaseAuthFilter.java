@@ -33,7 +33,7 @@ public class FirebaseAuthFilter extends OncePerRequestFilter {
     private String getUserIdFromAuthToken(String authToken) throws FirebaseAuthException {
         FirebaseToken decodedToken = FirebaseAuth.getInstance().verifyIdToken(authToken);
         String uid = decodedToken.getUid();
-        LOGGER.info("Decoded idToken [{}] to uid [{}]", authToken, uid);
+        LOGGER.info("Decoded idToken to uid [{}]", uid);
         return uid;
     }
 
@@ -46,7 +46,6 @@ public class FirebaseAuthFilter extends OncePerRequestFilter {
         if (StringUtils.isEmpty(firebaseToken)) {
             LOGGER.warn("Failed request - Firebase token is invalid or not found. Please make sure it is passed in the HEADER. Uri: [{}]", uri);
         } else {
-            LOGGER.info("Firebase token [{}] attempting to access [{}]", firebaseToken, uri);
             try {
                 final String uid = getUserIdFromAuthToken(firebaseToken);
                 if (!StringUtils.isEmpty(uid)) {

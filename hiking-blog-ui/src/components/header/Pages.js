@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import Posts from '../posts/Posts';
-import NewPost from '../create_post/NewPost'
+import Trips from '../posts/Trips';
+import TripDetails from '../trip/TripDetails';
 import HikingMap from './../map/HikingMap';
 import {
   BrowserRouter,
@@ -17,11 +17,11 @@ export default class Pages extends Component {
       return (
 
         <BrowserRouter>
-          <Navigation/>   
+          <Navigation/>
           <Routes>
             <Route path="/map" element={<HikingMap/>} />
-            <Route path="/routes" element={<Posts />} />
-            <Route path="/newPost" element={<NewPost />} />
+            <Route path="/trips" element={<Trips />} />
+            <Route path="/tripDetails/:tripId" element={<TripDetails />} />
             <Route path="*" element={<Navigate replace to="/map" />} />
           </Routes>
         </BrowserRouter>
