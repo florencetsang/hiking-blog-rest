@@ -12,6 +12,7 @@ import org.apache.logging.log4j.Logger;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 public class PostgresDatabaseDAO implements BaseDatabaseDAO {
@@ -78,7 +79,7 @@ public class PostgresDatabaseDAO implements BaseDatabaseDAO {
     }
 
     @Override
-    public int addTrip(String name, String description, String route, List<Integer> tagIds, String uid, java.util.Date fromDate, java.util.Date toDate) {
+    public int addTrip(String name, String description, String route, List<Integer> tagIds, String uid, Date fromDate, Date toDate) {
         int newTripId = -1;
 
         try (Connection connection = connectionResolver.getConnection()) {
