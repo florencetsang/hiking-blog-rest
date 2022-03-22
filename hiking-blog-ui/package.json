@@ -26,6 +26,8 @@
     "uglifyjs-webpack-plugin": "^2.2.0"
   },
   "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
     "start:dev": "env-cmd -f ./environments/.dev.env react-scripts start",
     "start:qa": "env-cmd -f ./environments/.qa.env react-scripts start",
     "start:prod": "env-cmd -f ./environments/.prod.env react-scripts start",
