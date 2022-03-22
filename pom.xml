@@ -19,30 +19,6 @@
 		<maven.compiler.release>11</maven.compiler.release>
 	</properties>
 
-	<profiles>
-		<profile>
-			<id>dev</id>
-			<properties>
-				<profiles.active>dev</profiles.active>
-			</properties>
-			<activation>
-				<activeByDefault>true</activeByDefault>
-			</activation>
-		</profile>
-		<profile>
-			<id>qa</id>
-			<properties>
-				<profiles.active>qa</profiles.active>
-			</properties>
-		</profile>
-		<profile>
-			<id>prod</id>
-			<properties>
-				<profiles.active>prod</profiles.active>
-			</properties>
-		</profile>
-	</profiles>
-
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
