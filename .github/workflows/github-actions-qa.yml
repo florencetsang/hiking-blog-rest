@@ -1,6 +1,9 @@
 name: Java CI with Maven
 
-on: [ push ]
+on:
+  push:
+    branchs:
+      - develop
 
 jobs:
   heroku-deploy:
@@ -12,5 +15,5 @@ jobs:
         uses: akhileshns/heroku-deploy@v3.12.12
         with:
           heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
-          heroku_app_name: ${{ secrets.HEROKU_APP_NAME }}
+          heroku_app_name: thetriphub
           heroku_email: ${{ secrets.HEROKU_EMAIL }}
