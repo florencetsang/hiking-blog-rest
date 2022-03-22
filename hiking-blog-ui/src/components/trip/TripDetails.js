@@ -6,7 +6,11 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Chip from '@mui/material/Chip';
 import Stack from '@mui/material/Stack';
+import DateAdapter from '@mui/lab/AdapterLuxon';
+import LocalizationProvider from '@mui/lab/LocalizationProvider';
+import DatePicker from '@mui/lab/DatePicker';
 import { makeStyles } from '@mui/styles';
+import { DateTime } from 'luxon';
 
 import { useNavigate, useParams } from 'react-router-dom';
 
@@ -35,6 +39,8 @@ export default function TripDetails() {
   const [pathCoordinates, setPathCoordinates] = useState(null);
   const [tags, setTags] = useState([]);
   const [tagNameSearch, setTagNameSearch] = useState('');
+  const [fromDate, setFromDate] = useState(DateTime.now());
+  const [toDate, setToDate] = useState(DateTime.now());
 
   useEffect(() => {
     if (editType !== 'UPDATE') {
@@ -49,12 +55,14 @@ export default function TripDetails() {
           setDescription(trip.description);
           setPathCoordinates(trip.pathCoordinates);
           setTags(trip.tags);
+          setFromDate(trip.fromDate);
+          setToDate(trip.toDate);
         }
       }
     };
     _getActivity();
     return () => {didCancel = true;};
-  }, [tripId, setName, setDescription, setPathCoordinates, setTags]);
+  }, [tripId, setName, setDescription, setPathCoordinates, setTags, setFromDate, setToDate]);
 
   const updateRouteFile = useCallback((file) => {
     setRouteFile(file);
@@ -88,19 +96,28 @@ export default function TripDetails() {
     setTags(tags => tags.filter(tag => tag.tagId !== tagId));
   }, [setTags]);
 
+  const updateFromDate = useCallback((date) => {
+    setFromDate(date);
+  }, [setFromDate]);
+
+  const updateToDate = useCallback((date) => {
+    setToDate(date);
+  }, [setToDate]);
+
   const validate = useCallback(() => {
-    return name.trim().length > 0;
-  }, [name]);
+    return name.trim().length > 0
+        && fromDate.startOf('day') <= toDate.startOf('day');
+  }, [name, fromDate, toDate]);
 
   const save = async () => {
     if (!validate()) {
       console.log('invalid trip details to save');
       return;
     }
-    console.log(`Form is submitted. File: [${routeFile.name}]. Name: [${name}]. Description: [${description}].`);
+    console.log(`Form is submitted. File: [${routeFile.name}]. Name: [${name}]. Description: [${description}]. fromDate: ${fromDate}, toDate: ${toDate}`);
     let res;
     if (editType === 'ADD') {
-      res = await createTrip(name, description, routeFile, tags.map(tag => tag.tagId));
+      res = await createTrip(name, description, routeFile, tags.map(tag => tag.tagId), fromDate, toDate);
     } else {
       // TODO
       res = true;
@@ -148,13 +165,32 @@ export default function TripDetails() {
         />
 
         <div>
-          <TextField label="Tag name" value={tagNameSearch} onChange={updateTagNameSearch}/>
+          <TextField label="Tag name" value={tagNameSearch} onChange={updateTagNameSearch} margin="normal"/>
           <Button variant="contained" onClick={searchAndAddTag}>Search and Add Tag</Button>
           <Stack direction="row" spacing={1}>
             {tags.map(tag => (
               <Chip key={tag.tagId} label={tag.name} onDelete={() => removeTag(tag.tagId)}/>
             ))}
           </Stack>
+        </div>
+
+        <div>
+          <LocalizationProvider dateAdapter={DateAdapter}>
+            <DatePicker
+              label="From Date"
+              inputFormat="yyyy-MM-dd"
+              value={fromDate}
+              onChange={updateFromDate}
+              renderInput={(params) => <TextField {...params} margin="normal"/>}
+            />
+            <DatePicker
+              label="To Date"
+              inputFormat="yyyy-MM-dd"
+              value={toDate}
+              onChange={updateToDate}
+              renderInput={(params) => <TextField {...params} margin="normal"/>}
+            />
+          </LocalizationProvider>
         </div>
 
         {

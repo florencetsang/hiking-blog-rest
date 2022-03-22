@@ -8,7 +8,9 @@ CREATE TABLE HIKING_ROUTES
 	NAME VARCHAR(100),
 	DESCRIPTION TEXT,
 	PATH_COORDINATES TEXT,
-	USER_ID VARCHAR(100) NOT NULL
+	USER_ID VARCHAR(100) NOT NULL,
+	from_date timestamp without time zone,
+    to_date timestamp without time zone
 );
 
 CREATE TABLE TAG
@@ -26,3 +28,9 @@ CREATE TABLE TRIP_TAG
     TAG_ID INT REFERENCES TAG,
     USER_ID VARCHAR(100) NOT NULL
 );
+
+ALTER TABLE IF EXISTS hiking_routes
+    ADD COLUMN from_date timestamp without time zone;
+ALTER TABLE IF EXISTS hiking_routes
+	ADD COLUMN to_date timestamp without time zone;
+UPDATE hiking_routes SET from_date = CURRENT_TIMESTAMP, to_date = CURRENT_TIMESTAMP;

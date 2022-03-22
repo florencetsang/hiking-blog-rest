@@ -16,6 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -76,7 +77,9 @@ public class TripController {
                 createTripReqBody.getDescription(),
                 routeFileInputStream,
                 createTripReqBody.getTagIds(),
-                uid);
+                uid,
+                createTripReqBody.getFromDate(),
+                createTripReqBody.getToDate());
         if (addedId < 0) {
             LOGGER.error("cannot create trip, addedId: {}", addedId);
             return CANNOT_CREATE_RES;
@@ -105,6 +108,8 @@ public class TripController {
         private String name;
         private String description;
         private List<Integer> tagIds = new ArrayList<>();
+        private Date fromDate;
+        private Date toDate;
 
         public String getName() {
             return name;
@@ -118,6 +123,14 @@ public class TripController {
             return tagIds;
         }
 
+        public Date getFromDate() {
+            return fromDate;
+        }
+
+        public Date getToDate() {
+            return toDate;
+        }
+
         @Override
         public String toString() {
             return "name: "
@@ -125,7 +138,11 @@ public class TripController {
                     + ", description: "
                     + description
                     + ", tags: "
-                    + tagIds.size();
+                    + tagIds.size()
+                    + ", fromDate: "
+                    + fromDate
+                    + ", toDate: "
+                    + toDate;
         }
     }
 
