@@ -1,4 +1,8 @@
 import React, { useCallback, useState } from 'react';
+
+import { getAuth, signOut } from "firebase/auth";
+import { useUser } from 'reactfire';
+
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
@@ -6,23 +10,9 @@ import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
-import { getAuth, signInWithPopup, signInWithRedirect, GoogleAuthProvider, signOut, onAuthStateChanged } from "firebase/auth";
 
 export default function AppMenu(props) {
-
-  const {loggedInUser} = props;
-
-  const handleLogin = useCallback((event) => {
-    const provider = new GoogleAuthProvider();
-    const auth = getAuth();
-    console.log("Login is clicked");
-    signInWithPopup(auth, provider)
-    .then((result) => {
-      console.log("Logged in");
-    }).catch((error) => {
-      console.log(`Error occurred during sign in ${error}`);
-    });
-  }, []);
+  const { data: user } = useUser();
 
   const handleLogout = useCallback((event) => {
     const auth = getAuth();
@@ -46,10 +36,15 @@ export default function AppMenu(props) {
           >
             <MenuIcon />
           </IconButton>
-          {loggedInUser? 
-          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>Welcome, {loggedInUser.displayName}.</Typography>:
-          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>Pls sign in.</Typography>}
-          {loggedInUser ?  <Button onClick={handleLogout} color="inherit">Logout</Button>: <Button onClick={handleLogin} color="inherit">Login</Button>}          
+
+          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+            {user ? `Welcome to TripHub, ${user.displayName}.` : 'TripHub'}
+          </Typography>
+
+          {
+            user
+            && <Button onClick={handleLogout} color="inherit">Logout</Button>
+          }
         </Toolbar>
       </AppBar>
     </Box>
