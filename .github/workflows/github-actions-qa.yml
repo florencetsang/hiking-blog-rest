@@ -1,8 +1,8 @@
-name: Java CI with Maven
+name: Heroku Deployment QA
 
 on:
   push:
-    branchs:
+    branches:
       - develop
 
 jobs:

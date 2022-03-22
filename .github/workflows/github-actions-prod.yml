@@ -1,8 +1,8 @@
-name: Java CI with Maven
+name: Heroku Deployment PROD
 
 on:
   push:
-    branchs:
+    branches:
       - master
 
 jobs:
