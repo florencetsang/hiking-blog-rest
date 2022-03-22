@@ -13,7 +13,6 @@
     "axios": "^0.21.0",
     "bootstrap": "^4.5.3",
     "dotenv-expand": "^8.0.3",
-    "env-cmd": "^10.1.0",
     "firebase": "^9.1.2",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
@@ -28,12 +27,6 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "start:dev": "env-cmd -f ./environments/.dev.env react-scripts start",
-    "start:qa": "env-cmd -f ./environments/.qa.env react-scripts start",
-    "start:prod": "env-cmd -f ./environments/.prod.env react-scripts start",
-    "build:dev": "env-cmd -f ./environments/.dev.env react-scripts build",
-    "build:qa": "env-cmd -f ./environments/.qa.env react-scripts build",
-    "build:prod": "env-cmd -f ./environments/.prod.env react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
   },
