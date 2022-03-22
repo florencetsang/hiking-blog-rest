@@ -19,8 +19,8 @@ export default function Main() {
         messagingSenderId: "584040487221",
         appId: "1:584040487221:web:f56f336fc90e366553147c",
         measurementId: "G-0JEMS8DE6Z"
-      };
-
+    };
+    
     // Initialize Firebase
     const app = initializeApp(firebaseConfig);
 
@@ -39,5 +39,5 @@ export default function Main() {
             {loggedInUser && <Pages loggedInUser={loggedInUser}/> }
         </div>
     );
-
+    
 }

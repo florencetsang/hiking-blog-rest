@@ -19,6 +19,7 @@
     "@types/react-dom": "^17.0.13",
     "axios": "^0.21.0",
     "bootstrap": "^4.5.3",
+    "dotenv-expand": "^8.0.3",
     "firebase": "^9.1.2",
     "luxon": "^2.3.1",
     "react": "^16.13.1",
