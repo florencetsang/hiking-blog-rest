@@ -1,6 +1,7 @@
 package com.florence.hikingblogrest.dto;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class Trip {
@@ -10,18 +11,24 @@ public class Trip {
     private String description;
     private List<LatLng> pathCoordinates;
     private List<Tag> tags;
+    private Date fromDate;
+    private Date toDate;
 
     public Trip(
             int key,
             String name,
             String description,
             List<LatLng> pathCoordinates,
-            List<Tag> tags) {
+            List<Tag> tags,
+            Date fromDate,
+            Date toDate) {
         this.key = key;
         this.name = name;
         this.description = description;
         this.pathCoordinates = pathCoordinates;
         this.tags = tags;
+        this.fromDate = fromDate;
+        this.toDate = toDate;
     }
 
     public int getKey() {
@@ -44,12 +51,22 @@ public class Trip {
         return tags;
     }
 
+    public Date getFromDate() {
+        return fromDate;
+    }
+
+    public Date getToDate() {
+        return toDate;
+    }
+
     public static class TripBuilder {
         private int key = -1;
         private String name = "";
         private String description = "";
         private List<LatLng> pathCoordinates = new ArrayList<>();
         private List<Tag> tags = new ArrayList<>();
+        private Date fromDate;
+        private Date toDate;
 
         public TripBuilder key(int key) {
             this.key = key;
@@ -76,13 +93,25 @@ public class Trip {
             return this;
         }
 
+        public TripBuilder fromDate(Date fromDate) {
+            this.fromDate = fromDate;
+            return this;
+        }
+
+        public TripBuilder toDate(Date toDate) {
+            this.toDate = toDate;
+            return this;
+        }
+
         public Trip build() {
             return new Trip(
                     key,
                     name,
                     description,
                     pathCoordinates,
-                    tags);
+                    tags,
+                    fromDate,
+                    toDate);
         }
     }
 }

@@ -52,6 +52,8 @@ public class PostgresDatabaseDAO implements BaseDatabaseDAO {
                     final String description = resultSet.getString("DESCRIPTION");
                     final String routeStr = resultSet.getString("PATH_COORDINATES");
                     final List<LatLng> pathCoordinates = Arrays.asList(objectMapper.readValue(routeStr, LatLng[].class));
+                    final Timestamp fromDate = resultSet.getTimestamp("FROM_DATE");
+                    final Timestamp toDate = resultSet.getTimestamp("TO_DATE");
 
                     final List<Tag> tags = tagDAO.getTripTags(uid, id);
 
@@ -60,7 +62,9 @@ public class PostgresDatabaseDAO implements BaseDatabaseDAO {
                             .name(name)
                             .description(description)
                             .pathCoordinates(pathCoordinates)
-                            .tags(tags);
+                            .tags(tags)
+                            .fromDate(fromDate)
+                            .toDate(toDate);
                     activities.add(tripBuilder.build());
                 }
             } catch (SQLException | JsonProcessingException e) {
@@ -74,11 +78,11 @@ public class PostgresDatabaseDAO implements BaseDatabaseDAO {
     }
 
     @Override
-    public int addTrip(String name, String description, String route, List<Integer> tagIds, String uid) {
+    public int addTrip(String name, String description, String route, List<Integer> tagIds, String uid, java.util.Date fromDate, java.util.Date toDate) {
         int newTripId = -1;
 
         try (Connection connection = connectionResolver.getConnection()) {
-            try (PreparedStatement insertTripStmt = connection.prepareStatement("INSERT INTO HIKING_ROUTES (NAME, DESCRIPTION, PATH_COORDINATES, USER_ID) VALUES (?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
+            try (PreparedStatement insertTripStmt = connection.prepareStatement("INSERT INTO HIKING_ROUTES (NAME, DESCRIPTION, PATH_COORDINATES, USER_ID, FROM_DATE, TO_DATE) VALUES (?, ?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
                  PreparedStatement addTagStmt = connection.prepareStatement("INSERT INTO TRIP_TAG (USER_ID, TRIP_ID, TAG_ID) VALUES (?, ?, ?)")) {
                 // start transaction, autoCommit is NOT reset after this method exits
                 connection.setAutoCommit(false);
@@ -88,6 +92,8 @@ public class PostgresDatabaseDAO implements BaseDatabaseDAO {
                 insertTripStmt.setString(2, description);
                 insertTripStmt.setString(3, route);
                 insertTripStmt.setString(4, uid);
+                insertTripStmt.setTimestamp(5, new Timestamp(fromDate.getTime()));
+                insertTripStmt.setTimestamp(6, new Timestamp(toDate.getTime()));
                 int addedRowsCnt = insertTripStmt.executeUpdate();
 
                 if (addedRowsCnt >= 0) {

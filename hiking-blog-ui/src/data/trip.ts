@@ -1,3 +1,5 @@
+import { DateTime } from 'luxon';
+
 import {Tag} from './tag';
 
 export interface Trip {
@@ -6,6 +8,8 @@ export interface Trip {
   description: string;
   tags: Tag[];
   pathCoordinates: Coordinate[];
+  fromDate: DateTime;
+  toDate: DateTime;
 }
 
 export interface Coordinate {

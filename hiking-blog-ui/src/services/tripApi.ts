@@ -1,17 +1,43 @@
+import { DateTime } from 'luxon';
+
 import { getApi, postApi, postFormData, dataToBlob } from './api';
 import { ApiRes, isSuccessApi } from './apiRes';
 
-import { Trip } from '../data/trip';
+import { Trip, Coordinate } from '../data/trip';
+import { Tag } from '../data/tag';
 
 const TRIP_API_PREFIX = '/api/trip';
+
+interface TripRes {
+  key: number;
+  name: string;
+  description: string;
+  tags: Tag[];
+  pathCoordinates: Coordinate[];
+  fromDate: number;
+  toDate: number;
+}
+
+const mapper = (res: TripRes): Trip => {
+  return {
+    key: res.key,
+    name: res.name,
+    description: res.description,
+    tags: res.tags,
+    pathCoordinates: res.pathCoordinates,
+    fromDate: DateTime.fromMillis(res.fromDate),
+    toDate: DateTime.fromMillis(res.toDate)
+  };
+};
 
 export const getTrips = async (): Promise<Trip[]> => {
   const searchParams = new URLSearchParams();
   try {
     const res = await getApi(`${TRIP_API_PREFIX}/getTrips`, searchParams);
-    const resJson = await res.json() as ApiRes<Trip[]>;
+    const resJson = await res.json() as ApiRes<TripRes[]>;
     if (isSuccessApi(resJson)) {
-      return resJson.data;
+      const trips = resJson.data.map(mapper);
+      return trips;
     } else {
       throw new Error(resJson.error);
     }
@@ -26,9 +52,10 @@ export const getTrip = async (tripId: string): Promise<Trip | null> => {
   searchParams.append('tripId', tripId);
   try {
     const res = await getApi(`${TRIP_API_PREFIX}/getTrip`, searchParams);
-    const resJson = await res.json() as ApiRes<Trip>;
+    const resJson = await res.json() as ApiRes<TripRes>;
     if (isSuccessApi(resJson)) {
-      return resJson.data;
+      const trip = mapper(resJson.data);
+      return trip;
     } else {
       throw new Error(resJson.error);
     }
@@ -38,12 +65,14 @@ export const getTrip = async (tripId: string): Promise<Trip | null> => {
   }
 };
 
-export const createTrip = async (name: string, description: string, routeFile: File, tagIds: number[]) => {
+export const createTrip = async (name: string, description: string, routeFile: File, tagIds: number[], fromDate: DateTime, toDate: DateTime) => {
   const formData = new FormData();
   const tripData = {
     name: name,
     description: description,
-    tagIds: tagIds
+    tagIds: tagIds,
+    fromDate: fromDate.toMillis(),
+    toDate: toDate.toMillis()
   };
   formData.append('trip', dataToBlob(tripData));
   formData.append('routeFile', routeFile);

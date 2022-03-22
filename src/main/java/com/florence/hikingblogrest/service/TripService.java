@@ -13,10 +13,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 public class TripService {
     private static final Logger LOGGER = LogManager.getLogger(TripService.class);
@@ -62,12 +59,12 @@ public class TripService {
         }
     }
 
-    public int addTrip(String name, String description, InputStream routeInputStream, List<Integer> tagIds, String uid) {
+    public int addTrip(String name, String description, InputStream routeInputStream, List<Integer> tagIds, String uid, Date fromDate, Date toDate) {
         final Optional<String> routeStr = RoutesHelper.getRouteStr(routeInputStream);
         if (routeStr.isEmpty()) {
             return -1;
         }
-        final int addedId = databaseDAO.addTrip(name, description, routeStr.get(), tagIds, uid);
+        final int addedId = databaseDAO.addTrip(name, description, routeStr.get(), tagIds, uid, fromDate, toDate);
         return addedId;
     }
 
