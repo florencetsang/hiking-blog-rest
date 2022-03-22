@@ -4,6 +4,7 @@ import ControlPanel from './ControlPanel';
 import * as mapStyle from './MapStyle';
 
 export default function Routes(props) {
+    const {trips} = props;
 
     const [activeKey, setActiveKey] = useState(null);
     const [strokeColor, setStrokeColor] = useState('#0000FF');
@@ -12,7 +13,7 @@ export default function Routes(props) {
     const [strokeStyle, setStrokeStyle] = useState(mapStyle.SOLID);
 
     console.log(`Dashed stroke in Routes is ${strokeStyle}`);
-    console.log(`Number to routes to render: ${props.routes.length}`);
+    console.log(`Number to routes to render: ${trips.length}`);
 
     return (
         <div>
@@ -28,12 +29,13 @@ export default function Routes(props) {
                 position={window.google.maps.ControlPosition.TOP_CENTER}
             />
 
-            {props.routes && props.routes.map(route => <Route
-                key={route.key}
-                label={route.key}
+            {trips && trips.map(trip => <Route
+                key={trip.key}
+                tripKey={trip.key}
+                name={trip.name}
                 setActiveKey={setActiveKey}
-                isActive={route.key === activeKey}
-                pathCoordinates={route.pathCoordinates}
+                isActive={trip.key === activeKey}
+                pathCoordinates={trip.pathCoordinates}
                 strokeColor={strokeColor}
                 strokeWeight={strokeWeight}
                 strokeOpacity={strokeOpacity}

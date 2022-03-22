@@ -19,6 +19,7 @@ import { Link } from 'react-router-dom';
 
 import { getMapsImgUrl } from './RouteStaticMap';
 import { deleteTrip } from '../../services/tripApi';
+import { getTripDetailsUrl } from '../header/navUtil';
 
 import { Trip } from '../../data/trip';
 
@@ -77,7 +78,7 @@ export default function TripCard(props: TripCardProps) {
             </CardActionArea>
             <CardActions>
                 <CardActions>
-                    <Button size="small"><Link to={`/tripDetails/${trip.key.toString()}`}>Details</Link></Button>
+                    <Button size="small"><Link to={getTripDetailsUrl(trip.key)}>Details</Link></Button>
                 </CardActions>
                 <IconButton aria-label="add to favorites">
                     <FavoriteIcon />

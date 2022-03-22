@@ -92,7 +92,7 @@ export default function HikingMap() {
                 options={GOOGLE_MAP_OPTIONS}
             // onLoad={map => handleOnLoad(map)}
             >
-                <Routes routes={trips} />
+                <Routes trips={trips} />
                 {/* <ControlPanelElement /> */}
             </GoogleMap>
 
