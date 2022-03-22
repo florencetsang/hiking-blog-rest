@@ -106,7 +106,7 @@ export default function TripDetails() {
 
   const validate = useCallback(() => {
     return name.trim().length > 0
-        && fromDate < toDate;
+        && fromDate.startOf('day') <= toDate.startOf('day');
   }, [name, fromDate, toDate]);
 
   const save = async () => {
