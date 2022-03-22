@@ -20,6 +20,8 @@ import UploadFile from './UploadFile';
 import { getTrip, createTrip } from '../../services/tripApi';
 import { getTagByName } from '../../services/tagApi';
 
+import { TRIPS_URL } from '../header/navUtil';
+
 const useStyles = makeStyles((theme) => ({
   root: {
     textAlign: 'center',
@@ -124,7 +126,7 @@ export default function TripDetails() {
     }
     if (res) {
       console.log('saved trip');
-      navigate('/trips');
+      navigate(TRIPS_URL);
     } else {
       console.log('cannot save trip');
     }

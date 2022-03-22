@@ -13,6 +13,7 @@ import TagDetails from '../tag/TagDetails';
 
 import { getTrips } from '../../services/tripApi';
 import { getTags, addTag } from '../../services/tagApi';
+import { NEW_TRIP_URL } from '../header/navUtil';
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -104,7 +105,7 @@ export default function Trips() {
                 ))}
             </Grid>
 
-            <Button><Link to="/tripDetails/_new">New Trip</Link></Button>
+            <Button><Link to={NEW_TRIP_URL}>New Trip</Link></Button>
 
             <div>{JSON.stringify(tags)}</div>
             <Button onClick={openTagModal}>New tag</Button>

@@ -10,6 +10,8 @@ import {
 } from "react-router-dom";
 import Navigation from '../header/Navigation';
 
+import { MAP_URL, TRIPS_URL, TRIP_DETAILS_URL } from './navUtil';
+
 export default class Pages extends Component {
 
     render() {
@@ -19,10 +21,10 @@ export default class Pages extends Component {
         <BrowserRouter>
           <Navigation/>
           <Routes>
-            <Route path="/map" element={<HikingMap/>} />
-            <Route path="/trips" element={<Trips />} />
-            <Route path="/tripDetails/:tripId" element={<TripDetails />} />
-            <Route path="*" element={<Navigate replace to="/map" />} />
+            <Route path={MAP_URL} element={<HikingMap/>} />
+            <Route path={TRIPS_URL} element={<Trips />} />
+            <Route path={TRIP_DETAILS_URL} element={<TripDetails />} />
+            <Route path="*" element={<Navigate replace to={MAP_URL} />} />
           </Routes>
         </BrowserRouter>
       )
