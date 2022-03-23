@@ -8,6 +8,10 @@ class UploadFileExtensionValidator(val patterns: List<String>): UploadFileValida
 
     override fun validate(file: MultipartFile): Boolean {
         val fileName = file.originalFilename
+        if (fileName == null) {
+            logger.info { "fileName is null" }
+            return false
+        }
         if (!patterns.any { pattern -> fileName.endsWith(pattern) }) {
             logger.info { "fileName $fileName does not match any of $patterns" }
             return false
