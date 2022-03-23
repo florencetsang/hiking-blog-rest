@@ -30,21 +30,14 @@ export default function UploadFileBulk(props) {
 
     const selectFiles = (event) => {
         setRouteFiles(event.target.files);
-        setNumFiles(event.target.files.length);
-        // if (event.target.files.length) {
-        //     console.log(`Selected file ${event.target.files[0].name}`);
-        //     updateFile(event.target.files[0]);
-        // } else { 
-        //     console.log("No file selected!");
-        // }        
+        setNumFiles(event.target.files.length);    
     };
 
-    const createTrips = (files) => {
-        [...files].forEach(file => {
-            createTrip("Untitled Trip", "", file, [], DateTime.now(), DateTime.now());
-        });
-        
-    }
+    // const createTrips = (files) => {
+    //     [...files].forEach(file => {
+    //         createTrip("Untitled Trip", "", file, [], DateTime.now(), DateTime.now());
+    //     });
+    // }
 
     const save = async () => {
         setSaving(true);
@@ -53,23 +46,6 @@ export default function UploadFileBulk(props) {
         await Promise.all(promises);
         setSaving(false);
         navigate(TRIPS_URL);
-        
-        // createTrips(routeFiles);
-        // console.log('Saved trips');
-        // navigate(TRIPS_URL);
-        // let res;
-        // if (editType === 'ADD') {
-        //     res = await createTrip(name, description, routeFile, tags.map(tag => tag.tagId), fromDate, toDate);
-        // } else {
-        //     // TODO
-        //     res = true;
-        // }
-        // if (res) {
-        //     console.log('saved trip');
-        //     navigate(TRIPS_URL);
-        // } else {
-        //     console.log('cannot save trip');
-        // }
     };
 
     return (
