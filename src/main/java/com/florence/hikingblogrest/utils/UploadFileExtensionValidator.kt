@@ -3,7 +3,7 @@ package com.florence.hikingblogrest.utils
 import mu.KotlinLogging
 import org.springframework.web.multipart.MultipartFile
 
-class UploadFileExtensionValidator(val patterns: List<String>): UploadFileValidator {
+class UploadFileExtensionValidator(private val patterns: List<String>): UploadFileValidator {
     private val logger = KotlinLogging.logger {}
 
     override fun validate(file: MultipartFile): Boolean {
