@@ -15,7 +15,6 @@ export default function Main() {
 
     return (
         <div>
-            <AppMenu/>
             {
                 (signInCheckResult && signInCheckResult.signedIn)
                 ? <Pages/>

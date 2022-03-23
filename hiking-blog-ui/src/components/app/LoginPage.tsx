@@ -2,6 +2,8 @@ import React from 'react';
 
 import { getAuth, GoogleAuthProvider } from 'firebase/auth';
 import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
+import Typography from '@mui/material/Typography';
+import Container from '@mui/material/Container';
 
 const uiConfig = {
   signInFlow: 'popup',
@@ -17,9 +19,14 @@ const LoginPage = () => {
   const auth = getAuth();
 
   return (
-    <StyledFirebaseAuth
-      uiConfig={uiConfig}
-      firebaseAuth={auth} />
+    <Container >
+      <Typography align="center" variant="h2" component="div" gutterBottom>
+          TripHub
+      </Typography>
+      <StyledFirebaseAuth
+        uiConfig={uiConfig}
+        firebaseAuth={auth} />
+    </Container>
   );
 };
 
