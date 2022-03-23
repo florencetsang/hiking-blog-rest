@@ -9,7 +9,7 @@ import {
     useLocation,
   } from 'react-router-dom';
 
-import { MAP_URL, TRIPS_URL } from './navUtil';
+import { DAHBOARD_URL, TRIPS_URL } from './navUtil';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -33,7 +33,7 @@ export default function Navigation(props) {
         return null;
       }
 
-    const routeMatch = useRouteMatch([MAP_URL, TRIPS_URL]);
+    const routeMatch = useRouteMatch([DAHBOARD_URL, TRIPS_URL]);
     const currentTab = routeMatch?.pattern?.path;
 
     return (
@@ -45,7 +45,7 @@ export default function Navigation(props) {
                     textColor="primary"
                     centered
                 >
-                    <Tab label="Map" value={MAP_URL} to={MAP_URL} component={Link}  />
+                    <Tab label="Dashboard" value={DAHBOARD_URL} to={DAHBOARD_URL} component={Link}  />
                     <Tab label="Trips" value={TRIPS_URL} to={TRIPS_URL} component={Link} />
                 </Tabs>
             </Paper>

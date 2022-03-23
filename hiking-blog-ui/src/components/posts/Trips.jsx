@@ -14,6 +14,7 @@ import TagDetails from '../tag/TagDetails';
 import { getTrips } from '../../services/tripApi';
 import { getTags, addTag } from '../../services/tagApi';
 import { NEW_TRIP_URL } from '../header/navUtil';
+import { NEW_TRIP_BULK_URL } from './../header/navUtil';
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -63,7 +64,7 @@ export default function Trips() {
             }
         };
         _loadTrips();
-        return () => {didCancel = true;};
+        return () => { didCancel = true; };
     }, []);
 
     useEffect(() => {
@@ -75,7 +76,7 @@ export default function Trips() {
             }
         };
         _loadTags();
-        return () => {didCancel = true;};
+        return () => { didCancel = true; };
     }, []);
 
     const openTagModal = useCallback(() => setTagModalOpen(true), [setTagModalOpen]);
@@ -106,6 +107,7 @@ export default function Trips() {
             </Grid>
 
             <Button><Link to={NEW_TRIP_URL}>New Trip</Link></Button>
+            <Button><Link to={NEW_TRIP_BULK_URL}>Bulk Upload New Trips</Link></Button>
 
             <div>{JSON.stringify(tags)}</div>
             <Button onClick={openTagModal}>New tag</Button>
@@ -116,7 +118,7 @@ export default function Trips() {
                 aria-describedby="Tag modal"
             >
                 <Box sx={tagModalStyle}>
-                    <TagDetails tagId={-1} editType={0} postSaveTag={postSaveTag}/>
+                    <TagDetails tagId={-1} editType={0} postSaveTag={postSaveTag} />
                 </Box>
             </Modal>
         </div>

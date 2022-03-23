@@ -10,7 +10,8 @@ import {
 } from "react-router-dom";
 import Navigation from '../header/Navigation';
 
-import { MAP_URL, TRIPS_URL, TRIP_DETAILS_URL } from './navUtil';
+import { DAHBOARD_URL, TRIPS_URL, TRIP_DETAILS_URL, NEW_TRIP_BULK_URL } from './navUtil';
+import UploadFileBulk from './../trip/UploadFileBulk';
 
 export default class Pages extends Component {
 
@@ -21,10 +22,11 @@ export default class Pages extends Component {
         <BrowserRouter>
           <Navigation/>
           <Routes>
-            <Route path={MAP_URL} element={<HikingMap/>} />
+            <Route path={DAHBOARD_URL} element={<HikingMap/>} />
             <Route path={TRIPS_URL} element={<Trips />} />
             <Route path={TRIP_DETAILS_URL} element={<TripDetails />} />
-            <Route path="*" element={<Navigate replace to={MAP_URL} />} />
+            <Route path={NEW_TRIP_BULK_URL} element={<UploadFileBulk />} />
+            <Route path="*" element={<Navigate replace to={DAHBOARD_URL} />} />
           </Routes>
         </BrowserRouter>
       )
