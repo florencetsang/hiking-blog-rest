@@ -40,7 +40,15 @@ export default function UploadFileBulk(props) {
         setSaving(true);
         console.log(`Saving [${routeFiles.length}] files.`);
         const promises = [...routeFiles].map(file => createTrip("Untitled Trip", "", file, [], DateTime.now(), DateTime.now()));
-        await Promise.all(promises);
+        const resList = await Promise.all(promises);  
+        console.log(resList);      
+        if (!resList.some((res) => res < 0)) {
+            console.log('Saved all trips.');
+        } else {            
+            const failedList = resList.map((_, i) => i).filter(e => resList[e] === -1).map(i => routeFiles[i].name);
+            console.log(`Some trips failed to save: ${failedList}`);
+            alert(`Some trips failed to save: ${failedList}`);
+        } 
         setSaving(false);
         navigate(TRIPS_URL);
     };
