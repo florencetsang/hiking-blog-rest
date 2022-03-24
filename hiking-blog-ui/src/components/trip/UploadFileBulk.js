@@ -4,7 +4,6 @@ import Button from '@mui/material/Button';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { DateTime } from 'luxon';
 import { createTrip } from '../../services/tripApi';
-import Container from '@mui/material/Container';
 import Box from '@mui/material/Box';
 import { TRIPS_URL } from '../header/navUtil';
 import { useNavigate } from 'react-router-dom';
@@ -47,22 +46,21 @@ export default function UploadFileBulk(props) {
     };
 
     return (
-        <Container className={classes.root}>
-            <Box sx={{
-                padding: '16px'
-            }}>
-                <Button disabled={saving} variant="contained" component="label" startIcon={<CloudUploadIcon />}>
-                    Upload GPX Files
-                    <input
-                        className={classes.upload}
-                        type="file"
-                        multiple
-                        onChange={selectFiles}
-                    />
-                </Button>
-                <span> { saving? "Saving..." : `${routeFiles.length} files selected.`} </span>
-                <Button disabled={saving} onClick={save}>Submit</Button>
-            </Box>
-        </Container>
+        <Box sx={{
+            padding: '16px',
+            textAlign: 'center'
+        }}>
+            <Button disabled={saving} variant="contained" component="label" startIcon={<CloudUploadIcon />}>
+                Upload GPX Files
+                <input
+                    className={classes.upload}
+                    type="file"
+                    multiple
+                    onChange={selectFiles}
+                />
+            </Button>
+            <span> { saving? "Saving..." : `${routeFiles.length} files selected.`} </span>
+            <Button disabled={saving} onClick={save}>Submit</Button>
+        </Box>
     );
 };
