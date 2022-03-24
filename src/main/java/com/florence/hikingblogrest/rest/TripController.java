@@ -6,6 +6,7 @@ import com.florence.hikingblogrest.rest.response.FailApiRes;
 import com.florence.hikingblogrest.rest.response.SuccessApiRes;
 import com.florence.hikingblogrest.security.UserPrincipal;
 import com.florence.hikingblogrest.service.TripService;
+import com.florence.hikingblogrest.utils.UploadFileValidator;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.http.MediaType;
@@ -30,9 +31,13 @@ public class TripController {
     private static final ApiRes CANNOT_DELETE_RES = new FailApiRes("cannot delete trip");
 
     private final TripService tripService;
+    private final UploadFileValidator routeUploadFileValidator;
 
-    public TripController(TripService tripService) {
+    public TripController(
+            TripService tripService,
+            UploadFileValidator routeUploadFileValidator) {
         this.tripService = tripService;
+        this.routeUploadFileValidator = routeUploadFileValidator;
     }
 
     @GetMapping("/getTrips")
@@ -63,6 +68,11 @@ public class TripController {
             @RequestPart(name = "trip") CreateTripReqBody createTripReqBody,
             @RequestPart(name = "routeFile") MultipartFile routeFile,
             @AuthenticationPrincipal UserPrincipal userPrincipal) {
+        if (!routeUploadFileValidator.validate(routeFile)) {
+            LOGGER.info("routeFile is invalid");
+            return CANNOT_CREATE_RES;
+        }
+
         final String uid = userPrincipal.getUid();
         final InputStream routeFileInputStream;
         try {

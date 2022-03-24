@@ -29,7 +29,9 @@ public class RoutesHelper {
     public static List<LatLng> loadGpxData(InputStream gpxFile) {
 
         Document document = getDocumentFromInputStream(gpxFile);
-        if (document == null) return Collections.emptyList();
+        if (document == null) {
+            return null;
+        }
 
         Element classElement = document.getRootElement();
 
@@ -67,10 +69,12 @@ public class RoutesHelper {
         }
         final List<LatLng> route = loadGpxData(gpxFile);
         String routeStr = null;
-        try {
-            routeStr = objectMapper.writeValueAsString(route);
-        } catch (JsonProcessingException e) {
-            LOGGER.error("Cannot write route as routeStr", e);
+        if (route != null) {
+            try {
+                routeStr = objectMapper.writeValueAsString(route);
+            } catch (JsonProcessingException e) {
+                LOGGER.error("Cannot write route as routeStr", e);
+            }
         }
         return routeStr != null ? Optional.of(routeStr) : Optional.empty();
     }
