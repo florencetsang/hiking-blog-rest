@@ -41,7 +41,6 @@ export default function UploadFileBulk(props) {
         console.log(`Saving [${routeFiles.length}] files.`);
         const promises = [...routeFiles].map(file => createTrip("Untitled Trip", "", file, [], DateTime.now(), DateTime.now()));
         const resList = await Promise.all(promises);  
-        console.log(resList);      
         if (!resList.some((res) => res < 0)) {
             console.log('Saved all trips.');
         } else {            
