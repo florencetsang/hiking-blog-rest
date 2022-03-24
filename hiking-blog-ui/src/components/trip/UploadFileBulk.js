@@ -22,15 +22,13 @@ export default function UploadFileBulk(props) {
 
     const classes = useStyles();
 
-    const [routeFiles, setRouteFiles] = useState('');
-    const [numFiles, setNumFiles] = useState(0);
+    const [routeFiles, setRouteFiles] = useState([]);
     const [saving, setSaving] = useState(false);
 
     const navigate = useNavigate();
 
     const selectFiles = (event) => {
         setRouteFiles(event.target.files);
-        setNumFiles(event.target.files.length);    
     };
 
     // const createTrips = (files) => {
@@ -42,7 +40,7 @@ export default function UploadFileBulk(props) {
     const save = async () => {
         setSaving(true);
         console.log(`Saving [${routeFiles.length}] files.`);
-        let promises = [...routeFiles].map(file => createTrip("Untitled Trip", "", file, [], DateTime.now(), DateTime.now()));
+        const promises = [...routeFiles].map(file => createTrip("Untitled Trip", "", file, [], DateTime.now(), DateTime.now()));
         await Promise.all(promises);
         setSaving(false);
         navigate(TRIPS_URL);
@@ -53,7 +51,7 @@ export default function UploadFileBulk(props) {
             <Box sx={{
                 padding: '16px'
             }}>
-                <Button variant="contained" component="label" startIcon={<CloudUploadIcon />}>
+                <Button disabled={saving} variant="contained" component="label" startIcon={<CloudUploadIcon />}>
                     Upload GPX Files
                     <input
                         className={classes.upload}
@@ -62,8 +60,8 @@ export default function UploadFileBulk(props) {
                         onChange={selectFiles}
                     />
                 </Button>
-                <span> { saving? "Saving..." : `${numFiles} files selected.`} </span>
-                <Button onClick={save}>Submit</Button>
+                <span> { saving? "Saving..." : `${routeFiles.length} files selected.`} </span>
+                <Button disabled={saving} onClick={save}>Submit</Button>
             </Box>
         </Container>
     );
