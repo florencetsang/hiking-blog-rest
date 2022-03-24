@@ -12,7 +12,7 @@ class UploadFileExtensionValidator(private val patterns: List<String>): UploadFi
             logger.info { "fileName is null" }
             return false
         }
-        if (!patterns.any { pattern -> fileName.endsWith(pattern) }) {
+        if (!patterns.any { fileName.endsWith(it) }) {
             logger.info { "fileName $fileName does not match any of $patterns" }
             return false
         }
