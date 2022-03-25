@@ -6,6 +6,9 @@ target/
 !**/src/main/**/target/
 !**/src/test/**/target/
 
+firebase-debug.log
+ui-debug.log
+
 ### STS ###
 .apt_generated
 .classpath

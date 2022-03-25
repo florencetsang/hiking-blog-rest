@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-import { getAuth } from 'firebase/auth';
+import { getAuth, connectAuthEmulator } from 'firebase/auth';
 import { FirebaseAppProvider, useFirebaseApp, AuthProvider } from 'reactfire';
 
 import Main from './Main';
@@ -22,6 +22,14 @@ const firebaseConfig = {
 const _App = () => {
   const app = useFirebaseApp();
   const auth = getAuth(app);
+
+  if (process.env.NODE_ENV !== 'production' && process.env.REACT_APP_DEV_FIREBASE_EMULATOR === 'true') {
+    console.log('using Firebase emulator')
+    if (process.env.REACT_APP_DEV_FIREBASE_EMULATOR_AUTH_HOST) {
+      connectAuthEmulator(auth, process.env.REACT_APP_DEV_FIREBASE_EMULATOR_AUTH_HOST);
+      console.log('using auth emulator');
+    }
+  }
 
   return (
     <AuthProvider sdk={auth}>
