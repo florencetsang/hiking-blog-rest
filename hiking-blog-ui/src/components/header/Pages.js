@@ -8,26 +8,26 @@ import {
   Route,
   Navigate
 } from "react-router-dom";
-import Navigation from '../header/Navigation';
-
-import { MAP_URL, TRIPS_URL, TRIP_DETAILS_URL } from './navUtil';
+import { DAHBOARD_URL, TRIPS_URL, TRIP_DETAILS_URL, NEW_TRIP_BULK_URL } from './navUtil';
+import UploadFileBulk from './../trip/UploadFileBulk';
+import AppMenu from './AppMenu';
 
 export default class Pages extends Component {
 
-    render() {
+  render() {
 
-      return (
+    return (
 
-        <BrowserRouter>
-          <Navigation/>
-          <Routes>
-            <Route path={MAP_URL} element={<HikingMap/>} />
-            <Route path={TRIPS_URL} element={<Trips />} />
-            <Route path={TRIP_DETAILS_URL} element={<TripDetails />} />
-            <Route path="*" element={<Navigate replace to={MAP_URL} />} />
-          </Routes>
-        </BrowserRouter>
-      )
-
-    }
+      <BrowserRouter>
+        <AppMenu/>
+        <Routes>
+          <Route path={DAHBOARD_URL} element={<HikingMap/>} />
+          <Route path={TRIPS_URL} element={<Trips />} />
+          <Route path={TRIP_DETAILS_URL} element={<TripDetails />} />
+          <Route path={NEW_TRIP_BULK_URL} element={<UploadFileBulk />} />
+          <Route path="*" element={<Navigate replace to={DAHBOARD_URL} />} />
+        </Routes>
+      </BrowserRouter>
+    )
+  }
 }

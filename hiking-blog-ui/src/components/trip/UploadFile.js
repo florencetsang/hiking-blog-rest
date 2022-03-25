@@ -7,7 +7,7 @@ const useStyles = makeStyles((theme) => ({
     root: {
       display: 'none',
     }
-  }));
+}));
 
 export default function UploadFile(props) {
 
