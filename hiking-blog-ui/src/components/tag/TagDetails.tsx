@@ -55,14 +55,14 @@ const TagDetails = (props: TagDetailsProps) => {
       console.log('invalid tag details to save');
       return;
     }
-    let res: boolean;
+    let res: number;
     if (editType === EditType.ADD) {
       res = await addTag(name, description);
     } else {
       // TODO
-      res = true;
+      res = 1;
     }
-    if (res) {
+    if (res >= 0) {
       console.log('saved tag');
       alert(`Saved tag ${name}`);
       postSaveTag();

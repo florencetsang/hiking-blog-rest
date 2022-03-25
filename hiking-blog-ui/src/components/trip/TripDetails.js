@@ -122,9 +122,9 @@ export default function TripDetails() {
       res = await createTrip(name, description, routeFile, tags.map(tag => tag.tagId), fromDate, toDate);
     } else {
       // TODO
-      res = true;
+      res = 1;
     }
-    if (res) {
+    if (res >= 0) {
       console.log('saved trip');
       navigate(TRIPS_URL);
     } else {

@@ -78,7 +78,7 @@ export const createTrip = async (name: string, description: string, routeFile: F
   formData.append('routeFile', routeFile);
   try {
     const res = await postFormData(`${TRIP_API_PREFIX}/createTrip`, formData);
-    const resJson = await res.json() as ApiRes<boolean>;
+    const resJson = await res.json() as ApiRes<number>;
     if (isSuccessApi(resJson)) {
       return resJson.data;
     } else {
@@ -86,7 +86,7 @@ export const createTrip = async (name: string, description: string, routeFile: F
     }
   } catch (err) {
     console.log('createTrip error', err);
-    return false;
+    return -1;
   }
 };
 

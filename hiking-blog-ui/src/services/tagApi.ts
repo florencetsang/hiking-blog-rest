@@ -62,7 +62,7 @@ export const addTag = async (name: string, description: string) => {
       description: description
     };
     const res = await postApi(`${TAG_API_PREFIX}/addTag`, data);
-    const resJson = await res.json() as ApiRes<boolean>;
+    const resJson = await res.json() as ApiRes<number>;
     if (isSuccessApi(resJson)) {
       return resJson.data;
     } else {
@@ -70,7 +70,7 @@ export const addTag = async (name: string, description: string) => {
     }
   } catch (err) {
     console.log('addTag error', err);
-    return false;
+    return -1;
   }
 };
 
