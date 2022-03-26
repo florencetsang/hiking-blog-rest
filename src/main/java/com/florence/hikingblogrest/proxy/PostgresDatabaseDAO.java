@@ -22,7 +22,7 @@ public class PostgresDatabaseDAO implements BaseDatabaseDAO {
     private final TagDAO tagDAO;
     private final ObjectMapper objectMapper;
 
-    private static final String GET_TRIP = "INSERT INTO HIKING_ROUTES (NAME, DESCRIPTION, PATH_COORDINATES, USER_ID, FROM_DATE, TO_DATE) VALUES (?, ?, ?, ?, ?, ?)";
+    private static final String INSERT_TRIP = "INSERT INTO HIKING_ROUTES (NAME, DESCRIPTION, PATH_COORDINATES, USER_ID, FROM_DATE, TO_DATE) VALUES (?, ?, ?, ?, ?, ?)";
     private static final String DELETE_TRIP = "DELETE FROM HIKING_ROUTES WHERE USER_ID = ? AND ID = ?";
     private static final String UPDATE_TRIP = "UPDATE HIKING_ROUTES SET NAME = ? , DESCRIPTION = ? , FROM_DATE = ? , TO_DATE = ? WHERE USER_ID = ? AND ID = ?";
     private static final String DELETE_TAGS = "DELETE FROM TRIP_TAG WHERE USER_ID = ? AND TRIP_ID = ?";
@@ -112,7 +112,7 @@ public class PostgresDatabaseDAO implements BaseDatabaseDAO {
         int newTripId = -1;
 
         if (connection != null) {
-            try (PreparedStatement insertTripStmt = connection.prepareStatement(GET_TRIP, Statement.RETURN_GENERATED_KEYS)) {
+            try (PreparedStatement insertTripStmt = connection.prepareStatement(INSERT_TRIP, Statement.RETURN_GENERATED_KEYS)) {
 
                 // insert trip
                 insertTripStmt.setString(1, name);
