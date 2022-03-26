@@ -6,7 +6,9 @@ import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
 import Modal from '@mui/material/Modal';
 
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
+import { logEvent } from 'firebase/analytics';
+import { useAnalytics } from 'reactfire';
 
 import TripCard from './TripCard';
 import TagDetails from '../tag/TagDetails';
@@ -41,6 +43,8 @@ const tagModalStyle = {
 
 export default function Trips() {
     const classes = useStyles();
+    const location = useLocation();
+    const analytics = useAnalytics();
 
     const [isLoading, setIsLoading] = useState(false);
     const [trips, setTrips] = useState([]);
@@ -87,6 +91,10 @@ export default function Trips() {
     const postSaveTag = useCallback(() => {
         closeTagModal();
     }, [closeTagModal]);
+
+    useEffect(() => {
+        logEvent(analytics, 'page_view', { page_location: location.pathname });
+    });
 
     if (isLoading) {
         return <p> Loading... </p>;
