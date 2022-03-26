@@ -29,6 +29,7 @@ public class TripController {
     private static final ApiRes CANNOT_GET_RES = new FailApiRes("cannot get trip");
     private static final ApiRes CANNOT_CREATE_RES = new FailApiRes("cannot create trip");
     private static final ApiRes CANNOT_DELETE_RES = new FailApiRes("cannot delete trip");
+    private static final ApiRes CANNOT_EDIT_RES = new FailApiRes("cannot edit trip");
 
     private final TripService tripService;
     private final UploadFileValidator routeUploadFileValidator;
@@ -114,6 +115,29 @@ public class TripController {
         return new SuccessApiRes<>(deletedId);
     }
 
+    @PostMapping(value = "/editTrip", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ApiRes editTrip(
+            @RequestPart(name = "trip") EditTripReqBody editTripReqBody,
+            @AuthenticationPrincipal UserPrincipal userPrincipal) {
+
+        final String uid = userPrincipal.getUid();
+        LOGGER.info("Edit trip. UID: {}, tripReqBody: {}", uid, editTripReqBody);
+        final int editedId = tripService.editTrip(
+                uid,
+                editTripReqBody.getTripId(),
+                editTripReqBody.getName(),
+                editTripReqBody.getDescription(),
+                editTripReqBody.getTagIds(),
+                editTripReqBody.getFromDate(),
+                editTripReqBody.getToDate());
+        if (editedId < 0) {
+            LOGGER.error("cannot edit trip, editedId: {}", editedId);
+            return CANNOT_EDIT_RES;
+        }
+        LOGGER.info("Edited trip {}", editedId);
+        return new SuccessApiRes<>(editedId);
+    }
+
     public abstract static class TripReqBody {
         private String name;
         private String description;
@@ -158,6 +182,19 @@ public class TripController {
 
     public static class CreateTripReqBody extends TripReqBody {
 
+    }
+
+    public static class EditTripReqBody extends TripReqBody {
+        private int tripId;
+
+        public int getTripId() {
+            return tripId;
+        }
+
+        @Override
+        public String toString() {
+            return "tripId: " + tripId + ", " + super.toString();
+        }
     }
 
     public static class DeleteTripReqBody {

@@ -107,3 +107,28 @@ export const deleteTrip = async (tripId: number) => {
     return false;
   }
 };
+
+export const editTrip = async (tripId: number, name: string, description: string, tagIds: number[], fromDate: DateTime, toDate: DateTime) => {
+  const formData = new FormData();
+  const tripData = {
+    tripId: tripId,
+    name: name,
+    description: description,
+    tagIds: tagIds,
+    fromDate: fromDate.toMillis(),
+    toDate: toDate.toMillis()
+  };
+  formData.append('trip', dataToBlob(tripData));
+  try {
+    const res = await postFormData(`${TRIP_API_PREFIX}/editTrip`, formData);
+    const resJson = await res.json() as ApiRes<number>;
+    if (isSuccessApi(resJson)) {
+      return resJson.data;
+    } else {
+      throw new Error(resJson.error);
+    }
+  } catch (err) {
+    console.log('editTrip error', err);
+    return -1;
+  }
+};
