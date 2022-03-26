@@ -9,6 +9,8 @@ import {
     useLocation,
   } from 'react-router-dom';
 
+import { DAHBOARD_URL, TRIPS_URL } from './navUtil';
+
 const useStyles = makeStyles((theme) => ({
     root: {
         flexGrow: 1,
@@ -17,7 +19,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function Navigation(props) {
-    
+
     const classes = useStyles();
 
     function useRouteMatch(patterns) {
@@ -27,25 +29,24 @@ export default function Navigation(props) {
             if (possibleMatch !== null) {
               return possibleMatch;
             }
-        }      
+        }
         return null;
       }
 
-    const routeMatch = useRouteMatch(['/map', '/routes', '/newPost']);
+    const routeMatch = useRouteMatch([DAHBOARD_URL, TRIPS_URL]);
     const currentTab = routeMatch?.pattern?.path;
 
     return (
         <div className={classes.root}>
             <Paper className={classes.root}>
-                <Tabs 
+                <Tabs
                     value={currentTab}
                     indicatorColor="primary"
                     textColor="primary"
-                    centered                
+                    centered
                 >
-                    <Tab label="Map" value="/map" to="/map" component={Link}  />
-                    <Tab label="Routes" value="/routes" to="/routes" component={Link} />
-                    <Tab label="New Route" value="/newPost" to="/newPost" component={Link} />
+                    <Tab label="Dashboard" value={DAHBOARD_URL} to={DAHBOARD_URL} component={Link}  />
+                    <Tab label="Trips" value={TRIPS_URL} to={TRIPS_URL} component={Link} />
                 </Tabs>
             </Paper>
         </div>

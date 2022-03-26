@@ -36,13 +36,13 @@ const getApiHeaders = (contentType) => {
   }
   return headers;
 };
-  
+
 const _postApi = async (apiPath, data, options, contentType) => {
     const authToken = await getAuthToken();
     if (!authToken) {
       throw new Error('Unauthrorized');
     }
-  
+
     return fetch(getApiPath(apiPath), {
       ...options,
       method: 'POST',
@@ -60,11 +60,15 @@ const _postApi = async (apiPath, data, options, contentType) => {
 };
 
 const postApi = async (apiPath, data, options={}) => {
-  return _postApi(apiPath, data, options, 'application/json');
+  return _postApi(apiPath, JSON.stringify(data), options, 'application/json');
 };
 
 const postFormData = async (apiPath, data, options={}) => {
   return _postApi(apiPath, data, options, null);
 };
-  
-export {getApi, postApi, postFormData};
+
+const dataToBlob = (data) => {
+  return new Blob([JSON.stringify(data)], {type: 'application/json'});
+};
+
+export {getApi, postApi, postFormData, dataToBlob};

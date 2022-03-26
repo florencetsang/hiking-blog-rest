@@ -1,5 +1,7 @@
 package com.florence.hikingblogrest.helper;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.florence.hikingblogrest.dto.LatLng;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -11,11 +13,14 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class RoutesHelper {
 
     private static final Logger LOGGER = LogManager.getLogger(RoutesHelper.class);
+
+    private static final ObjectMapper objectMapper = new ObjectMapper();
 
     private RoutesHelper() {
         throw new IllegalStateException("Utility class");
@@ -24,7 +29,9 @@ public class RoutesHelper {
     public static List<LatLng> loadGpxData(InputStream gpxFile) {
 
         Document document = getDocumentFromInputStream(gpxFile);
-        if (document == null) return Collections.emptyList();
+        if (document == null) {
+            return null;
+        }
 
         Element classElement = document.getRootElement();
 
@@ -54,6 +61,22 @@ public class RoutesHelper {
                     Double.parseDouble(lon.getValue()));
         }).collect(Collectors.toList());
 
+    }
+
+    public static Optional<String> getRouteStr(InputStream gpxFile) {
+        if (gpxFile == null) {
+            return Optional.empty();
+        }
+        final List<LatLng> route = loadGpxData(gpxFile);
+        String routeStr = null;
+        if (route != null) {
+            try {
+                routeStr = objectMapper.writeValueAsString(route);
+            } catch (JsonProcessingException e) {
+                LOGGER.error("Cannot write route as routeStr", e);
+            }
+        }
+        return routeStr != null ? Optional.of(routeStr) : Optional.empty();
     }
 
     private static Document getDocumentFromInputStream(InputStream inputStream) {

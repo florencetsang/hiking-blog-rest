@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import Routes from './Routes';
 import { GoogleMap, LoadScript } from '@react-google-maps/api'
-import { getApi } from '../../services/api';
+
+import { getTrips } from '../../services/tripApi';
+
+import {GOOGLE_MAPS_API_KEY} from './utils';
 
 const ZOOM = 11;
 
@@ -24,27 +27,21 @@ const GOOGLE_MAP_OPTIONS = {
 
 export default function HikingMap() {
 
-    const [routes, setRoutes] = useState([]);
+    const [trips, setTrips] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
         let didCancel = false;
-        const _loadRoutes = async () => {
-            getApi('/api/get-routes')
-            .then(response => response.json())
-            .then(data => {
-                if (!didCancel) {
-                    setRoutes(data.routes);
-                    setIsLoading(false);
-                    console.log(`Number of routes fetched: ${data.routes.length}`);
-                    data.routes.map(route => console.log(`Fetched ${route.key}`))   
-                }             
-            })
-            .catch((err) => {
-                console.log(err);
-            });
+        const _loadTrips = async () => {
+            const trips = await getTrips();
+            if (!didCancel) {
+                setTrips(trips);
+                setIsLoading(false);
+                console.log(`Number of trips fetched: ${trips.length}`);
+                trips.map(trip => console.log(`Fetched ${trip.key}`))
+            }
         };
-        _loadRoutes();
+        _loadTrips();
         return () => {didCancel = true;};
     }, []);
 
@@ -85,7 +82,7 @@ export default function HikingMap() {
 
     return (
         <LoadScript
-            googleMapsApiKey={process.env.REACT_APP_GOOGLE_MAPS_API_KEY}
+            googleMapsApiKey={GOOGLE_MAPS_API_KEY}
         >
             <GoogleMap
                 mapContainerStyle={CONTAINER_STYLE}
@@ -95,7 +92,7 @@ export default function HikingMap() {
                 options={GOOGLE_MAP_OPTIONS}
             // onLoad={map => handleOnLoad(map)}
             >
-                <Routes routes={routes} />
+                <Routes trips={trips} />
                 {/* <ControlPanelElement /> */}
             </GoogleMap>
 

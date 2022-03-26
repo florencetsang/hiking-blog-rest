@@ -7,19 +7,19 @@ const useStyles = makeStyles((theme) => ({
     root: {
       display: 'none',
     }
-  }));
+}));
 
 export default function UploadFile(props) {
 
     const classes = useStyles();
 
-    const {currentFile = null, updateFile} = props;    
+    const {currentFile = null, updateFile} = props;
 
     const selectFile = (event) => {
         if (event.target.files.length) {
             console.log(`Selected file ${event.target.files[0].name}`);
             updateFile(event.target.files[0]);
-        } else { 
+        } else {
             console.log("No file selected!");
         }
     };
@@ -32,6 +32,7 @@ export default function UploadFile(props) {
                     className={classes.root}
                     type="file"
                     onChange={selectFile}
+                    accept=".gpx"
                 />
             </Button>
             <span>  {currentFile ? currentFile.name : "No file selected."}</span>

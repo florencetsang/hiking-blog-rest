@@ -1,20 +1,16 @@
 package com.florence.hikingblogrest.proxy;
 
-import com.florence.hikingblogrest.dto.Activity;
-import com.florence.hikingblogrest.dto.Routes;
+import com.florence.hikingblogrest.dto.Trip;
 
-import java.sql.Connection;
-import java.sql.SQLException;
+import java.util.Date;
 import java.util.List;
 
 public interface BaseDatabaseDAO {
 
-    Routes getRoutes(String uid);
+    List<Trip> getTrips(String uid, int tripId);
 
-    List<Activity> getPosts(String uid);
+    int addTrip(String name, String description, String route, List<Integer> tagIds, String uid, Date fromDate, Date toDate);
 
-    void insertPost(String name, String description, String route, String uid) throws SQLException;
-
-    void deletePost(String uid, int id) throws SQLException;
+    int deleteTrip(String uid, int tripId);
 
 }
