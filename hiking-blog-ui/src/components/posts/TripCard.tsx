@@ -18,7 +18,6 @@ import Stack from '@mui/material/Stack';
 import { Link } from 'react-router-dom';
 
 import { getMapsImgUrl } from './RouteStaticMap';
-import { deleteTrip } from '../../services/tripApi';
 import { getTripDetailsUrl } from '../header/navUtil';
 
 import { Trip } from '../../data/trip';
@@ -34,25 +33,18 @@ const useStyles = makeStyles({
 
 interface TripCardProps {
     trip: Trip;
-    postDeleteTrip: (key: number) => void;
+    confirmDelete: (trip: Trip) => void;
 }
 
 export default function TripCard(props: TripCardProps) {
-    const {trip, postDeleteTrip} = props;
+    const {trip, confirmDelete} = props;
     const classes = useStyles();
 
     const mapsUrl = getMapsImgUrl(trip.pathCoordinates);
 
-    const handleDelete = useCallback(async () => {
-        console.log(`Deleting ${trip.name} with key ${trip.key}.`);
-        const res = await deleteTrip(trip.key);
-        if (res) {
-            postDeleteTrip(trip.key);
-            alert("Delete success");
-        } else {
-            alert("Delete Error");
-        };
-    }, []);
+    const handleConfirmDelete = useCallback(() => {
+        confirmDelete(trip);
+    }, [trip, confirmDelete]);
 
     return (
         <Card className={classes.root}>
@@ -86,7 +78,7 @@ export default function TripCard(props: TripCardProps) {
                 <IconButton aria-label="share">
                     <ShareIcon />
                 </IconButton>
-                <IconButton aria-label="delete activity" onClick={handleDelete}>
+                <IconButton aria-label="delete activity" onClick={handleConfirmDelete}>
                     <DeleteIcon />
                 </IconButton>
             </CardActions>
