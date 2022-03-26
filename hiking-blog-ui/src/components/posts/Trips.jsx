@@ -49,13 +49,12 @@ export default function Trips() {
     const [trips, setTrips] = useState([]);
     const [tags, setTags] = useState([]);
     const [tagModalOpen, setTagModalOpen] = useState(false);
-    const [confirmDeleteTrip, setConfirmDeleteTrip] = useState(null);
+    const [tripToDelete, setTripToDelete] = useState(null);
 
-    const _deleteTrip = useCallback(async () => {
-        const tripId = confirmDeleteTrip.key;
-        console.log(`Deleting ${confirmDeleteTrip.name} with key ${tripId}.`);
-        setIsLoading(true);
-        setConfirmDeleteTrip(null);
+    const handleDeleteTrip = useCallback(async () => {
+        const tripId = tripToDelete.key;
+        console.log(`Deleting ${tripToDelete.name} with key ${tripId}.`);
+        setTripToDelete(null);
         const res = await deleteTrip(tripId);
         if (res) {
             setTrips(trips => trips.filter(trip => trip.key !== tripId));
@@ -63,8 +62,7 @@ export default function Trips() {
         } else {
             alert("Delete Error");
         };
-        setIsLoading(false);
-    }, [confirmDeleteTrip, setTrips, setIsLoading]);
+    }, [tripToDelete, setTrips, setIsLoading]);
 
     useEffect(() => {
         let didCancel = false;
@@ -105,10 +103,10 @@ export default function Trips() {
 
     const confirmDelete = useCallback((trip) => {
         if (!isLoading) {
-            setConfirmDeleteTrip(trip);
+            setTripToDelete(trip);
         }
-    }, [setConfirmDeleteTrip, isLoading]);
-    const closeConfirmDeleteModal = useCallback(() => setConfirmDeleteTrip(null), [setConfirmDeleteTrip]);
+    }, [setTripToDelete, isLoading]);
+    const closeConfirmDeleteModal = useCallback(() => setTripToDelete(null), [setTripToDelete]);
 
     if (isLoading) {
         return <p> Loading... </p>;
@@ -125,7 +123,7 @@ export default function Trips() {
             >
                 {trips.map(trip => (
                     <Grid item xs={12} sm={6} md={3} key={trip.key}>
-                        <TripCard key={trip.key} trip={trip} deleteTrip={confirmDelete} />
+                        <TripCard key={trip.key} trip={trip} confirmDelete={confirmDelete} />
                     </Grid>
                 ))}
             </Grid>
@@ -150,14 +148,14 @@ export default function Trips() {
             </Modal>
 
             <Dialog
-                open={confirmDeleteTrip !== null}
+                open={tripToDelete !== null}
                 onClose={closeConfirmDeleteModal}
                 aria-label="Delete trip modal"
             >
-                <DialogTitle>Delete trip {confirmDeleteTrip && confirmDeleteTrip.name}?</DialogTitle>
+                <DialogTitle>Delete trip {tripToDelete && tripToDelete.name}?</DialogTitle>
                 <DialogActions>
                     <Button onClick={closeConfirmDeleteModal}>Cancel</Button>
-                    <Button onClick={_deleteTrip}>Delete</Button>
+                    <Button onClick={handleDeleteTrip}>Delete</Button>
                 </DialogActions>
             </Dialog>
         </div>

@@ -33,18 +33,18 @@ const useStyles = makeStyles({
 
 interface TripCardProps {
     trip: Trip;
-    deleteTrip: (trip: Trip) => void;
+    confirmDelete: (trip: Trip) => void;
 }
 
 export default function TripCard(props: TripCardProps) {
-    const {trip, deleteTrip} = props;
+    const {trip, confirmDelete} = props;
     const classes = useStyles();
 
     const mapsUrl = getMapsImgUrl(trip.pathCoordinates);
 
-    const handleDelete = useCallback(() => {
-        deleteTrip(trip);
-    }, [trip, deleteTrip]);
+    const handleConfirmDelete = useCallback(() => {
+        confirmDelete(trip);
+    }, [trip, confirmDelete]);
 
     return (
         <Card className={classes.root}>
@@ -78,7 +78,7 @@ export default function TripCard(props: TripCardProps) {
                 <IconButton aria-label="share">
                     <ShareIcon />
                 </IconButton>
-                <IconButton aria-label="delete activity" onClick={handleDelete}>
+                <IconButton aria-label="delete activity" onClick={handleConfirmDelete}>
                     <DeleteIcon />
                 </IconButton>
             </CardActions>
