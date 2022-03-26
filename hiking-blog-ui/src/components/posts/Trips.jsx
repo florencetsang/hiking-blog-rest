@@ -5,13 +5,16 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
 import Modal from '@mui/material/Modal';
+import Dialog from '@mui/material/Dialog';
+import DialogTitle from '@mui/material/DialogTitle';
+import DialogActions from '@mui/material/DialogActions';
 
 import { Link } from 'react-router-dom';
 
 import TripCard from './TripCard';
 import TagDetails from '../tag/TagDetails';
 
-import { getTrips } from '../../services/tripApi';
+import { getTrips, deleteTrip } from '../../services/tripApi';
 import { getTags } from '../../services/tagApi';
 import { NEW_TRIP_URL } from '../header/navUtil';
 import { NEW_TRIP_BULK_URL } from './../header/navUtil';
@@ -46,10 +49,22 @@ export default function Trips() {
     const [trips, setTrips] = useState([]);
     const [tags, setTags] = useState([]);
     const [tagModalOpen, setTagModalOpen] = useState(false);
+    const [confirmDeleteTrip, setConfirmDeleteTrip] = useState(null);
 
-    const deleteTrip = useCallback((tripId) => {
-        setTrips(trips => trips.filter(trip => trip.key !== tripId));
-    }, [setTrips]);
+    const _deleteTrip = useCallback(async () => {
+        const tripId = confirmDeleteTrip.key;
+        console.log(`Deleting ${confirmDeleteTrip.name} with key ${tripId}.`);
+        setIsLoading(true);
+        setConfirmDeleteTrip(null);
+        const res = await deleteTrip(tripId);
+        if (res) {
+            setTrips(trips => trips.filter(trip => trip.key !== tripId));
+            alert("Delete success");
+        } else {
+            alert("Delete Error");
+        };
+        setIsLoading(false);
+    }, [confirmDeleteTrip, setTrips, setIsLoading]);
 
     useEffect(() => {
         let didCancel = false;
@@ -88,6 +103,13 @@ export default function Trips() {
         closeTagModal();
     }, [closeTagModal]);
 
+    const confirmDelete = useCallback((trip) => {
+        if (!isLoading) {
+            setConfirmDeleteTrip(trip);
+        }
+    }, [setConfirmDeleteTrip, isLoading]);
+    const closeConfirmDeleteModal = useCallback(() => setConfirmDeleteTrip(null), [setConfirmDeleteTrip]);
+
     if (isLoading) {
         return <p> Loading... </p>;
     }
@@ -103,7 +125,7 @@ export default function Trips() {
             >
                 {trips.map(trip => (
                     <Grid item xs={12} sm={6} md={3} key={trip.key}>
-                        <TripCard key={trip.key} trip={trip} postDeleteTrip={deleteTrip} />
+                        <TripCard key={trip.key} trip={trip} deleteTrip={confirmDelete} />
                     </Grid>
                 ))}
             </Grid>
@@ -120,13 +142,24 @@ export default function Trips() {
             <Modal
                 open={tagModalOpen}
                 onClose={closeTagModal}
-                aria-labelledby="Tag modal"
-                aria-describedby="Tag modal"
+                aria-label="New tag modal"
             >
                 <Box sx={tagModalStyle}>
                     <TagDetails tagId={-1} editType={0} postSaveTag={postSaveTag} />
                 </Box>
             </Modal>
+
+            <Dialog
+                open={confirmDeleteTrip !== null}
+                onClose={closeConfirmDeleteModal}
+                aria-label="Delete trip modal"
+            >
+                <DialogTitle>Delete trip {confirmDeleteTrip && confirmDeleteTrip.name}?</DialogTitle>
+                <DialogActions>
+                    <Button onClick={closeConfirmDeleteModal}>Cancel</Button>
+                    <Button onClick={_deleteTrip}>Delete</Button>
+                </DialogActions>
+            </Dialog>
         </div>
     );
 };
