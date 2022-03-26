@@ -9,7 +9,9 @@ import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogActions from '@mui/material/DialogActions';
 
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
+import { logEvent } from 'firebase/analytics';
+import { useAnalytics } from 'reactfire';
 
 import TripCard from './TripCard';
 import TagDetails from '../tag/TagDetails';
@@ -44,6 +46,8 @@ const tagModalStyle = {
 
 export default function Trips() {
     const classes = useStyles();
+    const location = useLocation();
+    const analytics = useAnalytics();
 
     const [isLoading, setIsLoading] = useState(false);
     const [trips, setTrips] = useState([]);
@@ -107,6 +111,10 @@ export default function Trips() {
         }
     }, [setTripToDelete, isLoading]);
     const closeConfirmDeleteModal = useCallback(() => setTripToDelete(null), [setTripToDelete]);
+
+    useEffect(() => {
+        logEvent(analytics, 'page_view', { page_location: location.pathname });
+    });
 
     if (isLoading) {
         return <p> Loading... </p>;

@@ -72,4 +72,9 @@ public class TripService {
         final int deletedId = databaseDAO.deleteTrip(uid, tripId);
         return deletedId;
     }
+
+    public int editTrip(String uid, int tripId, String name, String description, List<Integer> tagIds, Date fromDate, Date toDate) {
+        final int editedId = databaseDAO.editTrip(uid, tripId, name, description, tagIds, fromDate, toDate);
+        return editedId;
+    }
 }

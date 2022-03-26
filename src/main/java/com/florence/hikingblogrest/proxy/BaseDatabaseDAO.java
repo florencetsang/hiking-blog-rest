@@ -13,4 +13,5 @@ public interface BaseDatabaseDAO {
 
     int deleteTrip(String uid, int tripId);
 
+    int editTrip(String uid, int tripId, String name, String description, List<Integer> tagIds, Date fromDate, Date toDate);
 }

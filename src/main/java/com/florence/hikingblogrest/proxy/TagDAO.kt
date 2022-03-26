@@ -14,7 +14,7 @@ class TagDAO(
     private val logger = KotlinLogging.logger {}
 
     fun getTags(uid: String, tagId: Int): List<Tag> {
-        val connection = connectionResolver.connection ?: return emptyList()
+        val connection = connectionResolver.resolveConnection(true) ?: return emptyList()
         var tags: List<Tag> = emptyList()
         connection.use {
             val sqlStringBuilder = StringBuilder()
@@ -37,7 +37,7 @@ class TagDAO(
     }
 
     fun getTagByName(uid: String, tagName: String): List<Tag> {
-        val connection = connectionResolver.connection ?: return emptyList()
+        val connection = connectionResolver.resolveConnection(true) ?: return emptyList()
         var tags: List<Tag> = emptyList()
         connection.use {
             val sqlStringBuilder = StringBuilder()
@@ -55,7 +55,7 @@ class TagDAO(
     }
 
     fun addTag(uid: String, name: String, description: String): Int {
-        val connection = connectionResolver.connection ?: return -1
+        val connection = connectionResolver.resolveConnection(true) ?: return -1
         var addedId = -1
         connection.use {
             val statement = connection.prepareStatement(
@@ -84,7 +84,7 @@ class TagDAO(
     }
 
     fun deleteTag(uid: String, tagId: Int): Int {
-        val connection = connectionResolver.connection ?: return -1
+        val connection = connectionResolver.resolveConnection(true) ?: return -1
         var deletedId = -1
         connection.use {
             val statement = connection.prepareStatement("DELETE FROM TAG WHERE ID = ? AND USER_ID = ?")
@@ -104,7 +104,7 @@ class TagDAO(
     }
 
     fun getTripTags(uid: String, tripId: Int): List<Tag> {
-        val connection = connectionResolver.connection ?: return emptyList()
+        val connection = connectionResolver.resolveConnection(true) ?: return emptyList()
         var tags: List<Tag> = emptyList()
         connection.use {
             val sqlStringBuilder = StringBuilder()

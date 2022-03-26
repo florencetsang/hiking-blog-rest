@@ -1,4 +1,9 @@
 import React, { useState, useEffect } from 'react';
+
+import { useLocation } from 'react-router-dom';
+import { logEvent } from 'firebase/analytics';
+import { useAnalytics } from 'reactfire';
+
 import Routes from './Routes';
 import { GoogleMap, LoadScript } from '@react-google-maps/api'
 
@@ -26,6 +31,8 @@ const GOOGLE_MAP_OPTIONS = {
 }
 
 export default function HikingMap() {
+    const location = useLocation();
+    const analytics = useAnalytics();
 
     const [trips, setTrips] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
@@ -44,6 +51,10 @@ export default function HikingMap() {
         _loadTrips();
         return () => {didCancel = true;};
     }, []);
+
+    useEffect(() => {
+        logEvent(analytics, 'page_view', { page_location: location.pathname });
+    });
 
     // const [strokeColor, setStrokeColor] = useState('#0000FF');
     // const [strokeWeight, setStrokeWeight] = useState(4);
