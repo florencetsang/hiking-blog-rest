@@ -121,7 +121,7 @@ public class TripController {
             @AuthenticationPrincipal UserPrincipal userPrincipal) {
 
         final String uid = userPrincipal.getUid();
-        LOGGER.info("Create trip. UID: {}, tripReqBody: {}", uid, editTripReqBody);
+        LOGGER.info("Edit trip. UID: {}, tripReqBody: {}", uid, editTripReqBody);
         final int editedId = tripService.editTrip(
                 uid,
                 editTripReqBody.getTripId(),
@@ -193,7 +193,7 @@ public class TripController {
 
         @Override
         public String toString() {
-            return "tripId: " + tripId;
+            return "tripId: " + tripId + ", " + super.toString();
         }
     }
 

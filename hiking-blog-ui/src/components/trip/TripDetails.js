@@ -137,7 +137,7 @@ export default function TripDetails() {
       <Box sx={{
         padding: '16px'
       }}>
-        { editType == 'ADD' && <UploadFile message="Upload gpx file" updateFile={updateRouteFile} currentFile={routeFile} /> }
+        { editType === 'ADD' && <UploadFile message="Upload gpx file" updateFile={updateRouteFile} currentFile={routeFile} /> }
         <TextField
           label="Name"
           style={{ margin: 8 }}
