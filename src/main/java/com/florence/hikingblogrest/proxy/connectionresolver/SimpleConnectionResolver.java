@@ -7,7 +7,10 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-@Deprecated
+/**
+ * @deprecated Simple connection resolver with no connection pool implementation.
+ */
+@Deprecated(since = "0.0.5")
 public class SimpleConnectionResolver implements ConnectionResolver {
     private static final Logger LOGGER = LoggerFactory.getLogger(SimpleConnectionResolver.class);
 
@@ -22,7 +25,24 @@ public class SimpleConnectionResolver implements ConnectionResolver {
     }
 
     @Override
-    public Connection getConnection() throws SQLException {
-        return DriverManager.getConnection(url, username, password);
+    public Connection resolveConnection(boolean autoCommit) {
+
+        Connection connection = null;
+
+        try {
+            connection = DriverManager.getConnection(url, username, password);
+            connection.setAutoCommit(autoCommit);
+        } catch (SQLException e) {
+            LOGGER.error("Connection Error", e);
+            if (connection != null) {
+                try {
+                    connection.close();
+                } catch (SQLException throwables) {
+                    LOGGER.error("Connection close error", e);
+                }
+            }
+        }
+
+        return connection;
     }
 }

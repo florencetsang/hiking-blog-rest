@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 
 import { getAuth } from 'firebase/auth';
-import { FirebaseAppProvider, useFirebaseApp, AuthProvider } from 'reactfire';
+import { getAnalytics } from 'firebase/analytics';
+import { FirebaseAppProvider, useFirebaseApp, AuthProvider, AnalyticsProvider } from 'reactfire';
 import { SnackbarProvider } from 'notistack';
 
 import Main from './Main';
@@ -23,12 +24,15 @@ const firebaseConfig = {
 const _App = () => {
   const app = useFirebaseApp();
   const auth = getAuth(app);
+  const analytics = getAnalytics(app);
 
   return (
     <AuthProvider sdk={auth}>
-      <SnackbarProvider maxSnack={1} autoHideDuration={2000}>
-        <Main/>
-      </SnackbarProvider>
+      <AnalyticsProvider sdk={analytics}>
+        <SnackbarProvider maxSnack={1} autoHideDuration={2000}>
+          <Main/>
+        </SnackbarProvider>
+      </AnalyticsProvider>
     </AuthProvider>
   );
 };

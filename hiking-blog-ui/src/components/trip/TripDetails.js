@@ -18,7 +18,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { RouteStaticMap } from '../posts/RouteStaticMap';
 import UploadFile from './UploadFile';
 
-import { getTrip, createTrip } from '../../services/tripApi';
+import { getTrip, createTrip, editTrip } from '../../services/tripApi';
 import { getTagByName } from '../../services/tagApi';
 
 import { TRIPS_URL } from '../header/navUtil';
@@ -48,7 +48,7 @@ export default function TripDetails() {
   const [toDate, setToDate] = useState(DateTime.now());
 
   useEffect(() => {
-    if (editType !== 'UPDATE') {
+    if (editType === 'ADD') {
       return;
     }
     let didCancel = false;
@@ -118,14 +118,14 @@ export default function TripDetails() {
     if (!validate()) {
       console.log('invalid trip details to save');
       return;
-    }
-    console.log(`Form is submitted. File: [${routeFile.name}]. Name: [${name}]. Description: [${description}]. fromDate: ${fromDate}, toDate: ${toDate}`);
+    }    
     let res;
     if (editType === 'ADD') {
+      console.log(`Form is submitted. File: [${routeFile.name}]. Name: [${name}]. Description: [${description}]. fromDate: ${fromDate}, toDate: ${toDate}`);
       res = await createTrip(name, description, routeFile, tags.map(tag => tag.tagId), fromDate, toDate);
     } else {
-      // TODO
-      res = 1;
+      console.log(`Form is submitted. Name: [${name}]. Description: [${description}]. fromDate: ${fromDate}, toDate: ${toDate}`);
+      res = await editTrip(tripId, name, description, tags.map(tag => tag.tagId), fromDate, toDate);
     }
     if (res >= 0) {
       console.log('saved trip');
@@ -140,7 +140,7 @@ export default function TripDetails() {
       <Box sx={{
         padding: '16px'
       }}>
-        <UploadFile message="Upload gpx file" updateFile={updateRouteFile} currentFile={routeFile} />
+        { editType === 'ADD' && <UploadFile message="Upload gpx file" updateFile={updateRouteFile} currentFile={routeFile} /> }
         <TextField
           label="Name"
           style={{ margin: 8 }}

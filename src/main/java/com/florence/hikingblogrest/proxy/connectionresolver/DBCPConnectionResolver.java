@@ -26,7 +26,25 @@ public class DBCPConnectionResolver implements ConnectionResolver {
     }
 
     @Override
-    public Connection getConnection() throws SQLException {
-        return ds.getConnection();
+    public Connection resolveConnection(boolean autoCommit) {
+
+        Connection connection = null;
+
+        try {
+            connection = ds.getConnection();
+            connection.setAutoCommit(autoCommit);
+
+        } catch (SQLException e) {
+            LOGGER.error("DBCP Connection Error", e);
+            if (connection != null) {
+                try {
+                    connection.close();
+                } catch (SQLException throwables) {
+                    LOGGER.error("Connection close error", e);
+                }
+            }
+        }
+
+        return connection;
     }
 }
