@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import { getAuth } from 'firebase/auth';
 import { getAnalytics } from 'firebase/analytics';
 import { FirebaseAppProvider, useFirebaseApp, AuthProvider, AnalyticsProvider } from 'reactfire';
+import { SnackbarProvider } from 'notistack';
 
 import Main from './Main';
 
@@ -28,8 +29,10 @@ const _App = () => {
   return (
     <AuthProvider sdk={auth}>
       <AnalyticsProvider sdk={analytics}>
-        <Main/>
-        </AnalyticsProvider>
+        <SnackbarProvider maxSnack={1} autoHideDuration={2000}>
+          <Main/>
+        </SnackbarProvider>
+      </AnalyticsProvider>
     </AuthProvider>
   );
 };

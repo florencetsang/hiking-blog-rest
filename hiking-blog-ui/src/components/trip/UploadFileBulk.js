@@ -1,12 +1,16 @@
 import React, { useState } from 'react';
+
 import { makeStyles } from '@mui/styles';
 import Button from '@mui/material/Button';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
-import { DateTime } from 'luxon';
-import { createTrip } from '../../services/tripApi';
 import Box from '@mui/material/Box';
-import { TRIPS_URL } from '../header/navUtil';
+import { useSnackbar } from 'notistack';
+
+import { DateTime } from 'luxon';
 import { useNavigate } from 'react-router-dom';
+
+import { createTrip } from '../../services/tripApi';
+import { TRIPS_URL } from '../header/navUtil';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -18,8 +22,9 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function UploadFileBulk(props) {
-
     const classes = useStyles();
+
+    const { enqueueSnackbar } = useSnackbar();
 
     const [routeFiles, setRouteFiles] = useState([]);
     const [saving, setSaving] = useState(false);
@@ -34,14 +39,14 @@ export default function UploadFileBulk(props) {
         setSaving(true);
         console.log(`Saving [${routeFiles.length}] files.`);
         const promises = [...routeFiles].map(file => createTrip(file.name, "", file, [], DateTime.now(), DateTime.now()));
-        const resList = await Promise.all(promises);  
+        const resList = await Promise.all(promises);
         if (!resList.some((res) => res < 0)) {
             console.log('Saved all trips.');
-        } else {            
+        } else {
             const failedList = resList.map((_, i) => i).filter(e => resList[e] === -1).map(i => routeFiles[i].name);
             console.log(`Some trips failed to save: ${failedList}`);
-            alert(`Some trips failed to save: ${failedList}`);
-        } 
+            enqueueSnackbar(`Some trips failed to save: ${failedList}`);
+        }
         setSaving(false);
         navigate(TRIPS_URL);
     };

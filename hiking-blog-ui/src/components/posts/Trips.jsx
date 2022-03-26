@@ -8,6 +8,7 @@ import Modal from '@mui/material/Modal';
 import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogActions from '@mui/material/DialogActions';
+import { useSnackbar } from 'notistack';
 
 import { Link, useLocation } from 'react-router-dom';
 import { logEvent } from 'firebase/analytics';
@@ -49,6 +50,8 @@ export default function Trips() {
     const location = useLocation();
     const analytics = useAnalytics();
 
+    const { enqueueSnackbar } = useSnackbar();
+
     const [isLoading, setIsLoading] = useState(false);
     const [trips, setTrips] = useState([]);
     const [tags, setTags] = useState([]);
@@ -62,9 +65,9 @@ export default function Trips() {
         const res = await deleteTrip(tripId);
         if (res) {
             setTrips(trips => trips.filter(trip => trip.key !== tripId));
-            alert("Delete success");
+            enqueueSnackbar("Delete success");
         } else {
-            alert("Delete Error");
+            enqueueSnackbar("Delete Error");
         };
     }, [tripToDelete, setTrips, setIsLoading]);
 

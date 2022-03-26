@@ -9,6 +9,7 @@ import Stack from '@mui/material/Stack';
 import DateAdapter from '@mui/lab/AdapterLuxon';
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import DatePicker from '@mui/lab/DatePicker';
+import { useSnackbar } from 'notistack';
 import { makeStyles } from '@mui/styles';
 import { DateTime } from 'luxon';
 
@@ -30,6 +31,8 @@ const useStyles = makeStyles((theme) => ({
 
 export default function TripDetails() {
   const classes = useStyles();
+
+  const { enqueueSnackbar } = useSnackbar();
 
   const { tripId } = useParams();
   const editType = tripId === '_new' ? 'ADD' : 'UPDATE';
@@ -90,7 +93,7 @@ export default function TripDetails() {
         return sameTagIdx < 0 ? [...tags, tag] : tags;
       });
     } else {
-      alert(`There is no tag with tag name ${tagNameSearch}.`);
+      enqueueSnackbar(`There is no tag with tag name ${tagNameSearch}.`);
     }
   }, [tagNameSearch, setTags]);
 
