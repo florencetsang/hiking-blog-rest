@@ -15,9 +15,7 @@ import AppMenu from './AppMenu';
 export default class Pages extends Component {
 
   render() {
-
     return (
-
       <BrowserRouter>
         <AppMenu/>
         <Routes>

@@ -21,6 +21,7 @@ public class PostgresDatabaseDAO implements BaseDatabaseDAO {
     private final ConnectionResolver connectionResolver;
     private final TagDAO tagDAO;
     private final ObjectMapper objectMapper;
+    private static final String CONNECTION_ERROR = "connection error";
 
     public PostgresDatabaseDAO(ConnectionResolver connectionResolver, TagDAO tagDAO) {
         this.connectionResolver = connectionResolver;
@@ -73,7 +74,7 @@ public class PostgresDatabaseDAO implements BaseDatabaseDAO {
                 activities = new ArrayList<>();
             }
         } catch (SQLException e) {
-            LOGGER.error("connection error", e);
+            LOGGER.error(CONNECTION_ERROR, e);
         }
         return activities;
     }
@@ -141,7 +142,7 @@ public class PostgresDatabaseDAO implements BaseDatabaseDAO {
                 }
             }
         } catch (SQLException e) {
-            LOGGER.error("connection error", e);
+            LOGGER.error(CONNECTION_ERROR, e);
         }
 
         LOGGER.info("newTripId: {}", newTripId);
@@ -163,7 +164,7 @@ public class PostgresDatabaseDAO implements BaseDatabaseDAO {
                 deleteTagStmt.setInt(2, tripId);
                 deleteTagStmt.executeUpdate();
 
-                // delete activity
+                // delete trip
                 deleteTripStmt.setString(1, uid);
                 deleteTripStmt.setInt(2, tripId);
                 final int deletedRowsCount = deleteTripStmt.executeUpdate();
@@ -187,10 +188,73 @@ public class PostgresDatabaseDAO implements BaseDatabaseDAO {
                 }
             }
         } catch (SQLException e) {
-            LOGGER.error("connection error", e);
+            LOGGER.error(CONNECTION_ERROR, e);
         }
 
         LOGGER.info("deletedTripId: {}", deletedTripId);
         return deletedTripId;
+    }
+
+    @Override
+    public int editTrip(String uid, int tripId, String name, String description, List<Integer> tagIds, Date fromDate, Date toDate) {
+        int editedTripId = -1;
+
+        try (Connection connection = connectionResolver.getConnection()) {
+            try (PreparedStatement updateTripStmt = connection.prepareStatement("UPDATE HIKING_ROUTES SET NAME = ? , DESCRIPTION = ? , FROM_DATE = ? , TO_DATE = ? WHERE USER_ID = ? AND ID = ?", Statement.RETURN_GENERATED_KEYS);
+                 PreparedStatement deleteTagStmt = connection.prepareStatement("DELETE FROM TRIP_TAG WHERE USER_ID = ? AND TRIP_ID = ?");
+                 PreparedStatement addTagStmt = connection.prepareStatement("INSERT INTO TRIP_TAG (USER_ID, TRIP_ID, TAG_ID) VALUES (?, ?, ?)")) {
+                // start transaction, autoCommit is NOT reset after this method exits
+                connection.setAutoCommit(false);
+
+                // update trip
+                updateTripStmt.setString(1, name);
+                updateTripStmt.setString(2, description);
+                updateTripStmt.setTimestamp(3, new Timestamp(fromDate.getTime()));
+                updateTripStmt.setTimestamp(4, new Timestamp(toDate.getTime()));
+                updateTripStmt.setString(5, uid);
+                updateTripStmt.setInt(6, tripId);
+                final int editedRowsCnt = updateTripStmt.executeUpdate();
+
+                // delete tags
+                deleteTagStmt.setString(1, uid);
+                deleteTagStmt.setInt(2, tripId);
+                deleteTagStmt.executeUpdate();
+
+                if (editedRowsCnt >= 0) {
+                    // insert tags
+                    for (int tagId : tagIds) {
+                        addTagStmt.setString(1, uid);
+                        addTagStmt.setInt(2, tripId);
+                        addTagStmt.setInt(3, tagId);
+                        addTagStmt.addBatch();
+                    }
+                    addTagStmt.executeBatch();
+                }
+
+                // commit transaction
+                connection.commit();
+
+                editedTripId = editedRowsCnt > 0 ? tripId : -1;
+
+            } catch (SQLException e) {
+                LOGGER.error("edit trip error", e);
+                editedTripId = -1;
+            }
+
+            // rollback if trip records are not updated
+            if (editedTripId < 0) {
+                LOGGER.info("rollback editTrip, editedTripId: {}", editedTripId);
+                try {
+                    connection.rollback();
+                } catch (SQLException e) {
+                    LOGGER.error("rollback editTrip error", e);
+                }
+            }
+        } catch (SQLException e) {
+            LOGGER.error(CONNECTION_ERROR, e);
+        }
+
+        LOGGER.info("editedTripId: {}", editedTripId);
+        return editedTripId;
     }
 }
