@@ -30,16 +30,10 @@ export default function UploadFileBulk(props) {
         setRouteFiles(event.target.files);
     };
 
-    // const createTrips = (files) => {
-    //     [...files].forEach(file => {
-    //         createTrip("Untitled Trip", "", file, [], DateTime.now(), DateTime.now());
-    //     });
-    // }
-
     const save = async () => {
         setSaving(true);
         console.log(`Saving [${routeFiles.length}] files.`);
-        const promises = [...routeFiles].map(file => createTrip("Untitled Trip", "", file, [], DateTime.now(), DateTime.now()));
+        const promises = [...routeFiles].map(file => createTrip(file.name, "", file, [], DateTime.now(), DateTime.now()));
         const resList = await Promise.all(promises);  
         if (!resList.some((res) => res < 0)) {
             console.log('Saved all trips.');
