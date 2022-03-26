@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 
 import { getAuth } from 'firebase/auth';
 import { FirebaseAppProvider, useFirebaseApp, AuthProvider } from 'reactfire';
+import { SnackbarProvider } from 'notistack';
 
 import Main from './Main';
 
@@ -25,7 +26,9 @@ const _App = () => {
 
   return (
     <AuthProvider sdk={auth}>
-      <Main/>
+      <SnackbarProvider maxSnack={1} autoHideDuration={2000}>
+        <Main/>
+      </SnackbarProvider>
     </AuthProvider>
   );
 };
