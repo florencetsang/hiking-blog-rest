@@ -35,9 +35,8 @@ export default function AppMenu(props) {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [anchorElUser, setAnchorElUser] = useState(null);
 
-  const handleDrawerToggle = useCallback(() => {
-    setDrawerOpen(drawerOpen => !drawerOpen);
-  }, []);
+  const handleDrawerOpen = useCallback(() => setDrawerOpen(true), []);
+  const handleDrawerClose = useCallback(() => setDrawerOpen(false), []);
 
   const handleOpenUserMenu = (event) => {
     setAnchorElUser(event.currentTarget);
@@ -77,7 +76,7 @@ export default function AppMenu(props) {
             color="inherit"
             aria-label="open drawer"
             edge="start"
-            onClick={handleDrawerToggle}
+            onClick={handleDrawerOpen}
             sx={{ mr: 2, display: { md: 'none' } }}
           >
             <MenuIcon />
@@ -165,7 +164,7 @@ export default function AppMenu(props) {
         <Drawer
           variant="temporary"
           open={drawerOpen}
-          onClose={handleDrawerToggle}
+          onClose={handleDrawerClose}
           ModalProps={{
             keepMounted: true, // Better open performance on mobile.
           }}
@@ -182,6 +181,7 @@ export default function AppMenu(props) {
                 key={page.title}
                 component={Link}
                 to={page.link}
+                onClick={handleDrawerClose}
               >
                 {page.title}
               </ListItem>
