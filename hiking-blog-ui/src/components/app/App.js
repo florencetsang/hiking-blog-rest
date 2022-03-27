@@ -7,6 +7,8 @@ import { SnackbarProvider } from 'notistack';
 
 import Main from './Main';
 
+import { LoadingProvider } from '../context/LoadingContext';
+
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -38,7 +40,9 @@ const _App = () => {
     <AuthProvider sdk={auth}>
       <AnalyticsProvider sdk={analytics}>
         <SnackbarProvider maxSnack={1} autoHideDuration={2000}>
-          <Main/>
+          <LoadingProvider>
+            <Main/>
+          </LoadingProvider>
         </SnackbarProvider>
       </AnalyticsProvider>
     </AuthProvider>
