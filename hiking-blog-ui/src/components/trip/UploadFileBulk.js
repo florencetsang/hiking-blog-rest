@@ -35,10 +35,8 @@ export default function UploadFileBulk(props) {
     const selectFiles = (event) => {
         setRouteFiles(event.target.files);
     };
-
     
     const trimFileExtension = (fileName) => {
-        console.log(`Replaced ${fileName} as ${fileName.replace(/\.[^/.]+$/, "")}`);
         return fileName.replace(/\.[^/.]+$/, "");        
     };
 
