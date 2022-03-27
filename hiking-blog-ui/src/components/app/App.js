@@ -1,9 +1,13 @@
 import React, { Component } from 'react';
 
-import { getAuth } from 'firebase/auth';
-import { FirebaseAppProvider, useFirebaseApp, AuthProvider } from 'reactfire';
+import { getAuth, connectAuthEmulator } from 'firebase/auth';
+import { getAnalytics } from 'firebase/analytics';
+import { FirebaseAppProvider, useFirebaseApp, AuthProvider, AnalyticsProvider } from 'reactfire';
+import { SnackbarProvider } from 'notistack';
 
 import Main from './Main';
+
+import { LoadingProvider } from '../context/LoadingContext';
 
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -22,10 +26,25 @@ const firebaseConfig = {
 const _App = () => {
   const app = useFirebaseApp();
   const auth = getAuth(app);
+  const analytics = getAnalytics(app);
+
+  if (process.env.NODE_ENV !== 'production' && process.env.REACT_APP_DEV_FIREBASE_EMULATOR === 'true') {
+    console.log('using Firebase emulator')
+    if (process.env.REACT_APP_DEV_FIREBASE_EMULATOR_AUTH_HOST) {
+      connectAuthEmulator(auth, process.env.REACT_APP_DEV_FIREBASE_EMULATOR_AUTH_HOST);
+      console.log('using auth emulator');
+    }
+  }
 
   return (
     <AuthProvider sdk={auth}>
-      <Main/>
+      <AnalyticsProvider sdk={analytics}>
+        <SnackbarProvider maxSnack={1} autoHideDuration={2000}>
+          <LoadingProvider>
+            <Main/>
+          </LoadingProvider>
+        </SnackbarProvider>
+      </AnalyticsProvider>
     </AuthProvider>
   );
 };

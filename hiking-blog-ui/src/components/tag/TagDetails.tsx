@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
+import { useSnackbar } from 'notistack';
 
 import { getTag, addTag } from '../../services/tagApi';
 
@@ -16,6 +17,8 @@ interface TagDetailsProps {
 
 const TagDetails = (props: TagDetailsProps) => {
   const {tagId, editType, postSaveTag} = props;
+
+  const { enqueueSnackbar } = useSnackbar();
 
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
@@ -64,11 +67,11 @@ const TagDetails = (props: TagDetailsProps) => {
     }
     if (res >= 0) {
       console.log('saved tag');
-      alert(`Saved tag ${name}`);
+      enqueueSnackbar(`Saved tag ${name}`);
       postSaveTag();
     } else {
       console.log('cannot save tag');
-      alert(`Cannot save tag ${name}`);
+      enqueueSnackbar(`Cannot save tag ${name}`);
     }
   };
 

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useContext } from 'react';
 
 import TextField from '@mui/material/TextField';
 import Container from '@mui/material/Container';
@@ -9,6 +9,7 @@ import Stack from '@mui/material/Stack';
 import DateAdapter from '@mui/lab/AdapterLuxon';
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import DatePicker from '@mui/lab/DatePicker';
+import { useSnackbar } from 'notistack';
 import { makeStyles } from '@mui/styles';
 import { DateTime } from 'luxon';
 
@@ -17,8 +18,9 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { RouteStaticMap } from '../posts/RouteStaticMap';
 import UploadFile from './UploadFile';
 
-import { getTrip, createTrip } from '../../services/tripApi';
+import { getTrip, createTrip, editTrip } from '../../services/tripApi';
 import { getTagByName } from '../../services/tagApi';
+import { LoadingContext } from '../context/LoadingContext';
 
 import { TRIPS_URL } from '../header/navUtil';
 
@@ -30,6 +32,9 @@ const useStyles = makeStyles((theme) => ({
 
 export default function TripDetails() {
   const classes = useStyles();
+
+  const { enqueueSnackbar } = useSnackbar();
+  const appLoading = useContext(LoadingContext);
 
   const { tripId } = useParams();
   const editType = tripId === '_new' ? 'ADD' : 'UPDATE';
@@ -45,12 +50,14 @@ export default function TripDetails() {
   const [toDate, setToDate] = useState(DateTime.now());
 
   useEffect(() => {
-    if (editType !== 'UPDATE') {
+    if (editType === 'ADD') {
       return;
     }
     let didCancel = false;
+    const loadingId = appLoading.load();
     const _getActivity = async () => {
       const trip = await getTrip(tripId);
+      appLoading.unLoad(loadingId);
       if (trip) {
         if (!didCancel) {
           setName(trip.name);
@@ -90,7 +97,7 @@ export default function TripDetails() {
         return sameTagIdx < 0 ? [...tags, tag] : tags;
       });
     } else {
-      alert(`There is no tag with tag name ${tagNameSearch}.`);
+      enqueueSnackbar(`There is no tag with tag name ${tagNameSearch}.`);
     }
   }, [tagNameSearch, setTags]);
 
@@ -116,14 +123,16 @@ export default function TripDetails() {
       console.log('invalid trip details to save');
       return;
     }
-    console.log(`Form is submitted. File: [${routeFile.name}]. Name: [${name}]. Description: [${description}]. fromDate: ${fromDate}, toDate: ${toDate}`);
+    const loadingId = appLoading.load();
     let res;
     if (editType === 'ADD') {
+      console.log(`Form is submitted. File: [${routeFile.name}]. Name: [${name}]. Description: [${description}]. fromDate: ${fromDate}, toDate: ${toDate}`);
       res = await createTrip(name, description, routeFile, tags.map(tag => tag.tagId), fromDate, toDate);
     } else {
-      // TODO
-      res = 1;
+      console.log(`Form is submitted. Name: [${name}]. Description: [${description}]. fromDate: ${fromDate}, toDate: ${toDate}`);
+      res = await editTrip(tripId, name, description, tags.map(tag => tag.tagId), fromDate, toDate);
     }
+    appLoading.unLoad(loadingId);
     if (res >= 0) {
       console.log('saved trip');
       navigate(TRIPS_URL);
@@ -137,7 +146,7 @@ export default function TripDetails() {
       <Box sx={{
         padding: '16px'
       }}>
-        <UploadFile message="Upload gpx file" updateFile={updateRouteFile} currentFile={routeFile} />
+        { editType === 'ADD' && <UploadFile message="Upload gpx file" updateFile={updateRouteFile} currentFile={routeFile} /> }
         <TextField
           label="Name"
           style={{ margin: 8 }}
