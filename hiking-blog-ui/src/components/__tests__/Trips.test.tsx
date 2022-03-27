@@ -7,21 +7,35 @@ import {setupServer} from 'msw/node';
 
 import { MemoryRouter, Routes, Route } from 'react-router-dom';
 
-import TripDetails from '../trip/TripDetails';
+import Trips from '../posts/Trips';
 
 const server = setupServer(
-  rest.get('/api/trip/getTrip', (req, res, ctx) => {
+  rest.get('/api/trip/getTrips', (req, res, ctx) => {
     return res(ctx.json({
       success: true,
-      data: {
-        key: 1,
-        name: 'Test trip',
-        description: 'Test description',
-        tags: [],
-        pathCoordinates: [],
-        fromDate: new Date(),
-        toDate: new Date()
-      }
+      data: [
+        {
+          key: 1,
+          name: 'Test trip',
+          description: 'Test description',
+          tags: [],
+          pathCoordinates: [],
+          fromDate: new Date(),
+          toDate: new Date()
+        }
+      ]
+    }));
+  }),
+  rest.get('/api/tag/getTags', (req, res, ctx) => {
+    return res(ctx.json({
+      success: true,
+      data: [
+        {
+          tagId: 1,
+          name: 'Test tag',
+          description: 'Test tag description'
+        }
+      ]
     }));
   })
 );
@@ -50,6 +64,24 @@ jest.mock('notistack', () => {
   };
 });
 
+jest.mock('firebase/analytics', () => {
+  const originalModule = jest.requireActual('firebase/analytics');
+  return {
+    __esModule: true,
+    ...originalModule,
+    logEvent: (analytics: any, page: any, options: any) => {}
+  };
+});
+
+jest.mock('reactfire', () => {
+  const originalModule = jest.requireActual('reactfire');
+  return {
+    __esModule: true,
+    ...originalModule,
+    useAnalytics: () => ({})
+  };
+});
+
 const render = (ui: React.ReactElement, {route = '/', routePath = '/'} = {}) => {
   return rtlRender(
     <MemoryRouter initialEntries={[route]}>
@@ -61,6 +93,6 @@ const render = (ui: React.ReactElement, {route = '/', routePath = '/'} = {}) => 
 };
 
 test('Load trip', async () => {
-  render(<TripDetails/>, {route: '/tripDetails/1', routePath: '/tripDetails/:tripId'});
+  render(<Trips/>, {route: '/trips', routePath: '/trips'});
   // await waitFor(() => screen.getByRole('textbox'));
 });
