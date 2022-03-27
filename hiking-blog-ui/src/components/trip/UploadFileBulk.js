@@ -29,7 +29,6 @@ export default function UploadFileBulk(props) {
     const appLoading = useContext(LoadingContext);
 
     const [routeFiles, setRouteFiles] = useState([]);
-    const [saving, setSaving] = useState(false);
 
     const navigate = useNavigate();
 
@@ -37,10 +36,16 @@ export default function UploadFileBulk(props) {
         setRouteFiles(event.target.files);
     };
 
+    
+    const trimFileExtension = (fileName) => {
+        console.log(`Replaced ${fileName} as ${fileName.replace(/\.[^/.]+$/, "")}`);
+        return fileName.replace(/\.[^/.]+$/, "");        
+    };
+
     const save = async () => {
         const loadingId = appLoading.load();
         console.log(`Saving [${routeFiles.length}] files.`);
-        const promises = [...routeFiles].map(file => createTrip(file.name, "", file, [], DateTime.now(), DateTime.now()));
+        const promises = [...routeFiles].map(file => createTrip(trimFileExtension(file.name), "", file, [], DateTime.now(), DateTime.now()));
         const resList = await Promise.all(promises);
         if (!resList.some((res) => res < 0)) {
             console.log('Saved all trips.');
