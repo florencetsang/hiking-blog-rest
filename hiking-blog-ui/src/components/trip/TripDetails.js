@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useContext } from 'react';
 
 import TextField from '@mui/material/TextField';
 import Container from '@mui/material/Container';
@@ -20,6 +20,7 @@ import UploadFile from './UploadFile';
 
 import { getTrip, createTrip, editTrip } from '../../services/tripApi';
 import { getTagByName } from '../../services/tagApi';
+import { LoadingContext } from '../context/LoadingContext';
 
 import { TRIPS_URL } from '../header/navUtil';
 
@@ -33,6 +34,7 @@ export default function TripDetails() {
   const classes = useStyles();
 
   const { enqueueSnackbar } = useSnackbar();
+  const appLoading = useContext(LoadingContext);
 
   const { tripId } = useParams();
   const editType = tripId === '_new' ? 'ADD' : 'UPDATE';
@@ -52,8 +54,10 @@ export default function TripDetails() {
       return;
     }
     let didCancel = false;
+    const loadingId = appLoading.load();
     const _getActivity = async () => {
       const trip = await getTrip(tripId);
+      appLoading.unLoad(loadingId);
       if (trip) {
         if (!didCancel) {
           setName(trip.name);
@@ -118,7 +122,8 @@ export default function TripDetails() {
     if (!validate()) {
       console.log('invalid trip details to save');
       return;
-    }    
+    }
+    const loadingId = appLoading.load();
     let res;
     if (editType === 'ADD') {
       console.log(`Form is submitted. File: [${routeFile.name}]. Name: [${name}]. Description: [${description}]. fromDate: ${fromDate}, toDate: ${toDate}`);
@@ -127,6 +132,7 @@ export default function TripDetails() {
       console.log(`Form is submitted. Name: [${name}]. Description: [${description}]. fromDate: ${fromDate}, toDate: ${toDate}`);
       res = await editTrip(tripId, name, description, tags.map(tag => tag.tagId), fromDate, toDate);
     }
+    appLoading.unLoad(loadingId);
     if (res >= 0) {
       console.log('saved trip');
       navigate(TRIPS_URL);

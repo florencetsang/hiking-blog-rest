@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 
 import { useLocation } from 'react-router-dom';
 import { logEvent } from 'firebase/analytics';
@@ -8,6 +8,7 @@ import Routes from './Routes';
 import { GoogleMap, LoadScript } from '@react-google-maps/api'
 
 import { getTrips } from '../../services/tripApi';
+import { LoadingContext } from '../context/LoadingContext';
 
 import {GOOGLE_MAPS_API_KEY} from './utils';
 
@@ -33,17 +34,18 @@ const GOOGLE_MAP_OPTIONS = {
 export default function HikingMap() {
     const location = useLocation();
     const analytics = useAnalytics();
+    const appLoading = useContext(LoadingContext);
 
     const [trips, setTrips] = useState([]);
-    const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
         let didCancel = false;
+        const loadingId = appLoading.load();
         const _loadTrips = async () => {
             const trips = await getTrips();
+            appLoading.unLoad(loadingId);
             if (!didCancel) {
                 setTrips(trips);
-                setIsLoading(false);
                 console.log(`Number of trips fetched: ${trips.length}`);
                 trips.map(trip => console.log(`Fetched ${trip.key}`))
             }
@@ -86,10 +88,6 @@ export default function HikingMap() {
     //     //     position={window.google.maps.ControlPosition.TOP_CENTER} />, controlButtonDiv);
     //     map.controls[window.google.maps.ControlPosition.TOP_CENTER].push(ControlPanelElement());
     // };
-
-    if (isLoading) {
-        return <p> Loading... </p>;
-    }
 
     return (
         <LoadScript

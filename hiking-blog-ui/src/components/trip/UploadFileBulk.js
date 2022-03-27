@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 
 import { makeStyles } from '@mui/styles';
 import Button from '@mui/material/Button';
@@ -10,6 +10,7 @@ import { DateTime } from 'luxon';
 import { useNavigate } from 'react-router-dom';
 
 import { createTrip } from '../../services/tripApi';
+import { LoadingContext } from '../context/LoadingContext';
 import { TRIPS_URL } from '../header/navUtil';
 
 const useStyles = makeStyles((theme) => ({
@@ -25,6 +26,7 @@ export default function UploadFileBulk(props) {
     const classes = useStyles();
 
     const { enqueueSnackbar } = useSnackbar();
+    const appLoading = useContext(LoadingContext);
 
     const [routeFiles, setRouteFiles] = useState([]);
     const [saving, setSaving] = useState(false);
@@ -36,7 +38,7 @@ export default function UploadFileBulk(props) {
     };
 
     const save = async () => {
-        setSaving(true);
+        const loadingId = appLoading.load();
         console.log(`Saving [${routeFiles.length}] files.`);
         const promises = [...routeFiles].map(file => createTrip(file.name, "", file, [], DateTime.now(), DateTime.now()));
         const resList = await Promise.all(promises);
@@ -47,7 +49,7 @@ export default function UploadFileBulk(props) {
             console.log(`Some trips failed to save: ${failedList}`);
             enqueueSnackbar(`Some trips failed to save: ${failedList}`);
         }
-        setSaving(false);
+        appLoading.unLoad(loadingId);
         navigate(TRIPS_URL);
     };
 
@@ -56,7 +58,7 @@ export default function UploadFileBulk(props) {
             padding: '16px',
             textAlign: 'center'
         }}>
-            <Button disabled={saving} variant="contained" component="label" startIcon={<CloudUploadIcon />}>
+            <Button disabled={appLoading.isLoading} variant="contained" component="label" startIcon={<CloudUploadIcon />}>
                 Upload GPX Files
                 <input
                     className={classes.upload}
@@ -65,8 +67,8 @@ export default function UploadFileBulk(props) {
                     onChange={selectFiles}
                 />
             </Button>
-            <span> { saving? "Saving..." : `${routeFiles.length} files selected.`} </span>
-            <Button disabled={saving} onClick={save}>Submit</Button>
+            <span> {appLoading.isLoading ? "Saving..." : `${routeFiles.length} files selected.`} </span>
+            <Button disabled={appLoading.isLoading} onClick={save}>Submit</Button>
         </Box>
     );
 };

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useContext } from 'react';
 
 import { makeStyles } from '@mui/styles';
 import Box from '@mui/material/Box';
@@ -21,6 +21,7 @@ import { getTrips, deleteTrip } from '../../services/tripApi';
 import { getTags } from '../../services/tagApi';
 import { NEW_TRIP_URL } from '../header/navUtil';
 import { NEW_TRIP_BULK_URL } from './../header/navUtil';
+import { LoadingContext } from '../context/LoadingContext';
 import Chip from '@mui/material/Chip';
 import Stack from '@mui/material/Stack';
 
@@ -51,8 +52,8 @@ export default function Trips() {
     const analytics = useAnalytics();
 
     const { enqueueSnackbar } = useSnackbar();
+    const appLoading = useContext(LoadingContext);
 
-    const [isLoading, setIsLoading] = useState(false);
     const [trips, setTrips] = useState([]);
     const [tags, setTags] = useState([]);
     const [tagModalOpen, setTagModalOpen] = useState(false);
@@ -62,24 +63,26 @@ export default function Trips() {
         const tripId = tripToDelete.key;
         console.log(`Deleting ${tripToDelete.name} with key ${tripId}.`);
         setTripToDelete(null);
+        const loadingId = appLoading.load();
         const res = await deleteTrip(tripId);
+        appLoading.unLoad(loadingId);
         if (res) {
             setTrips(trips => trips.filter(trip => trip.key !== tripId));
             enqueueSnackbar("Delete success");
         } else {
             enqueueSnackbar("Delete Error");
         };
-    }, [tripToDelete, setTrips, setIsLoading]);
+    }, [tripToDelete, setTrips]);
 
     useEffect(() => {
         let didCancel = false;
+        const loadingId = appLoading.load();
         const _loadTrips = async () => {
-            setIsLoading(true);
             console.log("Fetching trips.");
             const trips = await getTrips();
+            appLoading.unLoad(loadingId);
             if (!didCancel) {
                 setTrips(trips);
-                setIsLoading(false);
                 console.log(`Number of trips fetched: ${trips.length}`);
                 console.log(`trips: ${trips}`);
                 trips.map(trip => console.log(`Fetched trip with ID: ${trip.key}`))
@@ -91,8 +94,10 @@ export default function Trips() {
 
     useEffect(() => {
         let didCancel = false;
+        const loadingId = appLoading.load();
         const _loadTags = async () => {
             const tags = await getTags();
+            appLoading.unLoad(loadingId);
             if (!didCancel) {
                 setTags(tags);
             }
@@ -109,19 +114,15 @@ export default function Trips() {
     }, [closeTagModal]);
 
     const confirmDelete = useCallback((trip) => {
-        if (!isLoading) {
+        if (!appLoading.isLoading) {
             setTripToDelete(trip);
         }
-    }, [setTripToDelete, isLoading]);
+    }, [setTripToDelete]);
     const closeConfirmDeleteModal = useCallback(() => setTripToDelete(null), [setTripToDelete]);
 
     useEffect(() => {
         logEvent(analytics, 'page_view', { page_location: location.pathname });
     });
-
-    if (isLoading) {
-        return <p> Loading... </p>;
-    }
 
     return (
         <div className={classes.root}>
