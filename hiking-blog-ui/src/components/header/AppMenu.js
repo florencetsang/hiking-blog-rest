@@ -99,7 +99,7 @@ export default function AppMenu(props) {
                 component={Link}
                 to={page.link}
                 key={page.title}
-                sx={{ my: 2, color: 'white', display: 'block' }}
+                sx={{ color: 'white', display: 'block' }}
               >
                 {page.title}
               </Button>
