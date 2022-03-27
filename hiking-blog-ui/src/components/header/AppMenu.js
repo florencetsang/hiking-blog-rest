@@ -109,13 +109,13 @@ export default function AppMenu(props) {
             TripHub
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-            {pages.map((page) => (              
+            {pages.map((page) => (
               <Button
                 component={Link}
                 to={page.link}
                 key={page.title}
                 onClick={handleCloseNavMenu}
-                sx={{ my: 2, color: 'white', display: 'block' }}
+                sx={{ color: 'white', display: 'block' }}
               >
                 {page.title}
               </Button>
@@ -124,7 +124,7 @@ export default function AppMenu(props) {
 
           {
             user
-            && 
+            &&
             <div>
             <Box sx={{ flexGrow: 0 }}>
               <IconButton
@@ -151,7 +151,7 @@ export default function AppMenu(props) {
                   horizontal: 'right',
                 }}
                 open={Boolean(anchorElUser)}
-                onClose={handleCloseUserMenu} 
+                onClose={handleCloseUserMenu}
               >
                 <MenuItem key='Profile' onClick={handleCloseUserMenu}>
                   <Typography textAlign="center">{user.displayName}</Typography>
