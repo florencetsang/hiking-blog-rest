@@ -1,6 +1,7 @@
 import React, { useState, useCallback} from 'react';
 import { getAuth, signOut } from "firebase/auth";
 import { useUser } from 'reactfire';
+
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
@@ -11,8 +12,16 @@ import MenuIcon from '@mui/icons-material/Menu';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import AccountCircle from '@mui/icons-material/AccountCircle';
+import Drawer from '@mui/material/Drawer';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import Divider from '@mui/material/Divider';
+import CssBaseline from '@mui/material/CssBaseline';
+
 import { Link } from 'react-router-dom';
 import { DAHBOARD_URL, TRIPS_URL } from './navUtil';
+
+const drawerWidth = 240;
 
 const pages = [
   {title: 'Dashboard', link: DAHBOARD_URL},
@@ -23,18 +32,15 @@ const settings = ['Profile', 'Logout'];
 export default function AppMenu(props) {
   const { data: user } = useUser();
 
-  const [anchorElNav, setAnchorElNav] = useState(null);
+  const [drawerOpen, setDrawerOpen] = useState(false);
   const [anchorElUser, setAnchorElUser] = useState(null);
 
-  const handleOpenNavMenu = (event) => {
-    setAnchorElNav(event.currentTarget);
-  };
+  const handleDrawerToggle = useCallback(() => {
+    setDrawerOpen(drawerOpen => !drawerOpen);
+  }, []);
+
   const handleOpenUserMenu = (event) => {
     setAnchorElUser(event.currentTarget);
-  };
-
-  const handleCloseNavMenu = () => {
-    setAnchorElNav(null);
   };
 
   const handleCloseUserMenu = () => {
@@ -52,8 +58,11 @@ export default function AppMenu(props) {
 
   return (
     <Box sx={{ flexGrow: 1 }}>
+      <CssBaseline />
+
       <AppBar position="static">
         <Toolbar>
+          {/* App name for desktop (md or above) */}
           <Typography
             variant="h6"
             noWrap
@@ -62,44 +71,19 @@ export default function AppMenu(props) {
           >
             TripHub
           </Typography>
-          <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
-            <IconButton
-              size="large"
-              aria-label="account of current user"
-              aria-controls="menu-appbar"
-              aria-haspopup="true"
-              onClick={handleOpenNavMenu}
-              color="inherit"
-            >
-              <MenuIcon />
-            </IconButton>
-            <Menu
-              id="menu-appbar"
-              anchorEl={anchorElNav}
-              anchorOrigin={{
-                vertical: 'bottom',
-                horizontal: 'left',
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: 'top',
-                horizontal: 'left',
-              }}
-              open={Boolean(anchorElNav)}
-              onClose={handleCloseNavMenu}
-              sx={{
-                display: { xs: 'block', md: 'none' },
-              }}
-            >
-              {pages.map((page) => (
-                <MenuItem key={page.title} onClick={handleCloseNavMenu}>
-                  <Typography textAlign="center">
-                    <Link to={page.link}>{page.title}</Link>
-                  </Typography>
-                </MenuItem>
-              ))}
-            </Menu>
-          </Box>
+
+          {/* Menu icon for mobile */}
+          <IconButton
+            color="inherit"
+            aria-label="open drawer"
+            edge="start"
+            onClick={handleDrawerToggle}
+            sx={{ mr: 2, display: { md: 'none' } }}
+          >
+            <MenuIcon />
+          </IconButton>
+
+          {/* App name for mobile */}
           <Typography
             variant="h6"
             noWrap
@@ -108,13 +92,14 @@ export default function AppMenu(props) {
           >
             TripHub
           </Typography>
+
+          {/* Pages for desktop (md or above) */}
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-            {pages.map((page) => (              
+            {pages.map((page) => (
               <Button
                 component={Link}
                 to={page.link}
                 key={page.title}
-                onClick={handleCloseNavMenu}
                 sx={{ my: 2, color: 'white', display: 'block' }}
               >
                 {page.title}
@@ -122,11 +107,12 @@ export default function AppMenu(props) {
             ))}
           </Box>
 
+          {/* User menu */}
           {
             user
-            && 
-            <div>
+            &&
             <Box sx={{ flexGrow: 0 }}>
+              {/* User icon */}
               <IconButton
                 size="large"
                 aria-label="account of current user"
@@ -137,6 +123,7 @@ export default function AppMenu(props) {
               >
                 <AccountCircle />
               </IconButton>
+              {/* User menu */}
               <Menu
                 sx={{ mt: '45px' }}
                 id="menu-appbar"
@@ -151,7 +138,7 @@ export default function AppMenu(props) {
                   horizontal: 'right',
                 }}
                 open={Boolean(anchorElUser)}
-                onClose={handleCloseUserMenu} 
+                onClose={handleCloseUserMenu}
               >
                 <MenuItem key='Profile' onClick={handleCloseUserMenu}>
                   <Typography textAlign="center">{user.displayName}</Typography>
@@ -166,10 +153,42 @@ export default function AppMenu(props) {
                 ))} */}
               </Menu>
             </Box>
-            </div>
           }
         </Toolbar>
       </AppBar>
+
+      <Box
+        component="nav"
+        sx={{ width: { sm: drawerWidth }, flexShrink: { sm: 0 } }}
+        aria-label="Nav"
+      >
+        <Drawer
+          variant="temporary"
+          open={drawerOpen}
+          onClose={handleDrawerToggle}
+          ModalProps={{
+            keepMounted: true, // Better open performance on mobile.
+          }}
+          sx={{
+            display: { xs: 'block', md: 'none' },
+            '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth },
+          }}
+        >
+          <Toolbar />
+          <Divider />
+          <List>
+            {pages.map((page) => (
+              <ListItem
+                key={page.title}
+                component={Link}
+                to={page.link}
+              >
+                {page.title}
+              </ListItem>
+            ))}
+          </List>
+        </Drawer>
+      </Box>
     </Box>
   );
 }
