@@ -1,18 +1,8 @@
-import { getAuth } from "firebase/auth";
+import { getAuthToken } from './apiUtils';
 
 const getApiPath = (apiPath) => {
     return `${apiPath}`;
   };
-
-const getAuthToken = async () => {
-    try {
-        const auth = getAuth();
-        return await auth.currentUser?.getIdToken(true);
-    } catch (e) {
-        console.log(e);
-        return null;
-    }
-}
 
 const getApi = async (apiPath, urlParams=new URLSearchParams(), options={}) => {
     const authToken = await getAuthToken();

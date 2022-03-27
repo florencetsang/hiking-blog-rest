@@ -118,7 +118,7 @@ export default function TripDetails() {
     if (!validate()) {
       console.log('invalid trip details to save');
       return;
-    }    
+    }
     let res;
     if (editType === 'ADD') {
       console.log(`Form is submitted. File: [${routeFile.name}]. Name: [${name}]. Description: [${description}]. fromDate: ${fromDate}, toDate: ${toDate}`);
