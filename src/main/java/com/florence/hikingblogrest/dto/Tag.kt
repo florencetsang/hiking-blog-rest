@@ -1,12 +1,22 @@
 package com.florence.hikingblogrest.dto
 
 import com.fasterxml.jackson.annotation.JsonIgnore
+import javax.persistence.*
 
+@Entity(name = "TAG")
+@Table(name = "TAG")
 class Tag(
-    val tagId: Int,
-    @JsonIgnore val uid: String,
+    @JsonIgnore
+    @Column(name = "user_id")
+    val uid: String,
+    @Column(name = "name")
     val name: String,
-    val description: String
+    @Column(name = "description")
+    val description: String,
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
+    val tagId: Int? = null
 ) {
     class TagBuilder {
         private var tagId = -1
@@ -35,7 +45,7 @@ class Tag(
         }
 
         fun build(): Tag {
-            return Tag(tagId, uid, name, description)
+            return Tag(uid, name, description, tagId)
         }
     }
 }

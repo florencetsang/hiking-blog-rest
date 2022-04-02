@@ -1,5 +1,6 @@
 package com.florence.hikingblogrest.configurations
 
+import com.florence.hikingblogrest.dto.TagRepo
 import com.florence.hikingblogrest.proxy.TagDAO
 import com.florence.hikingblogrest.proxy.connectionresolver.ConnectionResolver
 import com.florence.hikingblogrest.service.TagService
@@ -14,7 +15,7 @@ class TagConfig {
     }
 
     @Bean
-    fun tagService(tagDAO: TagDAO): TagService {
-        return TagService(tagDAO)
+    fun tagService(tagRepo: TagRepo): TagService {
+        return TagService(tagRepo)
     }
 }

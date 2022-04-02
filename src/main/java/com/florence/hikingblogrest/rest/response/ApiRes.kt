@@ -1,3 +1,3 @@
 package com.florence.hikingblogrest.rest.response
 
-abstract class ApiRes(val isSuccess: Boolean)
+abstract class ApiRes(val success: Boolean)

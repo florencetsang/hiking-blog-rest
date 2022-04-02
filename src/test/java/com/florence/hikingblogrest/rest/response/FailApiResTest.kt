@@ -11,6 +11,6 @@ internal class FailApiResTest {
 
         val apiRes = FailApiRes("error msg")
         val apiResStr = objectMapper.writeValueAsString(apiRes)
-        assertEquals("{\"error\":\"error msg\",\"success\":false}", apiResStr)
+        assertEquals("{\"success\":false,\"error\":\"error msg\"}", apiResStr)
     }
 }
