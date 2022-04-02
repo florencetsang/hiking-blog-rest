@@ -18,7 +18,7 @@ interface TagRepo : CrudRepository<Tag, Int> {
         @Param("id") id: Int
     ): Optional<Tag>
 
-    @Query("SELECT t FROM TAG t WHERE USER_ID = :uid and ID LIKE %:name%")
+    @Query("SELECT t FROM TAG t WHERE USER_ID = :uid and NAME LIKE %:name%")
     fun getTagByName(
         @Param("uid") uid: String,
         @Param("name") name: String
