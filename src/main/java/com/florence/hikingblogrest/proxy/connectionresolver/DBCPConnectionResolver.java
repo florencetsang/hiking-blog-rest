@@ -7,6 +7,7 @@ import org.apache.logging.log4j.Logger;
 import java.sql.Connection;
 import java.sql.SQLException;
 
+@Deprecated(since = "0.0.8")
 public class DBCPConnectionResolver implements ConnectionResolver {
 
     private static final Logger LOGGER = LogManager.getLogger(DBCPConnectionResolver.class);

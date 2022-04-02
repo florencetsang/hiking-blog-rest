@@ -2,10 +2,11 @@ package com.florence.hikingblogrest.configurations;
 
 import com.florence.hikingblogrest.proxy.CloudStorageProxy;
 import com.florence.hikingblogrest.proxy.connectionresolver.ConnectionResolver;
-import com.florence.hikingblogrest.proxy.connectionresolver.DBCPConnectionResolver;
-import org.springframework.beans.factory.annotation.Value;
+import com.florence.hikingblogrest.proxy.connectionresolver.ConnectionResolverImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import javax.sql.DataSource;
 
 @Configuration
 public class DatasourceConfig {
@@ -16,12 +17,7 @@ public class DatasourceConfig {
     }
 
     @Bean
-    public ConnectionResolver connectionResolver(@Value("${spring.datasource.url}") String url,
-                                                 @Value("${spring.datasource.username}") String username,
-                                                 @Value("${spring.datasource.password}") String password,
-                                                 @Value("${dbcp.min.idle}") int minIdle,
-                                                 @Value("${dbcp.max.idle}") int maxIdle,
-                                                 @Value("${dbcp.maxWaitMillis}") int maxWaitMillis) {
-        return new DBCPConnectionResolver(url, username, password, minIdle, maxIdle, maxWaitMillis);
+    public ConnectionResolver connectionResolver(DataSource dataSource) {
+        return new ConnectionResolverImpl(dataSource);
     }
 }

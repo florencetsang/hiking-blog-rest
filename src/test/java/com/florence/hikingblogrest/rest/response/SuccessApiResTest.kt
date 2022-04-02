@@ -11,6 +11,6 @@ internal class SuccessApiResTest {
 
         val apiRes = SuccessApiRes(1)
         val apiResStr = objectMapper.writeValueAsString(apiRes)
-        assertEquals("{\"data\":1,\"success\":true}", apiResStr)
+        assertEquals("{\"success\":true,\"data\":1}", apiResStr)
     }
 }
