@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/api/tag")
-@CrossOrigin(origins = ["http://localhost:3000", "http://localhost:5000"])
 class TagController(private val tagService: TagService) {
     private val logger = KotlinLogging.logger {}
 
