@@ -22,7 +22,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/trip")
-@CrossOrigin(origins = {"http://localhost:3000", "http://localhost:5000"})
 public class TripController {
     private static final Logger LOGGER = LogManager.getLogger(TripController.class);
 
