@@ -19,13 +19,14 @@ import Divider from '@mui/material/Divider';
 import CssBaseline from '@mui/material/CssBaseline';
 
 import { Link } from 'react-router-dom';
-import { DAHBOARD_URL, TRIPS_URL } from './navUtil';
+import { DAHBOARD_URL, TRIPS_URL, SETTINGS_URL } from './navUtil';
 
 const drawerWidth = 240;
 
 const pages = [
   {title: 'Dashboard', link: DAHBOARD_URL},
-  {title: 'Trips', link: TRIPS_URL}
+  {title: 'Trips', link: TRIPS_URL},
+  {title: 'Settings', link: SETTINGS_URL}
 ];
 const settings = ['Profile', 'Logout'];
 

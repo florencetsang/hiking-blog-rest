@@ -2,7 +2,7 @@ import React from 'react';
 
 import {Coordinate} from '../../data/trip';
 
-import {GOOGLE_MAPS_API_KEY} from '../map/utils';
+import {GOOGLE_MAPS_API_KEY} from '../map/google_maps/utils';
 
 export const getMapsImgUrl = (pathCoordinates: Coordinate[], bin = 5) => {
   const coordinates = pathCoordinates.filter((element, index) => {

@@ -3,6 +3,7 @@ export const TRIPS_URL = '/trips';
 export const TRIP_DETAILS_URL = '/tripDetails/:tripId';
 export const NEW_TRIP_URL = '/tripDetails/_new';
 export const NEW_TRIP_BULK_URL = '/tripDetails/_newBulk';
+export const SETTINGS_URL = '/settings';
 
 export const getTripDetailsUrl = (key: number) => {
   return `/tripDetails/${key.toString()}`;
