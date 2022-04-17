@@ -4,13 +4,10 @@ import { Polyline, InfoWindow } from '@react-google-maps/api';
 
 import { Link } from 'react-router-dom';
 
-import { getTripDetailsUrl } from '../header/navUtil';
+import { getTripDetailsUrl } from '../../header/navUtil';
 
-import * as mapStyle from './MapStyle';
+import { StrokeStyle } from './data';
 
-/**
- * @param {{ setActiveKey: (arg0: any) => void; label: {}; isActive: any; strokeOpacity: any; pathCoordinates: any; strokeColor: any; strokeWeight: any; strokeStyle: any; }} props
- */
 export default function Route(props) {
     const [infoWindowPosition, setInfoWindowPosition] = useState({
         lat: 22.302711,
@@ -42,7 +39,7 @@ export default function Route(props) {
     };
 
     const icons = [
-        strokeStyle == mapStyle.DASHED ?
+        strokeStyle == StrokeStyle.DASHED ?
             {
                 icon: lineSymbol,
                 offset: "0",
@@ -58,7 +55,7 @@ export default function Route(props) {
                 options={{
                     strokeColor: strokeColor,
                     strokeWeight: strokeWeight,
-                    strokeOpacity: strokeStyle == mapStyle.DASHED ? 0 : strokeOpacity,
+                    strokeOpacity: strokeStyle == StrokeStyle.DASHED ? 0 : strokeOpacity,
                     icons: icons
                 }}
                 onClick={handleToogleOpen}

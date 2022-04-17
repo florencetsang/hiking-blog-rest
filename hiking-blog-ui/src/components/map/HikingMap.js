@@ -3,14 +3,14 @@ import React, { useState, useEffect, useContext } from 'react';
 import { useLocation } from 'react-router-dom';
 import { logEvent } from 'firebase/analytics';
 import { useAnalytics } from 'reactfire';
+import Box from '@mui/material/Box';
 
-import Routes from './Routes';
-import { GoogleMap, LoadScript } from '@react-google-maps/api'
-
+import GoogleMapsMap from './google_maps/GoogleMapsMap';
+import OpenStreetMapMap from './open_street_map/OpenStreetMap';
 import { getTrips } from '../../services/tripApi';
+import { getInitialMapType } from '../../utils/map';
 import { LoadingContext } from '../context/LoadingContext';
-
-import {GOOGLE_MAPS_API_KEY} from './utils';
+import { MapType } from '../../data/map';
 
 const ZOOM = 11;
 
@@ -19,24 +19,14 @@ const CENTER = {
     lng: 114.177216
 };
 
-const CONTAINER_STYLE = {
-    width: '100%',
-    height: 'calc(100vh - 48px)'
-};
-
-const GOOGLE_MAP_OPTIONS = {
-    streetViewControl: false,
-    gestureHandling: "greedy",
-    mapTypeId: "terrain",
-    mapTypeControlOptions: { position: 3 },
-}
-
 export default function HikingMap() {
     const location = useLocation();
     const analytics = useAnalytics();
     const appLoading = useContext(LoadingContext);
 
     const [trips, setTrips] = useState([]);
+
+    const mapType = getInitialMapType();
 
     useEffect(() => {
         let didCancel = false;
@@ -51,7 +41,7 @@ export default function HikingMap() {
             }
         };
         _loadTrips();
-        return () => {didCancel = true;};
+        return () => { didCancel = true; };
     }, []);
 
     useEffect(() => {
@@ -89,22 +79,29 @@ export default function HikingMap() {
     //     map.controls[window.google.maps.ControlPosition.TOP_CENTER].push(ControlPanelElement());
     // };
 
-    return (
-        <LoadScript
-            googleMapsApiKey={GOOGLE_MAPS_API_KEY}
-        >
-            <GoogleMap
-                mapContainerStyle={CONTAINER_STYLE}
-                zoom={ZOOM}
-                center={CENTER}
-                clickableIcons={false}
-                options={GOOGLE_MAP_OPTIONS}
-            // onLoad={map => handleOnLoad(map)}
-            >
-                <Routes trips={trips} />
-                {/* <ControlPanelElement /> */}
-            </GoogleMap>
+    let mapComp;
+    if (mapType === MapType.OPENSTREETMAP) {
+        mapComp = (
+            <OpenStreetMapMap
+                initialCenter={CENTER}
+                initialZoom={ZOOM}
+                trips={trips} />
+        );
+    } else {
+        mapComp = (
+            <GoogleMapsMap
+                initialCenter={CENTER}
+                initialZoom={ZOOM}
+                trips={trips} />
+        );
+    }
 
-        </LoadScript>
-    )
+    return (
+        <Box sx={{
+            width: '100%',
+            height: 'calc(100vh - 64px)'
+        }}>
+            {mapComp}
+        </Box>
+    );
 };
