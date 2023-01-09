@@ -6,6 +6,8 @@ import CircularProgress from '@mui/material/CircularProgress';
 import { Set } from 'immutable';
 import { v4 as uuidv4 } from 'uuid';
 
+import { useAppBarHeight } from '../uiUtils/uiUtils';
+
 interface AppLoading {
   isLoading: boolean;
   load: () => string;
@@ -26,6 +28,8 @@ interface LoadingProviderProps {
 
 export const LoadingProvider = (props: LoadingProviderProps) => {
   const [loadingIds, setLoadingIds] = useState(emptyLoadingIds);
+
+  const appBarHeight = useAppBarHeight();
 
   const isLoading = useMemo(() => loadingIds.size > 0, [loadingIds]);
 
@@ -54,9 +58,9 @@ export const LoadingProvider = (props: LoadingProviderProps) => {
         && (
           <Box sx={{
             width: '100%',
-            height: '100%',
+            height: `calc(100% - ${appBarHeight}px)`,
             position: 'absolute',
-            top: 0,
+            top: appBarHeight,
             left: 0,
             display: 'flex',
             justifyContent: 'center',

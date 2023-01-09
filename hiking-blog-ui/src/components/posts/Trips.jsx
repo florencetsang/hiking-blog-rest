@@ -89,7 +89,10 @@ export default function Trips() {
             }
         };
         _loadTrips();
-        return () => { didCancel = true; };
+        return () => {
+            didCancel = true;
+            appLoading.unLoad(loadingId);
+        };
     }, []);
 
     useEffect(() => {
@@ -103,7 +106,10 @@ export default function Trips() {
             }
         };
         _loadTags();
-        return () => { didCancel = true; };
+        return () => {
+            didCancel = true;
+            appLoading.unLoad(loadingId);
+        };
     }, []);
 
     const openTagModal = useCallback(() => setTagModalOpen(true), [setTagModalOpen]);

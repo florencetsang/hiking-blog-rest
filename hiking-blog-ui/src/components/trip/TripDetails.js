@@ -70,7 +70,10 @@ export default function TripDetails() {
       }
     };
     _getActivity();
-    return () => {didCancel = true;};
+    return () => {
+      didCancel = true;
+      appLoading.unLoad(loadingId);
+    };
   }, [tripId, setName, setDescription, setPathCoordinates, setTags, setFromDate, setToDate]);
 
   const updateRouteFile = useCallback((file) => {

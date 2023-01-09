@@ -51,7 +51,10 @@ export default function HikingMap() {
             }
         };
         _loadTrips();
-        return () => {didCancel = true;};
+        return () => {
+            didCancel = true;
+            appLoading.unLoad(loadingId);
+        };
     }, []);
 
     useEffect(() => {
