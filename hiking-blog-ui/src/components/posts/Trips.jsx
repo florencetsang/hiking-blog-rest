@@ -8,9 +8,14 @@ import Modal from '@mui/material/Modal';
 import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogActions from '@mui/material/DialogActions';
+import SpeedDial from '@mui/material/SpeedDial';
+import SpeedDialIcon from '@mui/material/SpeedDialIcon';
+import SpeedDialAction from '@mui/material/SpeedDialAction';
+import AddIcon from '@mui/icons-material/Add';
+import UploadFileIcon from '@mui/icons-material/UploadFile';
 import { useSnackbar } from 'notistack';
 
-import { Link, useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { logEvent } from 'firebase/analytics';
 import { useAnalytics } from 'reactfire';
 
@@ -49,6 +54,7 @@ const tagModalStyle = {
 export default function Trips() {
     const classes = useStyles();
     const location = useLocation();
+    const navigate = useNavigate();
     const analytics = useAnalytics();
 
     const { enqueueSnackbar } = useSnackbar();
@@ -120,6 +126,9 @@ export default function Trips() {
     }, [setTripToDelete]);
     const closeConfirmDeleteModal = useCallback(() => setTripToDelete(null), [setTripToDelete]);
 
+    const goToNewTrip = useCallback(() => navigate(NEW_TRIP_URL), []);
+    const goToBulkUpload = useCallback(() => navigate(NEW_TRIP_BULK_URL), []);
+
     useEffect(() => {
         logEvent(analytics, 'page_view', { page_location: location.pathname });
     });
@@ -140,8 +149,24 @@ export default function Trips() {
                 ))}
             </Grid>
 
-            <Button><Link to={NEW_TRIP_URL}>New Trip</Link></Button>
-            <Button><Link to={NEW_TRIP_BULK_URL}>Bulk Upload New Trips</Link></Button>
+            <SpeedDial
+                ariaLabel="New trip"
+                sx={{ position: 'absolute', bottom: 16, right: 16 }}
+                icon={<SpeedDialIcon/>}
+            >
+                    <SpeedDialAction
+                        icon={<AddIcon/>}
+                        tooltipTitle="New"
+                        onClick={goToNewTrip}
+                        tooltipOpen
+                    />
+                    <SpeedDialAction
+                        icon={<UploadFileIcon/>}
+                        tooltipTitle="Trips"
+                        onClick={goToBulkUpload}
+                        tooltipOpen
+                    />
+            </SpeedDial>
 
             <Stack direction="row" spacing={1}>
                 {tags.map(tag => (
