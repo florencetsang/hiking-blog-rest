@@ -48,6 +48,7 @@ export default function TripDetails() {
   const [tagNameSearch, setTagNameSearch] = useState('');
   const [fromDate, setFromDate] = useState(DateTime.now());
   const [toDate, setToDate] = useState(DateTime.now());
+  const [hasEditedToDate, setHasEditedToDate] = useState(false);
 
   useEffect(() => {
     if (editType === 'ADD') {
@@ -107,11 +108,20 @@ export default function TripDetails() {
 
   const updateFromDate = useCallback((date) => {
     setFromDate(date);
-  }, [setFromDate]);
+    if (date.startOf('day') > toDate.startOf('day')) {
+      setToDate(date);
+      setHasEditedToDate(false);
+    } else if (date.startOf('day') < toDate.startOf('day')) {
+      if (!hasEditedToDate) {
+        setToDate(date);
+      }
+    }
+  }, [toDate,hasEditedToDate, setFromDate, setToDate, setHasEditedToDate]);
 
   const updateToDate = useCallback((date) => {
     setToDate(date);
-  }, [setToDate]);
+    setHasEditedToDate(true);
+  }, [setToDate, setHasEditedToDate]);
 
   const validate = useCallback(() => {
     return name.trim().length > 0
@@ -193,6 +203,7 @@ export default function TripDetails() {
               value={fromDate}
               onChange={updateFromDate}
               renderInput={(params) => <TextField {...params} margin="normal"/>}
+              allowSameDateSelection={true}
             />
             <DatePicker
               label="To Date"
@@ -200,6 +211,8 @@ export default function TripDetails() {
               value={toDate}
               onChange={updateToDate}
               renderInput={(params) => <TextField {...params} margin="normal"/>}
+              allowSameDateSelection={true}
+              minDate={fromDate}
             />
           </LocalizationProvider>
         </div>
