@@ -235,6 +235,10 @@
 				<configuration>
 					<workingDirectory>hiking-blog-ui</workingDirectory>
 					<installDirectory>target</installDirectory>
+
+					<environmentVariables>
+						<GOOGLE_MAPS_API_KEY>${WEB_BUILD_GOOGLE_MAPS_API_KEY}</GOOGLE_MAPS_API_KEY>
+					</environmentVariables>
 				</configuration>
 				<executions>
 					<execution>
