@@ -292,6 +292,26 @@
 					</execution>
 				</executions>
 			</plugin>
+
+			<plugin>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<version>3.5.0</version>
+				<configuration>
+					<descriptors>
+						<descriptor>src/main/assembly/aws_eb_package.xml</descriptor>
+					</descriptors>
+				</configuration>
+				<executions>
+					<execution>
+						<id>make-assembly</id> <!-- this is used for inheritance merges -->
+						<phase>package</phase> <!-- append to the packaging phase. -->
+						<goals>
+							<goal>single</goal> <!-- goals == mojos -->
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
 <!--			<plugin>-->
 <!--				<groupId>com.heroku.sdk</groupId>-->
 <!--				<artifactId>heroku-maven-plugin</artifactId>-->
