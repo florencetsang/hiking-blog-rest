@@ -23,6 +23,20 @@ public class DBCPConnectionResolver implements ConnectionResolver {
 //        ds.setMaxOpenPreparedStatements(100);
 
         LOGGER.info("Created DBCPConnectionResolver. Url: [{}] MinIdle: [{}] MaxIdle: [{}] maxWaitMillis: [{}]", url, minIdle, maxIdle, maxWaitMillis);
+
+        final Connection connection = resolveConnection(true);
+        LOGGER.info("test DB connection");
+        if (connection == null) {
+            LOGGER.error("cannot connect to DB");
+            throw new RuntimeException("DB error");
+        }
+        try {
+            connection.close();
+            LOGGER.info("closed test DB connection");
+        } catch (SQLException e) {
+            LOGGER.error("cannot close test DB connection", e);
+            throw new RuntimeException("DB error");
+        }
     }
 
     @Override
